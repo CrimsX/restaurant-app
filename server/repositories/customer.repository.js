@@ -10,7 +10,7 @@ export const addCustomerToRepo = async(body) => {
     }
     try {
         const customer = new Customer(body);
-        const saved = customer.save();
+        const saved = await customer.save();
         return saved;
     }catch (e) {
         throw error ("Error while create profile")

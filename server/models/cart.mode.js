@@ -8,14 +8,14 @@ const OrderItemSchema = new mongoose.Schema(
     }
 )
 
-const CartSchema = new mongoose.Schema(
+const CartSchema = new mongoose.Schema( 
     {
-        items: [{type:[OrderItemSchema], required: true}],
-        cid: {type: Number, required: true},
-        rid: {type: Number, required: true},
-        total: {type: Number, required: true}
+        items: [{type: OrderItemSchema}],
+        customer: {type: Schema.Types.ObjectId, ref: 'Customer'},
+        restaurant: {type: Schema.Types.ObjectId, ref: 'Restaurant'},
+        total: {type: Number}
     }
 )
 
-const Cart = mongoose.model("Cart", CartSchema);
-export default Cart;
+const OrderItem = mongoose.model("OrderItem", OrderItemSchema);
+export default OrderItem;
