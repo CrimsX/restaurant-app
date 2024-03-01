@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-const OrderItemSchema = new mongoose.Schema(
+const OrderItemSchema = new Schema(
     {
         item: {type: Schema.Types.ObjectId, ref: 'Item'},
         quantity: { type: Number, required: true },
@@ -8,7 +8,7 @@ const OrderItemSchema = new mongoose.Schema(
     }
 )
 
-const OrderSchema = new mongoose.Schema(
+const OrderSchema = new Schema(
     {
         items: [{type:[OrderItemSchema], required: true}],
         customer: {type: Schema.Types.ObjectId, ref: 'Customer'},

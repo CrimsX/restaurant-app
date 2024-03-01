@@ -1,7 +1,6 @@
 import dbConnection from "./database/database.js";
-import { addCustomerToRepo, createCartRepo } from "./repositories/customer.repository.js";
-import { addRestaurantToRepo } from "./repositories/restaurant.repository.js";
-
+import { addCustomerToRepo } from "./repositories/customer.repository.js";
+import { addRestaurantToRepo, addItemRepo } from "./repositories/restaurant.repository.js";
 dbConnection();
 
 const customer =  {
@@ -26,6 +25,11 @@ const restaurant = {
     }
 }
 
+const testItem = {
+    name: "Spring Roll",
+    price: 20
+}
+
 
 const insertCustomer = async() => {
     let c = await addCustomerToRepo(customer);
@@ -34,13 +38,12 @@ const insertCustomer = async() => {
 
 const insertRestaurant = async() => {
     let r = await addRestaurantToRepo(restaurant);
-    console.log(r);
 }
 
-const createCart = async() => {
-    createCartRepo(1);
+const createItem = async() => {
+    let i = await addItemRepo(1, testItem);
 }
 
-createCart();
+createItem();
 
 

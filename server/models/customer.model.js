@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-const addressSchema = new mongoose.Schema(
+const addressSchema = new Schema(
     {
         street: {type: String, required: true},
         suite: {type: String, required: false},
@@ -9,7 +9,7 @@ const addressSchema = new mongoose.Schema(
     }
 );
 
-const CustomerSchema = new mongoose.Schema (
+const CustomerSchema = new Schema (
     {
         name: {type: String, required: true },
         cid: { type: Number, required: true },
@@ -17,7 +17,6 @@ const CustomerSchema = new mongoose.Schema (
         pw: {type: String, required: true },
         address: {type: addressSchema, required: true},
         orders: [{type: Schema.Types.ObjectId, ref: 'Order'}], 
-        cart: {type: Schema.Types.ObjectId, ref: 'Cart'}
     }
 )
 

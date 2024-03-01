@@ -1,9 +1,8 @@
-//Menu item for restaurant
 import mongoose, {Schema} from "mongoose";
 
-const ItemSchema = new mongoose.Schema(
+const ItemSchema = new Schema(
     {
-        name: {type: String, required: true},
+        name: { type: String, required: true},
         price: { type: Number, required: true }
     }
 )

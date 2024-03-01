@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-const addressSchema = new mongoose.Schema(
+const addressSchema = new Schema(
     {
         street: {type: String, required: true},
         suite: {type: String, required: false},
@@ -9,7 +9,7 @@ const addressSchema = new mongoose.Schema(
     }
 );
 
-const RestaurantSchema = new mongoose.Schema(
+const RestaurantSchema = new Schema(
     {
         name: { type: String, required: true },
         rid: { type: Number, required: true },
