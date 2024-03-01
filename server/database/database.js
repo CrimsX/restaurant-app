@@ -4,7 +4,6 @@ mongoose.set('strictQuery', true);
 
 const dbConnection = async() => {
     const url = `mongodb://localhost:27017/restaurant-app`; //make sure to add the db string
-    //const urlAtlas = 'mongodb+srv://scrs_user:DKIRlT7VG5BQuFlt@clusteralpha.7l0ll5y.mongodb.net/restaurant-app' //probably should use env file
     try {
         /*
         Mongoose will emit 'disconnected' if it loses connectivity to 
