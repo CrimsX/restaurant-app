@@ -1,8 +1,9 @@
 import dbConnection from "./database/database.js";
-import { addCustomerToRepo } from "./repositories/customer.repository.js";
-import { addRestaurantToRepo, addItemRepo } from "./repositories/restaurant.repository.js";
-dbConnection();
+import { addCustomerToRepo, createCartRepo } from "./repositories/customer.repository.js";
+import { addRestaurantToRepo, addItemRepo, getRestaurantRepo } from "./repositories/restaurant.repository.js";
+import { createOrderRepo } from "./repositories/order.repository.js";
 
+dbConnection();
 const customer =  {
     name: "Jack",
     email: "jack@mymail.com",
@@ -26,9 +27,11 @@ const restaurant = {
 }
 
 const testItem = {
-    name: "Spring Roll",
-    price: 20
+    name: "Spring Rolls",
+    price: "16.99"
 }
+
+
 
 
 const insertCustomer = async() => {
@@ -40,10 +43,32 @@ const insertRestaurant = async() => {
     let r = await addRestaurantToRepo(restaurant);
 }
 
-const createItem = async() => {
+
+const createMenuItem = async() => {
     let i = await addItemRepo(1, testItem);
 }
 
-createItem();
+//create a shopping cart
+const createCart = async() => {
+    const order = {
+        item: testItem,
+        quantity: 2,
+        total: testItem.price * 2
+    }
+    const info = {
+        items: [order],
+        rid: 1
+    }
+    createCartRepo(1, info);
+}
+
+const createOrder = async() => {
+    createCartRepo();
+}
+
+const getRestaurant = async() => { 
+    const res = await getRestaurantRepo(1);
+    console.log(res);
+}
 
 

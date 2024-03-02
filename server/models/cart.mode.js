@@ -1,19 +1,30 @@
 import mongoose, {Schema} from "mongoose";
 
+const getPrice = (num) => {
+    return (num/100).toFixed(2);
+}
+
+const setPrice = (num) => {
+    return (num * 100).toFixed(0);
+}
+
 const OrderItemSchema = new mongoose.Schema(
     {
-        item: {type: Schema.Types.ObjectId, ref: 'Item'},
+        item: { 
+            name: {type: String},
+            price: {type: Number,  get: getPrice, set: setPrice}
+        },
         quantity: { type: Number, required: true },
-        total: { type: Number, required: true} 
+        total: { type: Number,  get: getPrice, set: setPrice, required: true} 
     }
 )
 
 const CartSchema = new mongoose.Schema( 
     {
         items: [{type: OrderItemSchema}],
-        customer: {type: Schema.Types.ObjectId, ref: 'Customer'},
-        restaurant: {type: Schema.Types.ObjectId, ref: 'Restaurant'},
-        total: {type: Number}
+        cid: {type: Number},
+        rid: {type: Number},
+        total: {type: Number,  get: getPrice, set: setPrice}
     }
 )
 
