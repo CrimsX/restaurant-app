@@ -17,6 +17,17 @@ export const addRestaurantToRepo = async(body) => {
     }
 }
 
+export const getRestaurantRepo = async(query) => {
+    //const rid = query.rid; //use this version if pass through route
+    const rid = query;
+    try {
+        const restaurant = await Restaurant.findOne({rid: rid}).populate("menu", "-_id").select('-_id -email -pw');
+        return restaurant;
+    } catch (e) {
+        throw error ("Error while retrieving restaurant information")
+    }
+}
+
 export const addItemRepo = async(query, body) => {
     //const rid = query.rid; //use this version if pass through route
     const rid = query;
