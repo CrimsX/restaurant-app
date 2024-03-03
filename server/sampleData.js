@@ -1,5 +1,6 @@
 import dbConnection from "./database/database.js";
-import { addCustomerToRepo, createCartRepo } from "./repositories/customer.repository.js";
+import Cart from "./models/cart.mode.js";
+import { addCustomerToRepo, createCartRepo, getCustomerRepo } from "./repositories/customer.repository.js";
 import { addRestaurantToRepo, addItemRepo, getRestaurantRepo } from "./repositories/restaurant.repository.js";
 import { createOrderRepo } from "./repositories/order.repository.js";
 
@@ -31,19 +32,18 @@ const testItem = {
     price: "16.99"
 }
 
-
-
-
+//create a customer
 const insertCustomer = async() => {
     let c = await addCustomerToRepo(customer);
     console.log(c);
 } 
 
+//create a restaurant
 const insertRestaurant = async() => {
     let r = await addRestaurantToRepo(restaurant);
 }
 
-
+//add menu item to restaurant, only if 
 const createMenuItem = async() => {
     let i = await addItemRepo(1, testItem);
 }
@@ -63,7 +63,8 @@ const createCart = async() => {
 }
 
 const createOrder = async() => {
-    createCartRepo();
+    let cart = await Cart.findOne({cid: 1});
+    createOrderRepo(cart);
 }
 
 const getRestaurant = async() => { 
@@ -71,4 +72,7 @@ const getRestaurant = async() => {
     console.log(res);
 }
 
-
+const test = async() => {
+    const c = await getCustomerRepo({cid: 1})
+    console.log(c);
+}

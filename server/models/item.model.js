@@ -12,6 +12,7 @@ const setPrice = (num) => {
 const ItemSchema = new Schema(
     {
         name: { type: String, required: true},
+        rid: { type: Number},
         price: { type: Number, get: getPrice, set: setPrice ,required: true }
     }
 )
