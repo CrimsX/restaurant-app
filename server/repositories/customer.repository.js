@@ -18,32 +18,38 @@ export const addCustomerToRepo = async(body) => {
     }
 }
 
+export const getCustomerRepo = async(query) => {
+    try {
+        const customer = await Customer.findOne(query).select("-pw");
+        console.log(customer);
+        return customer;
+    } catch (e) {
+        throw error ("Error while attempting to retrieve profile")
+    }
+} 
+
 /**
  * Method to create a shopping cart or add item to a shopping
  * @param {} query - contain the customer id
  * @param {*} info - contain array of OrderItem object and restaurant id
  * @returns 
  */
-export const createCartRepo = async(query, info) => {
-    //const cid = query.cid; //use this version if pass through route
-    const cid = query; //customer ID
-    let cart = await Cart.findOne({cid: cid});
+export const createCartRepo = async(query, body) => {
+    let cart = await Cart.findOne(query);
     let saved; 
     try {
         if (cart === null) { //create new cart if none exist
-            info.cid = cid;
-            info.total = "33.98"
+            body.cid = query.cid;
+            body.total = "33.98"
             cart = await new Cart(info); //create new cart with the item
             saved = await cart.save();
-            console.log(saved);
             return saved;
         } else {
-            if (cart.rid != info.rid){ //check if the add item is from the same restaurant
-                console.log("Not from the same restaurant");
-                return;
+            if (cart.rid != body.rid){ //check if the add item is from the same restaurant
+                return ("Item is not from the same restaurant");
             }
             let total = parseFloat(cart.total) + info.items[0].total; //update the price 
-            let newcart = await Cart.findOneAndUpdate({cid: cid, rid: info.rid}, {$set: {total: total}, $push: {items: info.items}}, {new: true})
+            let newcart = await Cart.findOneAndUpdate({cid: cid, rid: body.rid}, {$set: {total: total}, $push: {items: body.items}}, {new: true})
             return newcart;
         }
     } catch (e) {

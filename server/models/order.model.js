@@ -1,12 +1,21 @@
 import mongoose, {Schema} from "mongoose";
 
+const getPrice = (num) => {
+    return (num/100).toFixed(2);
+}
 
+const setPrice = (num) => {
+    return (num * 100).toFixed(0);
+}
 
 const OrderItemSchema = new Schema(
     {
-        item: {type: Schema.Types.ObjectId, ref: 'Item'},
-        quantity: { type: Number, required: true },
-        total: { type: Number, required: true} 
+        item: {
+            name: {type: String},
+            price: {type: Number,  get: getPrice}
+        },
+        quantity: {type: Number,  required: true },
+        total: {type: Number,  get: getPrice} 
     }
 )
 
@@ -15,8 +24,8 @@ const OrderSchema = new Schema(
         items: [{type:[OrderItemSchema], required: true}],
         customer: {type: Schema.Types.ObjectId, ref: 'Customer'},
         restaurant: {type: Schema.Types.ObjectId, ref: 'Restaurant'},
-        time: { type: Date, required: true},
-        total: {type: String}
+        time: { type: Date},
+        total:  {type: Number,  get: getPrice}
     }
 )
 
