@@ -8,6 +8,7 @@ const setPrice = (num) => {
     return (num * 100).toFixed(0);
 }
 
+//may change the item to use object id instead
 const OrderItemSchema = new mongoose.Schema(
     {
         item: { 
@@ -22,9 +23,13 @@ const OrderItemSchema = new mongoose.Schema(
 const CartSchema = new mongoose.Schema( 
     {
         items: [{type: OrderItemSchema}],
-        cid: {type: Number},
-        rid: {type: Number},
-        total: {type: Number,  get: getPrice, set: setPrice}
+        cid: {type: Number, required: true},
+        rid: {type: Number, default: -1},
+        total: {type: Number,  get: getPrice, set: setPrice},
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        }
     }
 )
 

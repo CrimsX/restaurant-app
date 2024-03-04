@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dbConnection from "./database/database.js";
 import customerRouter from "./routes/customer.route.js";
+import cartRouter from "./routes/cart.route.js";
 
 const app = express();
 const port = 8000;
@@ -17,6 +18,8 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/customers", customerRouter);
+app.use("/cart", cartRouter);
+
 
 app.listen(port, function () {
 	console.log(`Server is listening on port ${port}!`); 

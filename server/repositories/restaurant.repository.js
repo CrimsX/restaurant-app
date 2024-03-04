@@ -18,9 +18,8 @@ export const addRestaurantToRepo = async(body) => {
 }
 
 export const getRestaurantRepo = async(query) => {
-    const rid = query;
     try {
-        const restaurant = await Restaurant.findOne({rid: rid}).populate("menu", "-_id").select('-_id -email -pw');
+        const restaurant = await Restaurant.findOne(query).populate("menu", "-_id").select('-_id -email -pw');
         return restaurant;
     } catch (e) {
         throw error ("Error while retrieving restaurant information")
