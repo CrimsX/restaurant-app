@@ -1,12 +1,14 @@
 import dbConnection from "./database/database.js";
-import Cart from "./models/cart.mode.js";
-import { addCustomerToRepo, createCartRepo, getCustomerRepo } from "./repositories/customer.repository.js";
+import Cart from "./models/cart.model.js";
+import { addCustomerToRepo, getCustomerRepo } from "./repositories/customer.repository.js";
 import { addRestaurantToRepo, addItemRepo, getRestaurantRepo } from "./repositories/restaurant.repository.js";
 import { createOrderRepo } from "./repositories/order.repository.js";
+import { createCartRepo, addItemToCartRepo } from "./repositories/cart.repository.js";
 
 dbConnection();
 const customer =  {
     name: "Jack",
+    username: "Jackker",
     email: "jack@mymail.com",
     pw: "12345",
     address: {
@@ -29,7 +31,7 @@ const restaurant = {
 
 const testItem = {
     name: "Spring Rolls",
-    price: "16.99"
+    price: 16.99
 }
 
 //create a customer
@@ -45,21 +47,23 @@ const insertRestaurant = async() => {
 
 //add menu item to restaurant, only if 
 const createMenuItem = async() => {
-    let i = await addItemRepo(1, testItem);
+    let i = await addItemRepo({cid: 1}, testItem);
 }
 
 //create a shopping cart
-const createCart = async() => {
+const addToCart = async() => {
+    const q = 2;
     const order = {
         item: testItem,
-        quantity: 2,
-        total: testItem.price * 2
+        quantity: q,
+        total: testItem.price * q
     }
     const info = {
-        items: [order],
-        rid: 1
+        order: order,
+        rid: 2
     }
-    createCartRepo(1, info);
+    const c = await addItemToCartRepo({cid: 1}, info);
+    console.log(c);
 }
 
 const createOrder = async() => {
@@ -68,11 +72,13 @@ const createOrder = async() => {
 }
 
 const getRestaurant = async() => { 
-    const res = await getRestaurantRepo(1);
+    const res = await getRestaurantRepo({rid: 1});
     console.log(res);
 }
 
 const test = async() => {
-    const c = await getCustomerRepo({cid: 1})
-    console.log(c);
+    const c = await createCartRepo({cid: 1})
+    console.log(c.items.length);
 }
+
+test();

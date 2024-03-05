@@ -24,8 +24,11 @@ const OrderSchema = new Schema(
         items: [{type:[OrderItemSchema], required: true}],
         customer: {type: Schema.Types.ObjectId, ref: 'Customer'},
         restaurant: {type: Schema.Types.ObjectId, ref: 'Restaurant'},
-        time: { type: Date},
-        total:  {type: Number,  get: getPrice}
+        total:  {type: Number,  get: getPrice},
+        orderAt: {
+            type: Date,
+            default: Date.now,
+        }
     }
 )
 
