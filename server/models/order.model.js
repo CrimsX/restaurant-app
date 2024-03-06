@@ -10,10 +10,7 @@ const setPrice = (num) => {
 
 const OrderItemSchema = new Schema(
     {
-        item: {
-            name: {type: String},
-            price: {type: Number,  get: getPrice}
-        },
+        item: {type: Schema.Types.ObjectId, ref: 'Items'},
         quantity: {type: Number,  required: true },
         total: {type: Number,  get: getPrice} 
     }
@@ -25,10 +22,10 @@ const OrderSchema = new Schema(
         customer: {type: Schema.Types.ObjectId, ref: 'Customer'},
         restaurant: {type: Schema.Types.ObjectId, ref: 'Restaurant'},
         total:  {type: Number,  get: getPrice},
-        orderAt: {
-            type: Date,
-            default: Date.now,
-        }
+        status: {type: String },
+        schedule: {type: String, required: true},
+        pickup: {type: Date}
+
     }
 )
 
