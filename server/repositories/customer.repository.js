@@ -14,7 +14,7 @@ export const addCustomerToRepo = async(body) => {
         const saved = await customer.save();
         return saved;
     }catch (e) {
-        throw error ("Error while create profile")
+        throw Error ("Error while create profile")
     }
 }
 
@@ -23,7 +23,7 @@ export const getCustomerRepo = async(query) => {
         const customer = await Customer.findOne(query).select("-pw -_id");
         return customer;
     } catch (e) {
-        throw error ("Error while attempting to retrieve profile")
+        throw Error ("Error while attempting to retrieve profile")
     }
 } 
 

@@ -17,7 +17,6 @@ const CustomerSchema = new Schema (
         email: {type: String, required: true },
         pw: {type: String, required: true },
         address: {type: addressSchema, required: true},
-        orders: [{type: Schema.Types.ObjectId, ref: 'Order'}], 
     }
 )
 

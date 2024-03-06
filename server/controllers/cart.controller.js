@@ -1,4 +1,4 @@
-import { getCartRepo, createCartRepo, addItemToCartRepo} from "../repositories/cart.repository.js";
+import { getCartRepo, createCartRepo, addItemToCartRepo, resetCartRepo, editCartRepo, removeItemRepo} from "../repositories/cart.repository.js";
 
 export const getCart = async(req, res) => {
     const { cid } = req.params;
@@ -35,6 +35,54 @@ export const addToCart = async(req, res) => {
     const { cid } = req.params;
     try {
         const cart = await addItemToCartRepo({cid: cid}, req.body);
+        return res.status(200).json({ 
+            status: 200, 
+            data: cart
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400, 
+            message: e.message
+        });
+    }
+}
+
+export const resetCart = async(req, res) => {
+    const { cid } = req.params;
+    try {
+        const cart = await resetCartRepo({cid: cid});
+        return res.status(200).json({ 
+            status: 200, 
+            data: cart
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400, 
+            message: e.message
+        });
+    }
+}
+
+export const editCart = async(req, res) => {
+    const { cid } = req.params;
+    try {
+        const cart = await editCartRepo({cid: cid}, req.body);
+        return res.status(200).json({ 
+            status: 200, 
+            data: cart
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400, 
+            message: e.message
+        });
+    }
+}
+
+export const removeFromCart= async(req, res) => {
+    const { cid } = req.params;
+    try {
+        const cart = await removeItemRepo({cid: cid}, req.body);
         return res.status(200).json({ 
             status: 200, 
             data: cart
