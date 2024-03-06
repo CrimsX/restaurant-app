@@ -22,11 +22,7 @@ const CartSchema = new mongoose.Schema(
         items: [{type: OrderItemSchema}],
         cid: {type: Number, required: true},
         rid: {type: Number, default: -1},
-        total: {type: Number,  get: getPrice, set: setPrice},
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        }
+        total: {type: Number,  get: getPrice, set: setPrice}
     }
 )
 

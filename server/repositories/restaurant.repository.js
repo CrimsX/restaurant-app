@@ -27,14 +27,13 @@ export const getRestaurantRepo = async(query) => {
 }
 
 export const addItemRepo = async(query, body) => {
-    const rid = query;
-    body["rid"] = rid;
-    console.log(body);
     try {
         const newItem = new Item(body);
+        newItem.rid = query.rid;
+        console.log(newItem);
         const saved = await newItem.save();
-        const restaurant = await Restaurant.findOneAndUpdate({rid: query}, {$push: {menu: saved._id}}, {new: true});
-        console.log(restaurant);
+        const restaurant = await Restaurant.findOneAndUpdate({rid: query.rid}, {$push: {menu: saved._id}}, {new: true});
+        return restaurant;
     }  catch (e) {
         throw error ("Error while adding new item")
     }

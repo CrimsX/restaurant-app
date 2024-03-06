@@ -47,9 +47,9 @@ const insertRestaurant = async() => {
     let r = await addRestaurantToRepo(restaurant);
 }
 
-//add menu item to restaurant, only if 
+//add menu item to restaurant
 const createMenuItem = async() => {
-    let i = await addItemRepo({cid: 1}, testItem);
+    let i = await addItemRepo({rid: 1}, testItem);
 }
 
 //create a shopping cart
@@ -65,23 +65,17 @@ const addToCart = async() => {
         order: order,
         rid: test_item.rid
     }
-    const c = await addItemToCartRepo({cid: 2}, info);
-    console.log(c);
+    //const c = await addItemToCartRepo({cid: 1}, info);
+    console.log(info);
 }
 
 const createOrder = async() => {
-    let cart = await Cart.findOne({cid: 1});
-    createOrderRepo(cart);
+    let order = await createOrderRepo({cid: 1});
 }
 
 const getRestaurant = async() => { 
     const res = await getRestaurantRepo({rid: 1});
     console.log(res);
-}
-
-const test = async() => {
-    let cart = await Cart.findOne({cid: 1, rid: 1, items: { $elemMatch: {item: ObjectId('65e36c2dc4c18783781e48b5')}}})
-    console.log(cart);
 }
 
 addToCart();
