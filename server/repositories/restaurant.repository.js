@@ -22,7 +22,7 @@ export const getRestaurantRepo = async(query) => {
         const restaurant = await Restaurant.findOne(query).populate("menu", "-_id").select('-_id -email -pw');
         return restaurant;
     } catch (e) {
-        throw error ("Error while retrieving restaurant information")
+        throw Error ("Error while retrieving restaurant information")
     }
 }
 
@@ -35,6 +35,6 @@ export const addItemRepo = async(query, body) => {
         const restaurant = await Restaurant.findOneAndUpdate({rid: query.rid}, {$push: {menu: saved._id}}, {new: true});
         return restaurant;
     }  catch (e) {
-        throw error ("Error while adding new item")
+        throw Error ("Error while adding new item")
     }
 }

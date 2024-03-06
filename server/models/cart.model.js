@@ -5,7 +5,10 @@ const getPrice = (num) => {
 }
 
 const setPrice = (num) => {
-    return (num * 100).toFixed(0);
+    if (!Number.isInteger(num)) 
+        return (num * 100).toFixed(0);
+    else 
+        return num;
 }
 
 //may change the item to use object id instead
