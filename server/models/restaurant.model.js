@@ -17,7 +17,6 @@ const RestaurantSchema = new Schema(
         pw: {type: String, required: true },
         address: {type: addressSchema, required: true},
         menu: [{type: Schema.Types.ObjectId, ref: 'Item'}],
-        orders: [{type: Schema.Types.ObjectId, ref: 'Order'}], 
     }
 )
 

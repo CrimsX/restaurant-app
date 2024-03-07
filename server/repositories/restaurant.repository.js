@@ -2,7 +2,7 @@ import Restaurant from "../models/restaurant.model.js";
 import Item from "../models/item.model.js";
 
 export const addRestaurantToRepo = async(body) => {
-    const maxID = await Restaurant.find().sort({"cid": -1}).limit(1);
+    const maxID = await Restaurant.find().sort({"rid": -1}).limit(1);
     if (maxID.length < 1) {
         body["rid"] = 1;
     } else {

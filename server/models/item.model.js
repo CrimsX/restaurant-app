@@ -22,7 +22,7 @@ const ItemSchema = new Schema(
     {
         name: { type: String, required: true},
         rid: {type: Number},
-        available: { type: Boolean, default: false},
+        available: { type: Boolean, default: true},
         price: { type: Number, get: getPrice, set: setPrice ,required: true }
     }
 )
