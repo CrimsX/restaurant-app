@@ -30,7 +30,6 @@ export const addItemRepo = async(query, body) => {
     try {
         const newItem = new Item(body);
         newItem.rid = query.rid;
-        console.log(newItem);
         const saved = await newItem.save();
         const restaurant = await Restaurant.findOneAndUpdate({rid: query.rid}, {$push: {menu: saved._id}}, {new: true});
         return restaurant;

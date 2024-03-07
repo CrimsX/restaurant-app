@@ -56,7 +56,6 @@ export const addItemToCartRepo = async(query, body) => {
             let total = parseFloat(cart.total) + body.order.total; //update the price
             let newcart = await Cart.findOneAndUpdate({cid: query.cid}, 
                 {$set: {total: total, rid: body.rid}, $push: {items: body.order}}, {new: true})
-            console.log(newcart);
             return newcart;
         }
     } catch (e) {
