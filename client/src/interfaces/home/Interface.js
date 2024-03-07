@@ -1,8 +1,7 @@
 import React from 'react';
-import { Routes, Route } from "react-router-dom";
-import Interface from './interfaces/home/Interface.js';
-import Home from './interfaces/client-interface/landing/landingScreen.js'
-
+import './Interface.css';
+import { NavToClientApp } from '../../components/navigation/client-button.component';
+import { NavToRestaurantApp } from '../../components/navigation/restaurant-button.component';
 
 /**
  * Sceen 1
@@ -15,14 +14,16 @@ import Home from './interfaces/client-interface/landing/landingScreen.js'
  * ● Students must be able to see all courses they are registered in
  */
 
-function App() {
+function Interface() {
   return (
-      <Routes>
-        <Route path="/" element={<Interface />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
+    <div className="App">
+      <header className="App-header">
+        <p>
+          <NavToClientApp/> <NavToRestaurantApp/>
+        </p>
+      </header>
+    </div>
   );
 }
 
-
-export default App;
+export default Interface;
