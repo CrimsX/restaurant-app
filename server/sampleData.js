@@ -74,14 +74,15 @@ const insertCustomer = async() => {
 
 //create a restaurant
 const insertRestaurant = async() => {
+    let q = await addRestaurantToRepo(restaurant[0]);
     let r = await addRestaurantToRepo(restaurant[1]);
-    r = await addRestaurantToRepo(restaurant[0]);
 }
 
 //add menu items to restaurants
 const createMenuItem = async() => {
-    //let i = await addItemRepo({rid: 1}, testItem[0]);
-    let j = await addItemRepo({rid: 2}, testItem[2]);
+    let i = await addItemRepo({rid: 1}, testItem[0]);
+    let j = await addItemRepo({rid: 2}, testItem[1]);
+    j = await addItemRepo({rid: 2}, testItem[2]);
 }
 
 //create a shopping cart
@@ -139,4 +140,6 @@ const editCart = async() => {
 
 }
 
-editCart()
+//insertCustomer();
+//insertRestaurant();
+//createMenuItem();
