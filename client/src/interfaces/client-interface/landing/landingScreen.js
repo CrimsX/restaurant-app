@@ -43,7 +43,8 @@ function Home(data) {
         <div>
             <NavBar/>
             <div className='body'>
-                <Restaurants restuarants={restaurants} onClick/>
+              <h1 className='title'>Restaurant's</h1>
+              <Restaurants restuarants={restaurants} onClick/>
             </div>
         </div>
 
