@@ -1,7 +1,8 @@
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import Interface from './interfaces/home/Interface.js';
-import Home from './interfaces/client-interface/landing/landingScreen.js'
+import Home from './interfaces/client-interface/landing/landingScreen.js';
+import Menu from './interfaces/client-interface/restaurant-menu/Menu.js';
 
 
 /**
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Interface />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/menu/:data" element={<Menu />} />
       </Routes>
   );
 }

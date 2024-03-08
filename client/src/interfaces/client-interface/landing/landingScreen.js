@@ -10,8 +10,9 @@ buttons on nav bar (sticky buttons for now):
 
 List restaurants
 */
-function Home() {
+function Home(data) {
     const [restaurants, setRestaurants] = useState([]);
+    console.log(data);
     useEffect( () => {
         const test = [
             {
@@ -37,11 +38,12 @@ function Home() {
           ]
         setRestaurants(test);
     }, []);
+
     return (
         <div>
             <NavBar/>
             <div className='body'>
-                <Restaurants restuarants={restaurants}/>
+                <Restaurants restuarants={restaurants} onClick/>
             </div>
         </div>
 
