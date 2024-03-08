@@ -37,7 +37,7 @@ const restaurant = [{
     pw: "pizzaria",
     address: {
         street: " 456 somewwhere",
-        city: "Leduck",
+        city: "Edmonton",
         postalcode: "HEEHEE"
     }}, 
     {
@@ -46,25 +46,126 @@ const restaurant = [{
     pw: "springrolls",
     address: {
         street: " 789 somewwhere",
-        city: "Tedmonton",
+        city: "Edmonton",
         postalcode: "H33H33"
     }},
+    {
+        name: "Freckle.B",
+        email: "freckle@burger.ca",
+        pw: "freckle",
+        address: {
+            street: " 231 saints row",
+            city: "Edmonton",
+            postalcode: "S6R T3P"
+    }}
 ]
 
-const testItem = [
+const delisios = [
     {
         name: "Special Pizza",
         price: 24.99
     },
     {
+        name: "Royal Hawaiian Pizza",
+        price: 16.99
+    },
+    {
+        name: "Meat Lover Pizza",
+        price: 20.99
+    },
+    {
+        name: " Buffalo Chicken Fingers",
+        price: 17.99
+    },
+    {
+        name: " Mac & Cheese",
+        price: 19.99
+    }, 
+    {
+        name: "Chicken Mushroom Fettuccini",
+        price: 22.79
+    },
+    {
+        name: "New York Cheesecake",
+        price: 9.29
+    },
+    {
+        name: "Soju and Melona",
+        price: 12.99
+    }
+];
+
+const asianres = [
+    {
         name: "Spring Rolls",
         price: 16.99
-    }, 
+    },
     {
         name: "Pho Bo Vien",
         price: 18.99
+    },
+    {
+        name: "Pho Dac Biet",
+        price: 20.99
+    },
+    {
+        name: "Phoritto",
+        price: 15.99
+    },
+    {
+        name: " Tofu Fries",
+        price: 9.99
+    },
+    {
+        name: "Cafe Sua Da",
+        price: 5.99
+    }, 
+    {
+        name: "Rice n Porkchops",
+        price: 17.99
+    },
+    {
+        name: "Vietnamese Sub",
+        price: 17.50
     }
-]
+];
+
+const freckle = [
+    {
+        name: "The Original Burger",
+        price: 16.99
+    }, 
+    {
+        name: "Kingburger Supreme",
+        price: 18.99
+    },
+    { 
+        name: "Classic Chicken Sandwich",
+        price: 15.99
+    },
+    {
+        name: "6 Chicken Tenders",
+        price: 19.99
+    },
+    {
+        name: "Crispy Fries",
+        price: 3.99
+    },
+    {
+        name: "Onion Rings",
+        price: 4.99
+    },
+    {
+        name: "Best Milkshake",
+        price: 6.69
+    },
+    {
+        name: "Fountain Pop",
+        price: 2.99
+    }
+];
+
+
 
 //create a customer
 const insertCustomer = async() => {
@@ -73,15 +174,15 @@ const insertCustomer = async() => {
 } 
 
 //create a restaurant
-const insertRestaurant = async() => {
-    let r = await addRestaurantToRepo(restaurant[1]);
-    r = await addRestaurantToRepo(restaurant[0]);
+const insertRestaurant = async(items) => {
+    let q = await addRestaurantToRepo(restaurant[2]);
 }
 
 //add menu items to restaurants
-const createMenuItem = async() => {
-    //let i = await addItemRepo({rid: 1}, testItem[0]);
-    let j = await addItemRepo({rid: 2}, testItem[2]);
+const createMenuItem = async(rid, items) => {
+    for (let item of items) {
+        await addItemRepo({rid: rid}, item)
+    }
 }
 
 //create a shopping cart
@@ -139,4 +240,6 @@ const editCart = async() => {
 
 }
 
-editCart()
+//insertCustomer();
+//insertRestaurant();
+//createMenuItem(1, delisios);

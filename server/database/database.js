@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
-
 mongoose.set('strictQuery', true);
+import dotenv from 'dotenv';
+
 
 const dbConnection = async() => {
-    const url = `mongodb://localhost:27017/restaurant-app`; //make sure to add the db string
+    dotenv.config()
+    const url = process.env.ATLAS_URI || `mongodb://localhost:27017/restaurant-app`; //make sure to add the db string
     try {
         /*
         Mongoose will emit 'disconnected' if it loses connectivity to 
