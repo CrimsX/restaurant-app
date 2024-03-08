@@ -1,4 +1,5 @@
 import Cart from "../models/cart.model.js";
+import Item from "../models/item.model.js";
 
 export const getCartRepo = async(query) => {
     try {
@@ -42,18 +43,22 @@ export const addItemToCartRepo = async(query, body) => {
             const existingItem = cart.items.find(item => String(item.item._id) === String(body.order.item._id));
             if (existingItem) { //update qunatity and price if item already in cart
                 existingItem.quantity = existingItem.quantity + body.order.quantity; //update quantity
-                existingItem.total = (parseFloat(existingItem.total) + body.order.total).toFixed(2); //update the price of the existing item
-                cart.total = (parseFloat(cart.total) + body.order.total); //update the total price of cart
+                existingItem.total = (parseFloat(existingItem.total) + (parseFloat(existingItem.item.price) * body.order.quantity)).toFixed(2); //update the price of the existing item
+                cart.total = (parseFloat(cart.total) + (parseFloat(existingItem.item.price) * body.order.quantity)); //update the total price of cart
                 let saved = await Cart.findOneAndUpdate(query, cart, {new: true});
                 return saved;
             } else { //add new item
-                let total = parseFloat(cart.total) + body.order.total; //update the price 
+                let item = await Item.findOne({_id: body.order.item._id});
+                let total = parseFloat(cart.total) + (parseFloat(item.price) * body.order.quantity); //update the price 
+                body.order.total = (parseFloat(item.price) * body.order.quantity);
                 cart = await Cart.findOneAndUpdate({cid: query.cid, rid: body.rid}, {$set: {total: total}, $push: {items: body.order}}, {new: true})          
                 return cart;
             }
         }
         else { //cart is empty
-            let total = parseFloat(cart.total) + body.order.total; //update the price
+            let item = await Item.findOne({_id: body.order.item._id});
+            let total = parseFloat(cart.total) + (parseFloat(item.price) * body.order.quantity); //update the price 
+            body.order.total = (parseFloat(item.price) * body.order.quantity);
             let newcart = await Cart.findOneAndUpdate({cid: query.cid}, 
                 {$set: {total: total, rid: body.rid}, $push: {items: body.order}}, {new: true})
             return newcart;
@@ -75,6 +80,7 @@ export const editCartRepo = async(query, body) => {
             if (existingItem) { //update quantity and price
                 let saved;
                 if (body.quantity < 1) { //remove item if quantity is 0
+                    console.log(existingItem)
                     cart.total = (parseFloat(cart.total) - existingItem.total);
                     saved = await Cart.findOneAndUpdate(query, {$set: {total: cart.total}, $pull: {items: { item: body._id }}}, {new: true})
                 }
