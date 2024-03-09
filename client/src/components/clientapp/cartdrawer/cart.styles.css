@@ -1,0 +1,10 @@
+.drawer-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .bottom {
+    margin-top: auto; /* Push the button to the bottom */
+  }
