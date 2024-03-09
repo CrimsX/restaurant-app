@@ -5,7 +5,10 @@ const getPrice = (num) => {
 }
 
 const setPrice = (num) => {
-    return (num * 100).toFixed(0);
+    if (!Number.isInteger(num)) 
+        return (num * 100).toFixed(0);
+    else 
+        return num;
 }
 
 const getSchedule = (num) => { 
@@ -18,6 +21,9 @@ const getSchedule = (num) => {
 }
 
 const getStatus = (num) => {
+    if (num < 0) {
+        return "Cart"
+    }
     switch(num) {
         case 1:
             return "In-progress";
@@ -30,31 +36,28 @@ const getStatus = (num) => {
     }
 }
 
-const OrderItemSchema = new Schema(
+//may change the item to use object id instead
+const OrderItemSchema = new mongoose.Schema(
     {
-        item: {type: Schema.Types.ObjectId, ref: "Item"},
-        quantity: {type: Number,  required: true },
-        total: {type: Number,  get: getPrice} 
+        item: {type: Schema.Types.ObjectId, ref: 'Item'},
+        quantity: { type: Number, required: true },
+        total: { type: Number,  get: getPrice, set: setPrice, required: true} 
     }
 )
 
-const OrderSchema = new Schema(
+const OrderSchema = new mongoose.Schema( 
     {
-        order_id: {type: Number, required: true},
+        order_id: {type: Number},
         items: [{type: OrderItemSchema}],
         customer: {type: Schema.Types.ObjectId, ref: 'Customer'},
         restaurant: {type: Schema.Types.ObjectId, ref: 'Restaurant'},
         cid: {type: Number, required: true},
-        rid: {type: Number, required: true},
-        total:  {type: Number,  get: getPrice},
-        status: {type: Number, get: getStatus, default: 0},
-        schedule: {type: Number, get: getSchedule, default: -1},
+        rid: {type: Number, default: -1},
+        total: {type: Number,  get: getPrice, set: setPrice},
+        status: {type: Number, get: getStatus, default: -1},
+        schedule: {type: Number, get: getSchedule},
         pickup: {type: Date},
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        }
-
+        orderAt: {type: Date}
     }
 )
 

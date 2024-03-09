@@ -5,8 +5,9 @@ export const getCustomer = async(req, res) => {
     try {
         const customer = await getCustomerRepo({cid: cid})
         return res.status(200).json({ 
-            status: 200, 
-            data: customer
+            status: 200,
+            success: customer[0], 
+            data: customer[1]
         });
     } catch (e) {
         return res.status(400).json({
