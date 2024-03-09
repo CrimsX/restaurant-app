@@ -1,10 +1,18 @@
-import Cart from "../models/cart.model.js";
+import Order from "../models/order.model.js";
 import Item from "../models/item.model.js";
+import Customer from "../models/customer.model.js";
 
 export const getCartRepo = async(query) => {
     try {
-        let cart = await Cart.findOne(query).populate("items.item");
-        return cart;
+        let exist = await Customer.exists({cid: query.cid});
+        if (!exist) {
+            return [false, "Customer don't exist"]
+        }
+        let cart = await Order.findOne({cid: query.cid, status: {$lt: 0}}).populate("items.item");
+        if (cart === null) {
+            return [true, "Cart is Empty"];
+        }
+        return [true, cart];
     } catch (e) {
         throw Error ("Error while getting cart")
     }
@@ -15,12 +23,16 @@ export const getCartRepo = async(query) => {
  */
 export const createCartRepo = async(body) => {
     try {
-        let cart = await Cart.findOne(body);
+        let exist = await Customer.exists({cid: query.cid});
+        if (!exist) {
+            return [false, "Customer don't exist"]
+        }
+        let cart = await Order.findOne(body);
         if (cart === null) { //create new cart if none exist
             body.total = 0;
-            cart = await new Cart(body); //create new cart with the item
+            cart = await new Order(body); //create new cart with the item
             let saved = await cart.save();
-            return saved;
+            return [true, saved];
         } else {
             return cart;
         }
@@ -31,37 +43,41 @@ export const createCartRepo = async(body) => {
 
 export const addItemToCartRepo = async(query, body) => {
     try {
-        let cart = await Cart.findOne(query).populate('items.item');
+        let exist = await Customer.exists({cid: query.cid});
+        if (!exist) {
+            return [false, "Customer don't exist"]
+        }
+        let cart = await Order.findOne({cid: query.cid, status: {$lt: 0}}).populate('items.item');
         if (!cart) { //create new cart if none exist
             query.total = 0;
-            cart = await new Cart(query).save();
+            cart = await new Order(query).save();
         }
         if (cart.items.length > 0 && cart.rid > -1) { //cart is not empty
             if (cart.rid != body.rid){ //check if the add item is from the same restaurant
-                return ("Item is not from the same restaurant");
+                return [false, "Item is not from the same restaurant"];
             }
             const existingItem = cart.items.find(item => String(item.item._id) === String(body.order.item._id));
             if (existingItem) { //update qunatity and price if item already in cart
                 existingItem.quantity = existingItem.quantity + body.order.quantity; //update quantity
                 existingItem.total = (parseFloat(existingItem.total) + (parseFloat(existingItem.item.price) * body.order.quantity)).toFixed(2); //update the price of the existing item
                 cart.total = (parseFloat(cart.total) + (parseFloat(existingItem.item.price) * body.order.quantity)); //update the total price of cart
-                let saved = await Cart.findOneAndUpdate(query, cart, {new: true});
-                return saved;
+                let saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, cart, {new: true});
+                return [true, saved];
             } else { //add new item
                 let item = await Item.findOne({_id: body.order.item._id});
                 let total = parseFloat(cart.total) + (parseFloat(item.price) * body.order.quantity); //update the price 
                 body.order.total = (parseFloat(item.price) * body.order.quantity);
-                cart = await Cart.findOneAndUpdate({cid: query.cid, rid: body.rid}, {$set: {total: total}, $push: {items: body.order}}, {new: true})          
-                return cart;
+                cart = await Order.findOneAndUpdate({cid: query.cid, rid: body.rid, status: {$lt: 0}}, {$set: {total: total}, $push: {items: body.order}}, {new: true})          
+                return [true, cart];
             }
         }
         else { //cart is empty
             let item = await Item.findOne({_id: body.order.item._id});
             let total = parseFloat(cart.total) + (parseFloat(item.price) * body.order.quantity); //update the price 
             body.order.total = (parseFloat(item.price) * body.order.quantity);
-            let newcart = await Cart.findOneAndUpdate({cid: query.cid}, 
+            let newcart = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, 
                 {$set: {total: total, rid: body.rid}, $push: {items: body.order}}, {new: true})
-            return newcart;
+            return [true, newcart];
         }
     } catch (e) {
         throw Error ("Error while adding item to cart");
@@ -71,50 +87,63 @@ export const addItemToCartRepo = async(query, body) => {
 //edit the user shopping cart
 export const editCartRepo = async(query, body) => {
     try {
-        let cart = await Cart.findOne(query).populate('items.item');
+        let exist = await Customer.exists({cid: query.cid});
+        if (!exist) {
+            return [false, "Customer don't exist"]
+        }
+        let cart = await Order.findOne({cid: query.cid, status: {$lt: 0}}).populate('items.item');
         if (!cart) { //create new cart if none exist
-            return "Cart is empty"
+            return [false, "Cart is empty"]
         }
         if (cart.items.length > 0 && cart.rid > -1) { //cart is not empty
             const existingItem = cart.items.find(item => String(item.item._id) === String(body._id));
             if (existingItem) { //update quantity and price
                 let saved;
                 if (body.quantity < 1) { //remove item if quantity is 0
-                    console.log(existingItem)
                     cart.total = (parseFloat(cart.total) - existingItem.total);
-                    saved = await Cart.findOneAndUpdate(query, {$set: {total: cart.total}, $pull: {items: { item: body._id }}}, {new: true})
+                    if (cart.total <= 0) {
+                        cart.rid = -1;
+                    }
+                    saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, {$set: {total: cart.total, rid: cart.rid}, $pull: {items: { item: body._id }}}, {new: true})
                 }
                 else { //update item quantity
                     existingItem.quantity = body.quantity; //update quantity
                     cart.total = (parseFloat(cart.total) - existingItem.total); //substract the previous total price for the item
                     existingItem.total = (parseFloat(existingItem.item.price) * body.quantity); //update the price of the existing item
                     cart.total = ((parseFloat(cart.total) +parseFloat(existingItem.total))); //update price
-                    saved = await Cart.findOneAndUpdate(query, cart, {new: true});
+                    saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, cart, {new: true});
                 }
-                return saved;
+                return [true, saved];
             } else { 
-                return "Item does not exist"
+                return [false, "Item does not exist"];
             }
         }
     } catch (e) {
-        throw Error ("Error while updating shopping cart")
+        throw Error ("Error while updating cart detail")
     }
 
 }
 
 export const removeItemRepo = async(query, body) => {
-        let cart = await Cart.findOne(query).populate('items.item');
+    try {
+        let cart = await Order.findOne({cid: query.cid, status: {$lt: 0}}).populate('items.item');
         if (!cart) { //create new cart if none exist
-            return "Cart is empty";
+            return [false, "Cart is empty"];
         }
         const existingItem = cart.items.find(item => String(item.item._id) === String(body._id));
         if (existingItem) { //update quantity and price
             cart.total = (parseFloat(cart.total) - existingItem.total); //update price 
+            if (cart.total <= 0) {
+                cart.rid = -1;
+            }
             //remove item
-            let saved = await Cart.findOneAndUpdate(query, {$set: {total: cart.total}, $pull: {items: { item: body._id }}}, {new: true});
-            return saved;
+            let saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, {$set: {total: cart.total, rid: cart.rid}, $pull: {items: { item: body._id }}}, {new: true});
+            return [true, saved];
         } 
-        return ("Can't find item in cart");
+        return [false, "Can't find item in cart"];
+    } catch (e) {
+        throw Error ("Error while reseting cart");
+    }
 
 
 }
@@ -122,13 +151,18 @@ export const removeItemRepo = async(query, body) => {
 //reset user cart by deleting and making new cart
 export const resetCartRepo = async(query) => {
     try {
-        let removed = await Cart.deleteOne(query); //delete cart
+        let exist = await Customer.exists({cid: query.cid});
+        if (!exist) {
+            return [false, "Customer don't exist"]
+        }
+        let removed = await Order.deleteOne({cid: query.cid, status: {$lt: 0}}); //delete cart
         query.total = 0;
-        let newcart = await new Cart(query).save();
-        return newcart;
+        let newcart = await new Order(query).save();
+        return [true, newcart];
     } catch (e) {
         throw Error ("Error while reseting cart");
     }
-
 }
+
+
 

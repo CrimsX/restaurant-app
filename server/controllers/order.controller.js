@@ -1,16 +1,18 @@
-import { createOrderRepo, getOrdersRepo, getSpecOrdeRepo, setOrderStatusRepo } from "../repositories/order.repository.js";
+import { createOrderRepo, getOrdersRepo, getOrdersRepo2, getSpecOrdeRepo, setOrderStatusRepo } from "../repositories/order.repository.js";
 
 export const createOrder = async(req, res) => {
-    const { cid } = req.body;
+    const { cid } = req.params;
     try {
-        const order = await createOrderRepo({cid: cid});
+        const order = await createOrderRepo({cid: cid}, req.body);
         return res.status(200).json({ 
             status: 200, 
-            data: order
+            success: order[0],
+            data: order[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -22,11 +24,13 @@ export const getOrdersCustomer = async(req, res) => {
         const orders = await getOrdersRepo({cid: cid});
         return res.status(200).json({ 
             status: 200, 
-            data: orders
+            success: orders[0],
+            data: orders[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -35,14 +39,16 @@ export const getOrdersCustomer = async(req, res) => {
 export const getOrdersRes = async(req, res) => {
     const { rid } = req.params;
     try {
-        const orders = await getOrdersRepo({rid: rid});
+        const orders = await getOrdersRepo2({rid: rid});
         return res.status(200).json({ 
             status: 200, 
-            data: orders
+            success: orders[0],
+            data: orders[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -60,6 +66,7 @@ export const getSpecOrderCustomer = async(req, res) => {
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -68,14 +75,16 @@ export const getSpecOrderCustomer = async(req, res) => {
 export const setOrderStatus = async(req, res) => {
     const { rid } = req.params;
     try {
-        const orders = await setOrderStatusRepo(rid, req.body);
+        const order = await setOrderStatusRepo(rid, req.body);
         return res.status(200).json({ 
             status: 200, 
-            data: orders
+            success: order[0],
+            data: order[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }

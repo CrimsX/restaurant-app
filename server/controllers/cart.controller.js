@@ -5,12 +5,14 @@ export const getCart = async(req, res) => {
     try {
         const cart = await getCartRepo({cid: cid})
         return res.status(200).json({ 
-            status: 200, 
-            data: cart
+            status: 200,
+            success: cart[0], 
+            data: cart[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -21,11 +23,13 @@ export const createCart = async(req, res) => {
         const cart = await createCartRepo(req.body);
         return res.status(200).json({ 
             status: 200, 
-            data: cart
+            success: cart[0],
+            data: cart[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -36,12 +40,14 @@ export const addToCart = async(req, res) => {
     try {
         const cart = await addItemToCartRepo({cid: cid}, req.body);
         return res.status(200).json({ 
-            status: 200, 
-            data: cart
+            status: 200,
+            success: cart[0], 
+            data: cart[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -53,11 +59,13 @@ export const resetCart = async(req, res) => {
         const cart = await resetCartRepo({cid: cid});
         return res.status(200).json({ 
             status: 200, 
-            data: cart
+            success: cart[0], 
+            data: cart[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -69,11 +77,13 @@ export const editCart = async(req, res) => {
         const cart = await editCartRepo({cid: cid}, req.body);
         return res.status(200).json({ 
             status: 200, 
-            data: cart
+            success: cart[0], 
+            data: cart[1]
         });
     } catch (e) {
         return res.status(400).json({
             status: 400, 
+            success: false,
             message: e.message
         });
     }
@@ -85,11 +95,13 @@ export const removeFromCart= async(req, res) => {
         const cart = await removeItemRepo({cid: cid}, req.body);
         return res.status(200).json({ 
             status: 200, 
-            data: cart
+            success: cart[0], 
+            data: cart[1]
         });
     } catch (e) {
         return res.status(400).json({
-            status: 400, 
+            status: 400,
+            success: false, 
             message: e.message
         });
     }
