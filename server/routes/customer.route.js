@@ -1,7 +1,7 @@
 import express from "express";
 import { getCustomer } from "../controllers/customer.controller.js";
 import { getCart, addToCart, resetCart, editCart, removeFromCart } from "../controllers/cart.controller.js";
-import { createOrder, getOrdersCustomer } from "../controllers/order.controller.js";
+import { createOrder, getOrdersCustomer, getOrdersHistoryC } from "../controllers/order.controller.js";
 const customerRouter = express.Router();
 
 customerRouter.get("/:cid", getCustomer);
@@ -15,6 +15,7 @@ customerRouter.patch("/cart/remove/:cid", removeFromCart); //remove an item from
 
 //orders information
 customerRouter.patch("/order/:cid", createOrder); //create order from cart
-customerRouter.get("/orders/:cid", getOrdersCustomer)
+customerRouter.get("/orders/:cid", getOrdersCustomer);
+customerRouter.get("orders/history/:cid", getOrdersHistoryC);
 
 export default customerRouter; 

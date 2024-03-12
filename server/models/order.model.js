@@ -20,6 +20,10 @@ const getSchedule = (num) => {
     }
 }
 
+const getTime = (date) => {
+    return date.toLocaleString();
+}
+
 const getStatus = (num) => {
     if (num < 0) {
         return "Cart"
@@ -56,8 +60,8 @@ const OrderSchema = new mongoose.Schema(
         total: {type: Number,  get: getPrice, set: setPrice},
         status: {type: Number, get: getStatus, default: -1},
         schedule: {type: Number, get: getSchedule},
-        pickup: {type: Date},
-        orderAt: {type: Date}
+        pickup: {type: Date, get: getTime},
+        orderAt: {type: Date, get: getTime}
     }
 )
 

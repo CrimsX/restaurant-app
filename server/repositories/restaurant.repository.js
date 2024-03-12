@@ -1,6 +1,7 @@
 import Restaurant from "../models/restaurant.model.js";
 import Employee from "../models/employee.model.js";
 import Item from "../models/item.model.js";
+import Order from "../models/order.model.js";
 
 export const addRestaurantToRepo = async(body) => {
     const maxID = await Restaurant.find().sort({"rid": -1}).limit(1);
@@ -36,13 +37,27 @@ export const getMenuRepo = async(query) => {
     }
 }
 
+//remove item using object id of menu item
+export const removeItemRepo = async(query, body) => {
+    try {
+        const item = await Item.findOneAndDelete({rid: query.rid, _id: body._id});
+        if (item === null) {
+            return [false, "Cannot find item"]
+        }
+        const restaurant = await Restaurant.findOneAndUpdate({rid: query.rid}, {$pull: {menu: item._id}}, {new: true}).populate("menu");
+        return [true, restaurant.menu];
+    } catch (e) {
+        throw Error ("Error while retrieving deleting menu item")
+    }
+}
+
 export const addItemRepo = async(query, body) => {
     try {
         const newItem = new Item(body);
         newItem.rid = query.rid;
         const saved = await newItem.save();
-        const restaurant = await Restaurant.findOneAndUpdate({rid: query.rid}, {$push: {menu: saved._id}}, {new: true});
-        return restaurant;
+        const restaurant = await Restaurant.findOneAndUpdate({rid: query.rid}, {$push: {menu: saved._id}}, {new: true}).populate("menu");
+        return [true, restaurant.menu];
     }  catch (e) {
         throw Error ("Error while adding new item")
     }
@@ -64,7 +79,6 @@ export const setItemStatusRepo = async(query, body) => {
     } catch (e) {
         throw Error ("Error while changing item avaibility")
     }
-
 }
 
 export const addEmployeeRepo = async(query, body) => {
@@ -83,5 +97,4 @@ export const addEmployeeRepo = async(query, body) => {
     } catch (e) {
         throw Error ("Error while adding creating worker's profile")
     }
-    
 }
