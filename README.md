@@ -1,11 +1,18 @@
-Client Interface Objectives:
-● Menu Browsing: Ability to view detailed menus from different restaurants.
-○ Dynamic updates of menu items based on ‘sold-out’ status.
-● Order Placement: Functionality for placing orders with specific menu items.
-○ Available food items will have a related image depicting it (For example, a
-restaurant that has available french fries will have a picture of french fries)
-● Order History and Tracking: Customers can view their past orders and track current
-orders.
-○ See the order status requirement above.
-○ See the pickup time requirement above.
-● Search and Filter: Search for restaurant name or specific dish name.
+Restaurant Manager Interface Objectives:
+
+- Menu Management: Add, update, or remove menu items.
+  - The ability to mark specific items as ‘sold-out’ and it will not appear on the
+    customer ordering page.
+  
+- Order Processing:
+  - View and manage incoming orders and their statuses.
+    - See the order status requirement above.
+    - See the pickup time requirement above.
+      
+- Analytics Dashboard:
+  - View insights on sales, popular items and busiest pickup time by
+    hour.
+  
+- Custom Feature:
+  - Develop a unique feature that enhances the restaurant pickup
+    experience. (this function is up to your group to create)
