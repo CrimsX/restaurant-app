@@ -1,8 +1,9 @@
 Restaurant Manager Interface Objectives:
 
-- Menu Management: Add, update, or remove menu items.
-  - The ability to mark specific items as ‘sold-out’ and it will not appear on the
-    customer ordering page.
+- Menu Management:
+  - Add, update, or remove menu items.
+    - The ability to mark specific items as ‘sold-out’ and it will not appear on the
+      customer ordering page.
   
 - Order Processing:
   - View and manage incoming orders and their statuses.
