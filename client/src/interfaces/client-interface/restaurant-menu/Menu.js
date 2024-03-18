@@ -48,8 +48,7 @@ function Menu() {
 
   const addToCart = (data) => {
     if (cartItems.some(item => item.name === data.name)) {
-      updateQty(data);
-      setCartItems(cartItems);
+      return
     } else {
       cartItems.push(data);
       setCartItems(cartItems);
@@ -71,15 +70,6 @@ function Menu() {
       setShowAddedToCartMsg(false);
     }, 3000);
     setTimerId(newTimerId);
-  }
-
-  const updateQty = (data) => {
-    for (var item of cartItems) {
-      if (data.name === item.name) {
-        item.qty = data.qty;
-        return;
-      }
-    }
   }
 
   const removeFromCart = (item) => {

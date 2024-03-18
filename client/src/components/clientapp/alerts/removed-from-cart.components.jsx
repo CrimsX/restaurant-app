@@ -2,7 +2,6 @@ import Alert from 'react-bootstrap/Alert';
 import './removed-from-cart.styles.css'
 
 export const removedFromCartMsg = (item) => {
-    console.log(item);
   return (
 
         <Alert className='center' key='success' variant={'success'}>
