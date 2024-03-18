@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 /*
   Hold all actions for restaurant related methods
@@ -6,50 +6,50 @@ import axios from 'axios';
 */
 const connection = "http://localhost:8000";
 
-export const getRestaurant = async(rid) => {
+export const getRestaurant = async (rid) => {
   try {
     const url = connection + `/restaurant/${rid}`;
-    const { data } = await axios.get(url)
+    const { data } = await axios.get(url);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching restaurant info:", error);
     throw error;
   }
-}
+};
 
 //--------------------------------Menu Item Manipulation------------------------------
 
 /**
  * Get all menu item for the restaurant (for restaurant side)
- * @param {*} rid 
- * @returns 
+ * @param {*} rid
+ * @returns
  */
-const getMenu = async(rid) => {
+export const getMenu = async (rid) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
-    const { data } = await axios.get(url)
+    const { data } = await axios.get(url);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching restaurant info:", error);
     throw error;
   }
-}
+};
 
 /**
  * Get all menu item for a restaurant, item that are not available will not be shown
- * @param {*} rid 
- * @returns 
+ * @param {*} rid
+ * @returns
  */
-const getMenuCustomer = async(rid) => {
+const getMenuCustomer = async (rid) => {
   try {
     const url = connection + `/restaurant/menu/customer/${rid}`;
-    const { data } = await axios.get(url)
+    const { data } = await axios.get(url);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching restaurant info:", error);
     throw error;
   }
-}
+};
 
 /**
  * Add item to restaurant menu
@@ -62,16 +62,16 @@ const getMenuCustomer = async(rid) => {
  *  wid: id of the worker authorizing
  * }
  */
-export const addItem = async(rid, item) => {
+export const addItem = async (rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
-    const { data } = await axios.post(url, item)
+    const { data } = await axios.post(url, item);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching restaurant info:", error);
     throw error;
   }
-}
+};
 
 /**
  * Update existing item in menu using object id
@@ -85,16 +85,16 @@ export const addItem = async(rid, item) => {
  *  status: 0 or 1 (change the item availability status, optional if only wish to change the price)
  * }
  */
-export const updateItem = async(rid, item) => {
+export const updateItem = async (rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
-    const { data } = await axios.patch(url, item)
+    const { data } = await axios.patch(url, item);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching restaurant info:", error);
     throw error;
   }
-}
+};
 
 /**
  * remove item from restaurant using the item object id
@@ -103,15 +103,15 @@ export const updateItem = async(rid, item) => {
  * {
  *  _id: string
  * }
- * @returns 
+ * @returns
  */
-export const removeItem = async(rid, item) => {
+export const removeItem = async (rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
-    const { data } = await axios.delete(url, item)
+    const { data } = await axios.delete(url, item);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching restaurant info:", error);
     throw error;
   }
-}
+};

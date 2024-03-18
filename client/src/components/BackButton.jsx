@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 
-const BackButton = ({ destination = "/" }) => {
+const BackButton = ({
+  destination = "http://localhost:3000/RestaurantInterface/home",
+}) => {
   return (
     <div className="flex">
       <Link
