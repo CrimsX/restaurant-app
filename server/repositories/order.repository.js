@@ -6,7 +6,7 @@ export const createOrderRepo = async(query, body) => {
         try {
         //this version will retrieve the user cart first using the cid
                 let cart = await Order.findOne({cid: query.cid, status: -1}).populate("items.item");
-                if (cart === null || cart.items.length < 0) {
+                if (cart === null || cart.items.length < 1) {
                         return [false, "Empty cart"];
                 }
                 let customer = await Customer.findOne({cid: cart.cid}).select("_id");
@@ -92,11 +92,13 @@ export const getSpecOrdeRepo = async(query, body) => {
 //Body will contain the month and year
 export const getOrdersHistoryRepo = async(query, body) => {
         try {
+            if (body.month > 12) {
+                return [false, "Invalid Month"];
+            } 
             const year = new Date().getFullYear();
             const startdate = new Date(year, body.month - 1, 1);
             const enddate = new Date(year, body.month, 0);
-            console.log(startdate, enddate);
-            const record = await Order.find({rid: query.rid, status: {$gt: 2}, orderAt: {$gte: startdate, $lte: enddate}});
+            const record = await Order.find({rid: query.rid, status: 3, orderAt: {$gte: startdate, $lte: enddate}});
             return [true, record];
         } catch (e) {
             throw Error ("Error while retrieving sales history");
@@ -106,11 +108,13 @@ export const getOrdersHistoryRepo = async(query, body) => {
 //For customer
 export const getOrdersHistoryRepoC = async(query, body) => {
         try {
+            if (body.month > 12) {
+                return [false, "Invalid Month"];
+            }    
             const year = new Date().getFullYear();
             const startdate = new Date(year, body.month - 1, 1);
             const enddate = new Date(year, body.month, 0);
-            console.log(startdate, enddate);
-            const record = await Order.find({cid: query.cid, status: {$gt: 2}, orderAt: {$gte: startdate, $lte: enddate}});
+            const record = await Order.find({cid: query.cid, status: 3, orderAt: {$gte: startdate, $lte: enddate}});
             return [true, record];
         } catch (e) {
             throw Error ("Error while retrieving sales history");

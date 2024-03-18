@@ -265,9 +265,11 @@ const addWorker = async() => {
 }
 
 const test = async() => {
-    let p = await getTotalProfitRepo({rid: 3});
-    let info = await getTotalPopularItemsRepo({rid: 3});
-    console.log(p);
+    //let p = await getTotalProfitRepo({rid: 3});
+    //let info = await getTotalPopularItemsRepo({rid: 3});
+    const connection = "http://localhost:8000";
+    const sid = 1;
+    console.log(connection + `/customer/${sid}`);
 }
 
 //insertCustomer();

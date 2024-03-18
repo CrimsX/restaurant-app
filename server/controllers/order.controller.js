@@ -116,7 +116,7 @@ export const getOrdersHistory = async(req, res) => {
 export const getOrdersHistoryC = async(req, res) => {
     const { cid } = req.params
     try {
-        const record = await getOrdersHistoryRepo({cid: cid}, req.body)
+        const record = await getOrdersHistoryRepoC({cid: cid}, req.body)
         return res.status(200).json({ 
             status: 200, 
             success: record[0],
