@@ -33,10 +33,10 @@ function App() {
 
       {/* Restaurant Manager Interface */}
       <Route path="/RestaurantInterface/home" element={<ManagerHome />} />
-      <Route path="/RestaurantInterface/create" element={<CreateItem />} />
-      <Route path="/RestaurantInterface/details/:id" element={<ShowItems />} />
-      <Route path="/RestaurantInterface/edit/:id" element={<EditItem />} />
-      <Route path="/RestaurantInterface/delete/:id" element={<DeleteItem />} />
+      <Route path="/items/create" element={<CreateItem />} />
+      <Route path="/items/details/:id" element={<ShowItems />} />
+      <Route path="/items/edit/:id" element={<EditItem />} />
+      <Route path="/items/delete/:id" element={<DeleteItem />} />
     </Routes>
   );
 }

@@ -36,20 +36,20 @@ const ManagerHome = () => {
         <Spinner />
       ) : (
         <table className="w-full border-seperate border-spacing-2">
-          <thread>
-            <tr>
-              <th className="border border-slate-600 rounded-md">ID</th>
+          <thead>
+            <tr className="text-center">
+              <th className="border border-slate-600 rounded-md">Item ID</th>
               <th className="border border-slate-600 rounded-md">Food Item</th>
-              <th className="border border-slate-600 rounded-md max-md:hidden">
+              <th className="border border-slate-600 rounded-md">
                 Availability
               </th>
-
-              <th className="border border-slate-600 rounded-md max-md:hidden">
-                Category
+              <th className="border border-slate-600 rounded-md">
+                Restaurant Branch
               </th>
               <th className="border border-slate-600 rounded-md">Price</th>
+              <th className="border border-slate-600 rounded-md">Actions</th>
             </tr>
-          </thread>
+          </thead>
           <tbody>
             {items.map((item, index) => (
               <tr key={item._id} className="h-8">
@@ -59,13 +59,20 @@ const ManagerHome = () => {
                 <td className="border border-slate-700 rounded-md text-center">
                   {item.name}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center max-md:hidden">
-                  {item.available}
+                <td className="border border-slate-700 rounded-md text-center">
+                  {/* {item.available} */}
+                  Available
                 </td>
-                <td className="border border-slate-700 rounded-md text-center max-md:hidden">
-                  {item.category}
+                <td className="border border-slate-700 rounded-md text-center">
+                  {item.category === 1
+                    ? "Deliscio"
+                    : item.category === 2
+                    ? "Restaurant 2"
+                    : item.category === 3
+                    ? "Restaurant 3"
+                    : "Unknown Category"}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center max-md:hidden">
+                <td className="border border-slate-700 rounded-md text-center">
                   ${item.price / 100}
                 </td>
                 <td className="border border-slate-700 rounded-md text-center">
@@ -77,7 +84,7 @@ const ManagerHome = () => {
                       <AiOutlineEdit className="text-2xl text-yellow-600" />
                     </Link>
                     <Link to={`/items/delete/${item._id}`}>
-                      <MdOutlineAddBox className="text-2xl text-red-600" />
+                      <MdOutlineDelete className="text-2xl text-red-600" />
                     </Link>
                   </div>
                 </td>
