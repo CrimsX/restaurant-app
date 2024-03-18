@@ -9,18 +9,19 @@ import Item from "./models/item.model.js"; //some schema error issue that need t
 const app = express();
 const port = 8000;
 
+// Middleware
 app.use(cors());
 dbConnection();
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res, next) => {
-    res.status(200).json({ message: "server is running" });
+  res.status(200).json({ message: "server is running" });
 });
 
 app.use("/customer", customerRouter);
 app.use("/restaurant", restaurantRouter);
 
 app.listen(port, function () {
-	console.log(`Server is listening on port ${port}!`); 
+  console.log(`Server is listening on port ${port}!`);
 });
