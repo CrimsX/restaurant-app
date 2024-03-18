@@ -1,14 +1,7 @@
 import dbConnection from "./database/database.js";
-import Item from "./models/item.model.js";
-import {
-  addCustomerToRepo,
-  getCustomerRepo,
-} from "./repositories/customer.repository.js";
-import {
-  addRestaurantToRepo,
-  addItemRepo,
-  addEmployeeRepo,
-} from "./repositories/restaurant.repository.js";
+import { addCustomerToRepo, getCustomerRepo } from "./repositories/customer.repository.js";
+import { addRestaurantToRepo, addItemRepo, addEmployeeRepo } from "./repositories/restaurant.repository.js";
+import { getTotalProfitRepo, getTotalPopularItemsRepo } from "./repositories/analytic.repository.js";
 
 dbConnection();
 const customer = [
@@ -276,6 +269,12 @@ const addWorker = async () => {
     await addEmployeeRepo({ rid: 3 }, item);
   }
 };
+
+const test = async() => {
+    let p = await getTotalProfitRepo({rid: 3});
+    let info = await getTotalPopularItemsRepo({rid: 3});
+    console.log(p);
+}
 
 //insertCustomer();
 //insertRestaurant();

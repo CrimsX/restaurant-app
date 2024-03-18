@@ -1,4 +1,5 @@
-import { createOrderRepo, getOrdersRepo, getOrdersRepo2, getSpecOrdeRepo, setOrderStatusRepo } from "../repositories/order.repository.js";
+import { createOrderRepo, getOrdersRepo, getOrdersRepo2, getSpecOrdeRepo, setOrderStatusRepo, 
+    getOrdersHistoryRepo, getOrdersHistoryRepoC } from "../repositories/order.repository.js";
 
 export const createOrder = async(req, res) => {
     const { cid } = req.params;
@@ -18,6 +19,26 @@ export const createOrder = async(req, res) => {
     }
 }
 
+//set order status and pick up time
+export const setOrderStatus = async(req, res) => {
+    const { rid } = req.params;
+    try {
+        const order = await setOrderStatusRepo(rid, req.body);
+        return res.status(200).json({ 
+            status: 200, 
+            success: order[0],
+            data: order[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400, 
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+//--------------------------------------------------Get All Orders for a customer or restaurant------------------------------
 export const getOrdersCustomer = async(req, res) => {
     const { cid } = req.params;
     try {
@@ -53,6 +74,7 @@ export const getOrdersRes = async(req, res) => {
         });
     }
 }
+//---------------------------------------------------------------------------------------------------------------------------
 
 export const getSpecOrderCustomer = async(req, res) => {
     const { cid } = req.params;
@@ -72,20 +94,40 @@ export const getSpecOrderCustomer = async(req, res) => {
     }
 }
 
-export const setOrderStatus = async(req, res) => {
-    const { rid } = req.params;
+//----------------------------------------------------------Get Orders History within a selected month----------------------------------------
+export const getOrdersHistory = async(req, res) => {
+    const { rid } = req.params
     try {
-        const order = await setOrderStatusRepo(rid, req.body);
+        const record = await getOrdersHistoryRepo({rid: rid}, req.body)
         return res.status(200).json({ 
             status: 200, 
-            success: order[0],
-            data: order[1]
+            success: record[0],
+            data: record[1]
         });
     } catch (e) {
         return res.status(400).json({
-            status: 400, 
+            status: 400,
             success: false,
             message: e.message
         });
     }
 }
+
+export const getOrdersHistoryC = async(req, res) => {
+    const { cid } = req.params
+    try {
+        const record = await getOrdersHistoryRepo({cid: cid}, req.body)
+        return res.status(200).json({ 
+            status: 200, 
+            success: record[0],
+            data: record[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400,
+            success: false,
+            message: e.message
+        });
+    }
+}
+//-------------------------------------------------------------------------------------------------------------------------------------------

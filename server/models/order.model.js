@@ -20,6 +20,10 @@ const getSchedule = (num) => {
     }
 }
 
+const getTime = (date) => {
+    return date.toLocaleString();
+}
+
 const getStatus = (num) => {
     if (num < 0) {
         return "Cart"
