@@ -11,11 +11,11 @@ customerRouter.get("/cart/:cid", getCart);
 customerRouter.delete("/cart/:cid", resetCart); //reset cart
 customerRouter.patch("/cart/add/:cid", addToCart); //add item to cart
 customerRouter.patch("/cart/edit/:cid", editCart); //edit item quantity from cart
-customerRouter.patch("/cart/remove/:cid", removeFromCart); //remove an item from cart
+customerRouter.delete("/cart/remove/:cid", removeFromCart); //remove an item from cart
 
 //orders information
-customerRouter.patch("/order/:cid", createOrder); //create order from cart
+customerRouter.patch("/orders/:cid", createOrder); //create order from cart
 customerRouter.get("/orders/:cid", getOrdersCustomer);
-customerRouter.get("orders/history/:cid", getOrdersHistoryC);
+customerRouter.get("/orders/history/:cid", getOrdersHistoryC);
 
 export default customerRouter; 
