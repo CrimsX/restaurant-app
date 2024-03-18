@@ -10,16 +10,29 @@ export const Cart = ({cartItems, removeFromCart}) => {
     const [showRemovedFromCartMsg, setShowRemovedFromCartMsg] = useState(false);
     const [removedItem, setRemovedItem] = useState('');
     const [timerId, setTimerId] = useState(null);
+    const [quantities, setQuantities] = useState({});
 
     const calcPrice = (price, qty) =>{
+        if (isNaN(parseFloat(qty))){
+            qty = 1;
+        }
         const total = parseFloat(price) * parseFloat(qty);
         return total.toFixed(2);
+    }
+
+    const handleQuantityChange = (event, itemName) => {
+        const { value } = event.target;
+        setQuantities(prevQuantities => ({
+            ...prevQuantities,
+            [itemName]: value
+        }));
     }
 
     const removeItem = (item) => {
         setRemovedItem(item);
         removeFromCart(item);
         setShowRemovedFromCartMsg(true);
+        delete quantities[item.name];
         if (timerId) {
             clearTimeout(timerId);
           }
@@ -53,8 +66,8 @@ export const Cart = ({cartItems, removeFromCart}) => {
                         <thead className="center-text">
                             <tr>
                                 <th scope="col">Item</th>
-                                <th scope="col">Quantity</th>
                                 <th scope="col">Price</th>
+                                <th scope="col">Qty</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -63,8 +76,17 @@ export const Cart = ({cartItems, removeFromCart}) => {
                             .map(item => (
                                     <tr key={item.name}>
                                         <td>{item.name}</td>
-                                        <td>{item.qty}</td>
-                                        <td>{'$' + calcPrice(item.price, item.qty)}</td>
+                                        <td>{'$' + calcPrice(item.price, quantities[item.name])}</td>
+                                        <td>
+                                        <select
+                                        value={quantities[item.name] || 1}
+                                        onChange={(event) => handleQuantityChange(event, item.name)}
+                                        >
+                                            {[...Array(99).keys()].map(num => (
+                                            <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                            ))}
+                                        </select>
+                                        </td>
                                         <td>
                                             <button onClick={() => removeItem(item)}>
                                                 Remove

@@ -5,7 +5,7 @@ export const addedToCartMsg = (item) => {
   return (
 
         <Alert key='success' variant={'success'}>
-          Added {item.qty} {item.name} to cart!
+          Added {item.name} to cart!
         </Alert>
   );
 }
