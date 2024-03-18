@@ -25,7 +25,7 @@ export const MenuItems = ({ menu, addToCart, cartItems}) => {
     }
 
     return (
-        <table className="table table-dark">
+        <table className="table">
         <thead className="center-text">
             <tr>
                 <th scope="col">Item</th>

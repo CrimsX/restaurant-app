@@ -3,10 +3,15 @@ import './Menu.css'
 import { MenuItems } from '../../../components/clientapp/menu/menu.components'
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
+import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components'
 
 function Menu() {
   let { data } = useParams();
   const [cartItems, setCartItems] = useState([])
+  const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
+  const [addedItem, setAddedItem] = useState('');
+  const [timerId, setTimerId] = useState(null);
+
   const test = {
     "name": "McDonald's",
     "rid": 1,
@@ -34,7 +39,7 @@ function Menu() {
       {
         "name": "Chicken McNuggets",
         "rid": 1,
-        "available": false,
+        "available": true,
         "price": 5.99
       }
     ],
@@ -48,7 +53,24 @@ function Menu() {
     } else {
       cartItems.push(data);
       setCartItems(cartItems);
+      displayAddedToCartAlert(data);
     }
+  }
+
+  const displayAddedToCartAlert = (data) => {
+    setAddedItem(data);
+    setShowAddedToCartMsg(true);
+
+    // reset timer if add to cart clicked before 3 seconds is up
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+
+    // Set new timer
+    const newTimerId = setTimeout(() => {
+      setShowAddedToCartMsg(false);
+    }, 3000);
+    setTimerId(newTimerId);
   }
 
   const updateQty = (data) => {
@@ -72,6 +94,7 @@ function Menu() {
       <div className='container'>
         <div className='table'>
           <h1>{test.name}</h1>
+          {showAddedToCartMsg && addedToCartMsg(addedItem)}
           <MenuItems menu={test.menu} addToCart={addToCart} cartItems={cartItems}/ >
         </div>
       </div>

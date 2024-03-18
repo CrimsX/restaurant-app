@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { Button } from 'react-bootstrap';
 import { Drawer } from "antd";
+import { removedFromCartMsg } from "../alerts/removed-from-cart.components";
+
 import './cart.styles.css'
 
 export const Cart = ({cartItems, removeFromCart}) => {
     const [open, setOpen] = useState(false);
+    const [showRemovedFromCartMsg, setShowRemovedFromCartMsg] = useState(false);
+    const [removedItem, setRemovedItem] = useState('');
+    const [timerId, setTimerId] = useState(null);
 
     const calcPrice = (price, qty) =>{
         const total = parseFloat(price) * parseFloat(qty);
@@ -12,7 +17,17 @@ export const Cart = ({cartItems, removeFromCart}) => {
     }
 
     const removeItem = (item) => {
+        setRemovedItem(item);
         removeFromCart(item);
+        setShowRemovedFromCartMsg(true);
+        if (timerId) {
+            clearTimeout(timerId);
+          }
+
+          const newTimerId = setTimeout(() => {
+            setShowRemovedFromCartMsg(false);
+          }, 3000);
+          setTimerId(newTimerId);
     }
     return (
         <div>
@@ -60,6 +75,7 @@ export const Cart = ({cartItems, removeFromCart}) => {
                         </tbody>
                     </table>
                     )}
+                        {showRemovedFromCartMsg && removedFromCartMsg(removedItem)}
                     <div className="bottom">
                         <Button>Checkout</Button>
                     </div>
