@@ -37,9 +37,25 @@ export const getMenuRepo = async(query) => {
     }
 }
 
+//filter out the unavailable item for customer
+export const getMenuRepoCustomer = async(query) => {
+    try {
+        const restaurant = await Restaurant.findOne(query).populate("menu");
+        //filter to only show available item
+        const customer_menu = restaurant.menu.filter((item) => item.available === true);
+        return [true, customer_menu];
+    } catch (e) {
+        throw Error ("Error while retrieving restaurant information")
+    }
+}
+
 //remove item using object id of menu item
 export const removeItemRepo = async(query, body) => {
     try {
+        const authorizer = await Employee.findOne({rid: query.rid, wid: body.wid});
+        if (authorizer.wid > 2 || authorizer === null) {
+            return [false, "You are not authorize to make change to this item"];
+        }
         const item = await Item.findOneAndDelete({rid: query.rid, _id: body._id});
         if (item === null) {
             return [false, "Cannot find item"]
@@ -53,6 +69,10 @@ export const removeItemRepo = async(query, body) => {
 
 export const addItemRepo = async(query, body) => {
     try {
+        const authorizer = await Employee.findOne({rid: query.rid, wid: body.wid});
+        if (authorizer.wid > 2 || authorizer === null) {
+            return [false, "You are not authorize to make change to this item"];
+        }
         const newItem = new Item(body);
         newItem.rid = query.rid;
         const saved = await newItem.save();
@@ -74,7 +94,10 @@ export const updateItemRepo = async(query, body) => {
             return [false, "You are not authorize to make change to this item"];
         }
         if (body.hasOwnProperty('status')) { //set order status
-            item.status = body.status;
+            if (body.status === 0)
+                item.available = false;
+            else 
+                item.available = true;
         }
         if (body.hasOwnProperty("price")) {
             item.price = body.price;
