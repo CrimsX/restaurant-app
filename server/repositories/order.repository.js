@@ -1,70 +1,86 @@
 import Order from "../models/order.model.js";
-import Cart from "../models/cart.model.js";
 import Customer from "../models/customer.model.js";
 import Restaurant from "../models/restaurant.model.js";
 
-export const createOrderRepo1 = async(body) => { //this version takes the cart object 
+export const createOrderRepo = async(query, body) => { 
         try {
-                if (body === null || body.items.length < 0) {
-                        return "Empty cart";
-                }
-                let customer = await Customer.findOne({cid: body.cid}).select("_id");
-                let restaurant = await Restaurant.findOne({rid: body.rid}).select("_id");
-                let order = new Order({order_id: new Date().valueOf()});
-                order.customer = customer._id;
-                order.restaurant = restaurant._id;
-                order.items = body.items;
-                order.total = body.total;
-                let saved = (await order.save()).populate("items.item");
-                let removed = await Cart.deleteOne({cid: body.cid}); //delete cart
-                return saved;
-        } catch (e) {
-                throw Error ("Error while creating order")
-        }
-}
-
-export const createOrderRepo = async(query) => { 
         //this version will retrieve the user cart first using the cid
-        try {
-                let body = await Cart.findOne(query);
-                if (body === null || body.items.length < 0) {
-                        return "Empty cart";
+                let cart = await Order.findOne({cid: query.cid, status: -1}).populate("items.item");
+                if (cart === null || cart.items.length < 1) {
+                        return [false, "Empty cart"];
                 }
-                let customer = await Customer.findOne({cid: body.cid}).select("_id");
-                let restaurant = await Restaurant.findOne({rid: body.rid}).select("_id");
-                let order = new Order({order_id: new Date().valueOf()});
-                order.customer = customer._id;
-                order.restaurant = restaurant._id;
-                order.cid = body.cid;
-                order.rid = body.rid;
-                order.items = body.items;
-                order.total = body.total;
-                let saved = (await order.save()).populate("items.item");
-                let removed = await Cart.deleteOne({cid: body.cid}); //delete cart
-                return saved;
+                let customer = await Customer.findOne({cid: cart.cid}).select("_id");
+                let restaurant = await Restaurant.findOne({rid: cart.rid}).select("_id");
+                cart.order_id = new Date().valueOf(); //generate orderID
+                cart.status = 0; //set cart to ordered
+                cart.customer = customer._id;
+                cart.restaurant = restaurant._id;
+                cart.schedule = body.schedule;
+                cart.orderAt = new Date();
+                let order = await cart.save();
+                return [true, order];
         } catch (e) {
-                throw Error ("Error while creating order")
+                throw Error ("Error while creating order");
         }
 }
 
+//query is the restaurant id
+export const setOrderStatusRepo= async(rid, body) => {
+        try {
+                let order = await Order.findOne({rid: rid, order_id: body.order_id, status: {$gt: -1}});
+                if ( order === null ) {
+                        return [false, "Order not found"];
+                }
+                if (body.hasOwnProperty('status')) { //set order status
+                        order.status = body.status;
+                }
+                if (body.hasOwnProperty('h')) { //set pickup time
+                        const date = new Date();
+                        date.setHours(body.h);
+                        date.setMinutes(body.m);
+                        //need to set up time validation
+                        if (date < order.orderAt) {
+                                return [false, "Invalid pick up time"]
+                        }
+                        order.pickup = date;
+                }
+                let saved = await Order.findOneAndUpdate({rid: rid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
+                return [true, saved];
+        }
+        catch (e) { 
+                throw Error ("Error while update order status")
+        }
+}
+
+//--------------------------------------------------Get all Orders for customers and restaurants-----------------------------------------------------------------
+//for restaurant
 export const getOrdersRepo = async(query) => {
         try {
-                let orders = await Order.find(query).populate("items.item"); //return an array
-                return orders;
+                let orders = await Order.find({cid: query.cid, status: {$gt: -1}}).populate("items.item"); //return an array
+                return [true, orders];
         }
         catch (e) { 
                 throw Error ("Error while retrieving orders")
         }
 }
-
-
+//for customer
+export const getOrdersRepo2 = async(query) => {
+        try {
+                let orders = await Order.find({rid: query.rid, status: {$gt: -1}}).populate("items.item"); //return an array
+                return [true, orders];
+        }
+        catch (e) { 
+                throw Error ("Error while retrieving orders")
+        }
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //for searching for specific order
 export const getSpecOrdeRepo = async(query, body) => {
         try {
                 const cid = query.cid;
                 const order_id = body.order_id;
-                let orders = await Order.findOne({cid: cid, order_id: order_id}).populate("items.item");
+                let orders = await Order.findOne({cid: cid, order_id: order_id, status: {$gt: -1}}).populate("items.item");
                 return orders;
         }
         catch (e) { 
@@ -72,14 +88,36 @@ export const getSpecOrdeRepo = async(query, body) => {
         }
 }
 
-//query is the restaurant id
-export const setOrderStatusRepo= async(rid, body) => {
+//-------------------------------------------------------------Get Orders history within a selected month-------------------------------------------------------------
+//Body will contain the month and year
+export const getOrdersHistoryRepo = async(query, body) => {
         try {
-                let order = await Order.findOneAndUpdate({rid: rid, order_id: body.order_id}, {$set: {status: body.status}}, {new: true}).populate("items.item");
-                return order;
+            if (body.month > 12) {
+                return [false, "Invalid Month"];
+            } 
+            const year = new Date().getFullYear();
+            const startdate = new Date(year, body.month - 1, 1);
+            const enddate = new Date(year, body.month, 0);
+            const record = await Order.find({rid: query.rid, status: 3, orderAt: {$gte: startdate, $lte: enddate}});
+            return [true, record];
+        } catch (e) {
+            throw Error ("Error while retrieving sales history");
         }
-        catch (e) { 
-                throw Error ("Error while update order status")
+    }
+
+//For customer
+export const getOrdersHistoryRepoC = async(query, body) => {
+        try {
+            if (body.month > 12) {
+                return [false, "Invalid Month"];
+            }    
+            const year = new Date().getFullYear();
+            const startdate = new Date(year, body.month - 1, 1);
+            const enddate = new Date(year, body.month, 0);
+            const record = await Order.find({cid: query.cid, status: 3, orderAt: {$gte: startdate, $lte: enddate}});
+            return [true, record];
+        } catch (e) {
+            throw Error ("Error while retrieving sales history");
         }
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,4 @@
 import Customer from "../models/customer.model.js";
-import Cart from "../models/cart.model.js";
-import Restaurant from "../models/restaurant.model.js";
 
 export const addCustomerToRepo = async(body) => {
     const maxID = await Customer.find().sort({"cid": -1}).limit(1);
@@ -21,7 +19,10 @@ export const addCustomerToRepo = async(body) => {
 export const getCustomerRepo = async(query) => {
     try {
         const customer = await Customer.findOne(query).select("-pw -_id");
-        return customer;
+        if (customer === null) {
+            return [false, "Customer not found"]
+        }
+        return [true, customer];
     } catch (e) {
         throw Error ("Error while attempting to retrieve profile")
     }

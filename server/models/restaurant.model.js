@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-const addressSchema = new Schema(
+export const addressSchema = new Schema(
     {
         street: {type: String, required: true},
         suite: {type: String, required: false},
@@ -9,14 +9,14 @@ const addressSchema = new Schema(
     }
 );
 
-const RestaurantSchema = new Schema(
+export const RestaurantSchema = new Schema(
     {
         name: { type: String, required: true },
         rid: { type: Number, required: true },
         email: {type: String, required: true },
-        pw: {type: String, required: true },
         address: {type: addressSchema, required: true},
         menu: [{type: Schema.Types.ObjectId, ref: 'Item'}],
+        employees: [{type: Schema.Types.ObjectId, ref: 'Employee'}]
     }
 )
 

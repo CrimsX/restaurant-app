@@ -15,7 +15,6 @@ const CustomerSchema = new Schema (
         cid: { type: Number, required: true },
         username: {type: String, required: true },
         email: {type: String, required: true },
-        pw: {type: String, required: true },
         address: {type: addressSchema, required: true},
     }
 )
