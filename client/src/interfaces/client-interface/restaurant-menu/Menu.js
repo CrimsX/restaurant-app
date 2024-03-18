@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Menu.css'
-import { MenuItems } from '../../../components/clientapp/menu/table.components'
+import { MenuItems } from '../../../components/clientapp/menu/menu.components'
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 
 function Menu() {
   let { data } = useParams();
+  const [cartItems, setCartItems] = useState([])
   const test = {
     "name": "McDonald's",
     "rid": 1,
@@ -39,18 +40,43 @@ function Menu() {
     ],
     "orders": []
   };
-    return (
-      <div>
-        <NavBar/>
 
-        <div className='container'>
-          <div className='table'>
-            <h1>{test.name}</h1>
-            <MenuItems menu={test.menu}/ >
-          </div>
+  const addToCart = (data) => {
+    if (cartItems.some(item => item.name === data.name)) {
+      updateQty(data);
+      setCartItems(cartItems);
+    } else {
+      cartItems.push(data);
+      setCartItems(cartItems);
+    }
+  }
+
+  const updateQty = (data) => {
+    for (var item of cartItems) {
+      if (data.name === item.name) {
+        item.qty = data.qty;
+        return;
+      }
+    }
+  }
+
+  const removeFromCart = (item) => {
+    const updatedCartItems = cartItems.filter(cartItem => !(item.name === cartItem.name && item.rid === cartItem.rid));
+    setCartItems(updatedCartItems);
+  }
+
+  return (
+    <div>
+      <NavBar cartItems={cartItems} removeFromCart={removeFromCart}/>
+
+      <div className='container'>
+        <div className='table'>
+          <h1>{test.name}</h1>
+          <MenuItems menu={test.menu} addToCart={addToCart} cartItems={cartItems}/ >
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
 export default Menu;

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Interface from './interfaces/home/Interface.js';
 import Home from './interfaces/client-interface/landing/landingScreen.js';
 import Menu from './interfaces/client-interface/restaurant-menu/Menu.js';
-import Orders from './interfaces/client-interface/order/OrderScreen.js'
+import Orders from './interfaces/client-interface/orders/OrdersScreen.js'
 
 
 /**
