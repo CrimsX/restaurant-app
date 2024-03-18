@@ -22,8 +22,38 @@ export const createOrderRepo = async(query, body) => {
         } catch (e) {
                 throw Error ("Error while creating order");
         }
-    }
+}
 
+//query is the restaurant id
+export const setOrderStatusRepo= async(rid, body) => {
+        try {
+                let order = await Order.findOne({rid: rid, order_id: body.order_id, status: {$gt: -1}});
+                if ( order === null ) {
+                        return [false, "Order not found"];
+                }
+                if (body.hasOwnProperty('status')) { //set order status
+                        order.status = body.status;
+                }
+                if (body.hasOwnProperty('h')) { //set pickup time
+                        const date = new Date();
+                        date.setHours(body.h);
+                        date.setMinutes(body.m);
+                        //need to set up time validation
+                        if (date < order.orderAt) {
+                                return [false, "Invalid pick up time"]
+                        }
+                        order.pickup = date;
+                }
+                let saved = await Order.findOneAndUpdate({rid: rid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
+                return [true, saved];
+        }
+        catch (e) { 
+                throw Error ("Error while update order status")
+        }
+}
+
+//--------------------------------------------------Get all Orders for customers and restaurants-----------------------------------------------------------------
+//for restaurant
 export const getOrdersRepo = async(query) => {
         try {
                 let orders = await Order.find({cid: query.cid, status: {$gt: -1}}).populate("items.item"); //return an array
@@ -33,7 +63,7 @@ export const getOrdersRepo = async(query) => {
                 throw Error ("Error while retrieving orders")
         }
 }
-
+//for customer
 export const getOrdersRepo2 = async(query) => {
         try {
                 let orders = await Order.find({rid: query.rid, status: {$gt: -1}}).populate("items.item"); //return an array
@@ -43,6 +73,7 @@ export const getOrdersRepo2 = async(query) => {
                 throw Error ("Error while retrieving orders")
         }
 }
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //for searching for specific order
 export const getSpecOrdeRepo = async(query, body) => {
@@ -57,18 +88,32 @@ export const getSpecOrdeRepo = async(query, body) => {
         }
 }
 
-//query is the restaurant id
-//Body will hold the employee code to check if they authorize to do so.
-export const setOrderStatusRepo= async(rid, body) => {
+//-------------------------------------------------------------Get Orders history within a selected month-------------------------------------------------------------
+//Body will contain the month and year
+export const getOrdersHistoryRepo = async(query, body) => {
         try {
-                let order = await Order.findOneAndUpdate({rid: rid, order_id: body.order_id, status: {$gt: -1}}, {$set: {status: body.status}}, {new: true}).populate("items.item");
-                if ( order === null ) {
-                        return [false, "Order not found"];
-                }
-                return [true, order];
+            const year = new Date().getFullYear();
+            const startdate = new Date(year, body.month - 1, 1);
+            const enddate = new Date(year, body.month, 0);
+            console.log(startdate, enddate);
+            const record = await Order.find({rid: query.rid, status: {$gt: 2}, orderAt: {$gte: startdate, $lte: enddate}});
+            return [true, record];
+        } catch (e) {
+            throw Error ("Error while retrieving sales history");
         }
-        catch (e) { 
-                throw Error ("Error while update order status")
+    }
+
+//For customer
+export const getOrdersHistoryRepoC = async(query, body) => {
+        try {
+            const year = new Date().getFullYear();
+            const startdate = new Date(year, body.month - 1, 1);
+            const enddate = new Date(year, body.month, 0);
+            console.log(startdate, enddate);
+            const record = await Order.find({cid: query.cid, status: {$gt: 2}, orderAt: {$gte: startdate, $lte: enddate}});
+            return [true, record];
+        } catch (e) {
+            throw Error ("Error while retrieving sales history");
         }
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
