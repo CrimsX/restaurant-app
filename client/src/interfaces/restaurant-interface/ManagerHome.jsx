@@ -1,23 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Spinner from "../../components/Spinner";
 import { Link } from "react-router-dom";
-import { AiOutlineEdit } from "react-icons/ai";
+import { MdOutlineAddBox } from "react-icons/md";
 import { BsInfoCircle } from "react-icons/bs";
-import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
+import { AiOutlineEdit } from "react-icons/ai";
+import { MdOutlineDelete } from "react-icons/md";
+import Spinner from "../../components/Spinner";
 
 const ManagerHome = () => {
-  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:8000/restaurant/menu/1")
-      .then((response) => {
-        setItems(response.data.data);
-        setLoading(false);
-      })
+      .all([
+        axios.get("http://localhost:8000/restaurant/menu/1"),
+        axios.get("http://localhost:8000/restaurant/menu/2"),
+      ])
+      .then(
+        axios.spread((menu1Response, menu2Response) => {
+          const mergedItems = [
+            ...menu1Response.data.data,
+            ...menu2Response.data.data,
+          ];
+          setItems(mergedItems);
+          setLoading(false);
+        })
+      )
       .catch((error) => {
         console.log(error);
         setLoading(false);
@@ -27,7 +37,16 @@ const ManagerHome = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl my-8">Items List</h1>
+        <h1 className="text-3xl my-8">All Items</h1>
+        <div className="dropdown">
+          <label htmlFor="dropdown">Choose an option: </label>
+          <br></br>
+          <select id="dropdown">
+            <option value="id_1">Deliscio</option>
+            <option value="id_2">Asianres</option>
+          </select>
+        </div>
+
         <Link to="/items/create">
           <MdOutlineAddBox className="text-sky-800 text-4xl" />
         </Link>
@@ -35,47 +54,36 @@ const ManagerHome = () => {
       {loading ? (
         <Spinner />
       ) : (
-        <table className="w-full border-seperate border-spacing-2">
+        <table className="w-full border-separate border-spacing-2">
           <thead>
             <tr className="text-center">
-              <th className="border border-slate-600 rounded-md">Item ID</th>
-              <th className="border border-slate-600 rounded-md">Food Item</th>
-              <th className="border border-slate-600 rounded-md">
-                Availability
-              </th>
-              <th className="border border-slate-600 rounded-md">
-                Restaurant Branch
-              </th>
-              <th className="border border-slate-600 rounded-md">Price</th>
-              <th className="border border-slate-600 rounded-md">Actions</th>
+              <th className="border border-slate-600 ">Item ID</th>
+              <th className="border border-slate-600 ">Food Item</th>
+              <th className="border border-slate-600 ">Availability</th>
+              <th className="border border-slate-600 ">Restaurant Branch</th>
+              <th className="border border-slate-600 ">Price</th>
+              <th className="border border-slate-600 ">Actions</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, index) => (
               <tr key={item._id} className="h-8">
-                <td className="border border-slate-700 rounded-md text-center">
+                <td className="border border-slate-700  text-center">
                   {index + 1}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
+                <td className="border border-slate-700  text-center">
                   {item.name}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
-                  {/* {item.available} */}
+                <td className="border border-slate-700  text-center">
                   Available
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
-                  {item.category === 1
-                    ? "Deliscio"
-                    : item.category === 2
-                    ? "Restaurant 2"
-                    : item.category === 3
-                    ? "Restaurant 3"
-                    : "Unknown Category"}
+                <td className="border border-slate-700  text-center">
+                  {item.rid === 1 ? "Deliscio" : "Asianres"}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
+                <td className="border border-slate-700  text-center">
                   ${item.price / 100}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
+                <td className="border border-slate-700  text-center">
                   <div className="flex justify-center gap-x-4">
                     <Link to={`/items/details/${item._id}`}>
                       <BsInfoCircle className="text-2xl text-green-800" />
