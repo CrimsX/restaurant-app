@@ -63,7 +63,7 @@ export const addItemRepo = async(query, body) => {
     }
 }
 
-export const setItemStatusRepo = async(query, body) => {
+export const updateItemRepo = async(query, body) => {
     try { 
         const authorizer = await Employee.findOne({rid: query.rid, wid: body.wid});
         const item = await Item.findOne({_id: body._id, rid: query.rid})
@@ -73,13 +73,19 @@ export const setItemStatusRepo = async(query, body) => {
         if (authorizer.wid > 2 || item.rid != authorizer.rid || authorizer === null) {
             return [false, "You are not authorize to make change to this item"];
         }
-        item.available = body.status;
+        if (body.hasOwnProperty('status')) { //set order status
+            item.status = body.status;
+        }
+        if (body.hasOwnProperty("price")) {
+            item.price = body.price;
+        }
         const saved = await item.save();
         return [true, saved];
     } catch (e) {
         throw Error ("Error while changing item avaibility")
     }
 }
+
 
 export const addEmployeeRepo = async(query, body) => {
     try {

@@ -1,4 +1,4 @@
-import { setItemStatusRepo, getRestaurantRepo, getMenuRepo, addItemRepo, 
+import { updateItemRepo, getRestaurantRepo, getMenuRepo, addItemRepo, 
     removeItemRepo } from "../repositories/restaurant.repository.js";
 
 export const getRestaurant = async(req, res) => {
@@ -22,7 +22,7 @@ export const getRestaurant = async(req, res) => {
 export const setItemStatus = async(req, res) => {
     const { rid } = req.params;
     try {
-        const menu = await setItemStatusRepo({rid: rid}, req.body)
+        const menu = await updateItemRepo({rid: rid}, req.body)
         return res.status(200).json({ 
             status: 200, 
             success: menu[0],

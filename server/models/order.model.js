@@ -60,8 +60,8 @@ const OrderSchema = new mongoose.Schema(
         total: {type: Number,  get: getPrice, set: setPrice},
         status: {type: Number, get: getStatus, default: -1},
         schedule: {type: Number, get: getSchedule},
-        pickup: {type: Date, get: getTime},
-        orderAt: {type: Date, get: getTime}
+        pickup: {type: Date},
+        orderAt: {type: Date}
     }
 )
 

@@ -38,10 +38,14 @@ export const setOrderStatusRepo= async(rid, body) => {
                         const date = new Date();
                         date.setHours(body.h);
                         date.setMinutes(body.m);
+                        //need to set up time validation
+                        if (date < order.orderAt) {
+                                return [false, "Invalid pick up time"]
+                        }
                         order.pickup = date;
                 }
                 let saved = await Order.findOneAndUpdate({rid: rid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
-                return [true, order];
+                return [true, saved];
         }
         catch (e) { 
                 throw Error ("Error while update order status")
