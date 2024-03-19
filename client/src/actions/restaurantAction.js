@@ -68,7 +68,7 @@ export const addItem = async(rid, item) => {
     const { data } = await axios.post(url, item)
     return data;
   } catch (error) { 
-    console.error("Error fetching restaurant info:", error);
+    console.error("Error adding item:", error);
     throw error;
   }
 }
@@ -91,7 +91,7 @@ export const updateItem = async(rid, item) => {
     const { data } = await axios.patch(url, item)
     return data;
   } catch (error) { 
-    console.error("Error fetching restaurant info:", error);
+    console.error("Error updating menu item:", error);
     throw error;
   }
 }
@@ -109,6 +109,98 @@ export const removeItem = async(rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
     const { data } = await axios.delete(url, item)
+    return data;
+  } catch (error) { 
+    console.error("Error removing item from inventory:", error);
+    throw error;
+  }
+}
+
+//--------------------------------Order Manipulation and History------------------------------
+
+/**
+ * For updating order status
+ * @param {*} rid - the restaurant id
+ * @param {*} body - body holding information to update for an order
+ * {
+ *  order_id: order id number,
+ *  status: status change to the order (1 = In-progress, 2 = awaiting pickup, 3 = complete) (optional)
+ *  h: the estimate hour for when order is ready for pick up (24 hours clock) (optional)
+ *  m: the estimate minute for when order is ready for pick up
+ * }
+ */
+export const updateOrderStatus = async(rid, body) => {
+  try {
+    const url = connection + `/restaurant/order/${rid}`;
+    const { data } = await axios.patch(url, body)
+    return data;
+  } catch (error) { 
+    console.error("Error updating orders:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get all orders for a restaurant
+ * @param {*} rid - restaurant id
+ * @returns 
+ */
+export const getOrders = async(rid) => {
+  try {
+    const url = connection + `/restaurant/orders/${rid}`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching restaurant orders:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get order history for a restaurant by month 
+ * @param {*} rid - restaurant id
+ * @param {*} body - object holding the month field
+ * {
+ *  month: month 
+ * }
+ */
+export const getOrderByMonthRes = async(rid, body) => {
+  try {
+    const url = connection + `/restaurant/orders/history/${rid}`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching restaurant orders:", error);
+    throw error;
+  }
+}
+
+//---------------------------------------------Analytic--------------------------------------------
+
+/**
+ * Get total profit from all completed orders
+ * @param {*} rid - restaurant id
+ */
+export const getProfit = async(rid) => {
+  try {
+    const url = connection + `/restaurant/analytic/profit/${rid}`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching restaurant info:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get array of menu item and the amount of time they have been ordered
+ * @param {*} rid - restaurant id
+ * @returns 
+ */
+export const getPopularItems = async(rid) => {
+  try {
+    const url = connection + `/restaurant/analytic/items/${rid}`;
+    const { data } = await axios.get(url)
     return data;
   } catch (error) { 
     console.error("Error fetching restaurant info:", error);

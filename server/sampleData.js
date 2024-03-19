@@ -1,7 +1,8 @@
 import dbConnection from "./database/database.js";
 import { addCustomerToRepo, getCustomerRepo } from "./repositories/customer.repository.js";
 import { addRestaurantToRepo, addItemRepo, addEmployeeRepo } from "./repositories/restaurant.repository.js";
-import { getTotalProfitRepo, getTotalPopularItemsRepo } from "./repositories/analytic.repository.js";
+import { getTotalProfitRepo, getTotalPopularItemsRepo, getHourCountRepo } from "./repositories/analytic.repository.js";
+import Order from "./models/order.model.js";
 
 dbConnection();
 const customer = [
@@ -273,9 +274,11 @@ const addWorker = async () => {
 const test = async() => {
     //let p = await getTotalProfitRepo({rid: 3});
     //let info = await getTotalPopularItemsRepo({rid: 3});
-    const connection = "http://localhost:8000";
-    const sid = 1;
-    console.log(connection + `/customer/${sid}`);
+
+    //let o = await getHourCountRepo({rid: 1});
+
+    let o = await Order.findOne({order_id: 1710794079520});
+    console.log(o.orderAt);
 }
 
 //insertCustomer();
