@@ -46,3 +46,25 @@ export const getTotalPopularItemsRepo = async(query) => {
     throw Error ("Error while retrieving popular items information")
   }
 }
+
+//working progress
+export const getHourCountRepo = async(query) => {
+    const info = await Order.aggregate([
+      {$match: {rid: parseInt(query.rid), status: 3}},
+      {
+        $addFields: {
+          orderHour: { $dateToString: { format: "%H", date: "$orderAt" } }
+        }
+      },
+      // Group by the 'orderHour' field and count the number of orders for each hour
+      {
+        $group: {
+          _id: "$orderHour",
+          count: { $sum: 1 }
+        }
+      },
+      // Optionally, sort by hour
+      { $sort: { _id: 1 } }
+    ]);
+    return[true, info];
+}

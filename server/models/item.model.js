@@ -34,6 +34,7 @@ const setAvailibility = (num) => {
 const ItemSchema = new Schema(
     {
         name: { type: String, required: true},
+        mid: {type: Number}, 
         rid: {type: Number},
         available: { type: Boolean, default: true, set: setAvailibility},
         category: {type: Number,required: true},
