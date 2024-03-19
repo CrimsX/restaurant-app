@@ -16,8 +16,9 @@ buttons on nav bar (sticky buttons for now):
 List restaurants
 */
 function Order() {
+    const [cartItems, setCartItems] = useState([])
     return (
-        <NavBar/>
+        <NavBar cartItems={cartItems}/>
     )}
 
 export default Order;

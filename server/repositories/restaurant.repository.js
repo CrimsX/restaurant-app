@@ -73,6 +73,12 @@ export const addItemRepo = async(query, body) => {
         if (authorizer.wid > 2 || authorizer === null) {
             return [false, "You are not authorize to make change to this item"];
         }
+        const maxID = await Item.find({rid: query.rid}).sort({"mid": -1}).limit(1); //find the maxID of the restaurant
+        if (maxID.length < 1) {
+            body.mid = 1;
+        } else {
+            body.mid = maxID[0].mid + 1;
+        }
         const newItem = new Item(body);
         newItem.rid = query.rid;
         const saved = await newItem.save();

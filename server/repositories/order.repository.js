@@ -53,9 +53,10 @@ export const setOrderStatusRepo= async(rid, body) => {
 }
 
 //--------------------------------------------------Get all Orders for customers and restaurants-----------------------------------------------------------------
-//for restaurant
+//for customer
 export const getOrdersRepo = async(query) => {
         try {
+
                 let orders = await Order.find({cid: query.cid, status: {$gt: -1}}).populate("items.item"); //return an array
                 return [true, orders];
         }
@@ -63,7 +64,7 @@ export const getOrdersRepo = async(query) => {
                 throw Error ("Error while retrieving orders")
         }
 }
-//for customer
+//for restaurant
 export const getOrdersRepo2 = async(query) => {
         try {
                 let orders = await Order.find({rid: query.rid, status: {$gt: -1}}).populate("items.item"); //return an array
@@ -113,7 +114,7 @@ export const getOrdersHistoryRepoC = async(query, body) => {
             }    
             const year = new Date().getFullYear();
             const startdate = new Date(year, body.month - 1, 1);
-            const enddate = new Date(year, body.month, 0);
+            const enddate = new Date(year, body.month , 0);
             const record = await Order.find({cid: query.cid, status: 3, orderAt: {$gte: startdate, $lte: enddate}});
             return [true, record];
         } catch (e) {

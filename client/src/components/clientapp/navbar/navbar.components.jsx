@@ -2,7 +2,7 @@ import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Cart } from '../cartdrawer/cart.components'
 import './navbar.styles.css'
 
-export function NavBar() {
+export function NavBar({cartItems, removeFromCart}) {
   return (
     <Navbar expand="lg" className="bg-body-tertiary sticky">
       <Container>
@@ -14,7 +14,7 @@ export function NavBar() {
                 <Nav.Link href="../orders">Orders</Nav.Link>
             </Nav>
             <Nav className="ml-auto">
-                <Cart/>
+                <Cart cartItems={cartItems} removeFromCart={removeFromCart}/>
             </Nav>
         </Navbar.Collapse>
       </Container>
