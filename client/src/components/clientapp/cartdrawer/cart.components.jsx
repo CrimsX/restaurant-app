@@ -1,10 +1,47 @@
 import React, { useState } from "react";
 import { Button } from 'react-bootstrap';
 import { Drawer } from "antd";
+import { removedFromCartMsg } from "../alerts/removed-from-cart.components";
+
 import './cart.styles.css'
 
-export const Cart = () => {
+export const Cart = ({cartItems, removeFromCart}) => {
     const [open, setOpen] = useState(false);
+    const [showRemovedFromCartMsg, setShowRemovedFromCartMsg] = useState(false);
+    const [removedItem, setRemovedItem] = useState('');
+    const [timerId, setTimerId] = useState(null);
+    const [quantities, setQuantities] = useState({});
+
+    const calcPrice = (price, qty) =>{
+        if (isNaN(parseFloat(qty))){
+            qty = 1;
+        }
+        const total = parseFloat(price) * parseFloat(qty);
+        return total.toFixed(2);
+    }
+
+    const handleQuantityChange = (event, itemName) => {
+        const { value } = event.target;
+        setQuantities(prevQuantities => ({
+            ...prevQuantities,
+            [itemName]: value
+        }));
+    }
+
+    const removeItem = (item) => {
+        setRemovedItem(item);
+        removeFromCart(item);
+        setShowRemovedFromCartMsg(true);
+        delete quantities[item.name];
+        if (timerId) {
+            clearTimeout(timerId);
+          }
+
+          const newTimerId = setTimeout(() => {
+            setShowRemovedFromCartMsg(false);
+          }, 3000);
+          setTimerId(newTimerId);
+    }
     return (
         <div>
             <Button
@@ -22,7 +59,45 @@ export const Cart = () => {
                 }}
             >
                 <div className="drawer-content">
-                    <p>this is the drawer</p>
+                    {cartItems.length === 0 ? (
+                        <p>Your cart is empty.</p>
+                    ) : (
+                    <table className="table">
+                        <thead className="center-text">
+                            <tr>
+                                <th scope="col">Item</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody className="center-text">
+                            {cartItems
+                            .map(item => (
+                                    <tr key={item.name}>
+                                        <td>{item.name}</td>
+                                        <td>{'$' + calcPrice(item.price, quantities[item.name])}</td>
+                                        <td>
+                                        <select
+                                        value={quantities[item.name] || 1}
+                                        onChange={(event) => handleQuantityChange(event, item.name)}
+                                        >
+                                            {[...Array(99).keys()].map(num => (
+                                            <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                            ))}
+                                        </select>
+                                        </td>
+                                        <td>
+                                            <button onClick={() => removeItem(item)}>
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    )}
+                        {showRemovedFromCartMsg && removedFromCartMsg(removedItem)}
                     <div className="bottom">
                         <Button>Checkout</Button>
                     </div>

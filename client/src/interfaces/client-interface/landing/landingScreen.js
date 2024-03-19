@@ -12,6 +12,8 @@ List restaurants
 */
 function Home(data) {
     const [restaurants, setRestaurants] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
+
     console.log(data);
     useEffect( () => {
         const test = [
@@ -41,7 +43,7 @@ function Home(data) {
 
     return (
         <div>
-            <NavBar/>
+            <NavBar cartItems={cartItems}/>
             <div className='body'>
               <h1 className='title'>Restaurant's</h1>
               <Restaurants restuarants={restaurants} onClick/>

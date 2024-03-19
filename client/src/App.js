@@ -1,9 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Interface from "./interfaces/home/Interface.js";
-import Home from "./interfaces/client-interface/landing/landingScreen.js";
-import Menu from "./interfaces/client-interface/restaurant-menu/Menu.js";
-import Orders from "./interfaces/client-interface/order/OrderScreen.js";
+
+import Interface from './interfaces/home/Interface.js';
+import Home from './interfaces/client-interface/landing/landingScreen.js';
+import Menu from './interfaces/client-interface/restaurant-menu/Menu.js';
+import Orders from './interfaces/client-interface/orders/OrdersScreen.js'
+
 
 import ManagerHome from "./interfaces/restaurant-interface/ManagerHome.jsx";
 import CreateItem from "./interfaces/restaurant-interface/CreateItem.jsx";
