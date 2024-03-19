@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components'
 
+
 function Menu() {
   let { data } = useParams();
   const [cartItems, setCartItems] = useState([])
@@ -13,39 +14,38 @@ function Menu() {
   const [timerId, setTimerId] = useState(null);
 
   const test = {
-    "name": "McDonald's",
-    "rid": 1,
-    "email": "mcdonalds@example.com",
-    "pw": "password",
-    "address": {
-      "street": "123 Main St",
-      "city": "Anytown",
-      "state": "CA",
-      "zip": "12345"
+    name: "McDonald's",
+    rid: 1,
+    email: "mcdonalds@example.com",
+    pw: "password",
+    address: {
+      street: "123 Main St",
+      city: "Anytown",
+      state: "CA",
+      zip: "12345",
     },
-    "menu": [
+    menu: [
       {
-        "name": "Big Mac",
-        "rid": 1,
-        "available": true,
-        "price": 4.99
+        name: "Big Mac",
+        rid: 1,
+        available: true,
+        price: 4.99,
       },
       {
-        "name": "French Fries",
-        "rid": 1,
-        "available": true,
-        "price": 2.49
+        name: "French Fries",
+        rid: 1,
+        available: true,
+        price: 2.49,
       },
       {
         "name": "Chicken McNuggets",
         "rid": 1,
         "available": true,
         "price": 5.99
-      }
+      },
     ],
-    "orders": []
+    orders: [],
   };
-
   const addToCart = (data) => {
     if (cartItems.some(item => item.name === data.name)) {
       return
