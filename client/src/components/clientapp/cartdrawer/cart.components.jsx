@@ -13,6 +13,10 @@ export const Cart = ({cartItems, removeFromCart}) => {
     const [timerId, setTimerId] = useState(null);
     const [quantities, setQuantities] = useState({});
 
+    /*
+    TODO: useEffect to fetch user cart items
+    */
+
     //Calculates the price of the individual item in cart. Updates when quantitiy dropdown is changed
     const calcPrice = (price, qty) =>{
         if (isNaN(parseFloat(qty))){
@@ -31,7 +35,7 @@ export const Cart = ({cartItems, removeFromCart}) => {
             [itemName]: value
         }));
     }
-    
+
     //Remove item from cart and display alert message when item is successfully removed
     const removeItem = (item) => {
         setRemovedItem(item);

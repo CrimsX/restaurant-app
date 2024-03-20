@@ -7,5 +7,6 @@ Menu.js:
     -removedFromCart(): remove the item as a cart item when this button is clicked.
 
 cart.components.jsx:
+    -useEffect to fetch user cart items
     -checkout(): should change cart status to ordered in the backend
     -handleQuantityChange(): change the quantity in the backend when this function is called.
