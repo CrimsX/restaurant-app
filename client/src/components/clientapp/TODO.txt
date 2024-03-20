@@ -1,0 +1,11 @@
+landingScreen.js:
+    -useEffect to fetch list of restaurants.
+
+Menu.js:
+    -useEffect(): fetch restaurant items
+    -addToCart(): store item to backend in order model as a cart item. Store quantity as 1.
+    -removedFromCart(): remove the item as a cart item when this button is clicked.
+
+cart.components.jsx:
+    -checkout(): should change cart status to ordered in the backend
+    -handleQuantityChange(): change the quantity in the backend when this function is called.
