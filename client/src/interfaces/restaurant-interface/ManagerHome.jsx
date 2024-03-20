@@ -1,9 +1,7 @@
 import Spinner from "../../components/Spinner";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { MdOutlineAddBox } from "react-icons/md";
-import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
 import { getMenu } from "../../actions/restaurantAction";
@@ -104,20 +102,19 @@ const ManagerHome = () => {
                     );
                   }}
                 >
-                  <td className="py-2 border text-center">{item._id}</td>
+                  <td className="py-2 border text-center">{item.mid}</td>
                   <td className="py-2 border text-center">{item.name}</td>
-                  <td className="py-2 border text-center">Available</td>
+                  <td className="py-2 border text-center">
+                    {item.available === true ? "Available" : "Sold Out"}
+                  </td>
                   <td className="py-2 border text-center">
                     {item.rid === 1 ? "Deliscio" : "Asianres"}
                   </td>
                   <td className="py-2 border text-center">
-                    ${item.price / 100}
+                    ${(item.price / 100).toFixed(2)}
                   </td>
                   <td className="py-2 px-5 border text-center">
                     <div className="flex justify-center gap-x-5">
-                      <Link to={`/items/details/${item._id}`}>
-                        <BsInfoCircle className="text-2xl text-blue-600 hover:text-blue-400" />
-                      </Link>
                       <Link to={`/items/edit/${item._id}`}>
                         <AiOutlineEdit className="text-2xl text-green-600 hover:text-green-400" />
                       </Link>
