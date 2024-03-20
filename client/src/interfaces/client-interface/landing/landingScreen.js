@@ -2,19 +2,15 @@ import React, { useEffect, useState }from 'react';
 import { NavBar } from'../../../components/clientapp/navbar/navbar.components'
 import './landingScreen.css'
 import Restaurants from '../../../components/clientapp/restuarant-list/resutarant-tile-display/display.components'
-/*
-buttons on nav bar (sticky buttons for now):
-        view cart (enddrawer from the right (component))
-            place order option
-        view orderhistory (navigate to order history page)
 
-List restaurants
-*/
+//Home page that displays list of restaurants 
 function Home(data) {
     const [restaurants, setRestaurants] = useState([]);
     const [cartItems, setCartItems] = useState([]);
 
-    console.log(data);
+    /*
+    TODO: fetch list of restuarants from db in the useEffect
+    */
     useEffect( () => {
         const test = [
             {

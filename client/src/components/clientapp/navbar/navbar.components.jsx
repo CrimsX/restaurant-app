@@ -2,6 +2,8 @@ import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Cart } from '../cartdrawer/cart.components'
 import './navbar.styles.css'
 
+
+// Navigation bar that is used on all pages in the client application.
 export function NavBar({cartItems, removeFromCart}) {
   return (
     <Navbar expand="lg" className="bg-body-tertiary sticky">

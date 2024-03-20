@@ -1,13 +1,15 @@
 import React, {useState} from "react";
 import './menu.styles.css';
 
-
+// MenuItems component. This is a table that displays the menu items name, price, and a "Add to Cart" button
 export const MenuItems = ({ menu, addToCart, cartItems}) => {
 
+    //Display nothing if the menu is empty
     if (!menu) {
         return;
     }
 
+    //Handles add to cart button click. Handled in Menu.js
     const handleAddToCart = (item, qty) => {
         addToCart(item, qty);
     }

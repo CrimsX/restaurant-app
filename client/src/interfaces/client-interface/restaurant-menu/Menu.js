@@ -5,13 +5,15 @@ import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components'
 
-
+//Menu screen that displays items that are being sold by the restaurant if in stock
 function Menu() {
-  let { data } = useParams();
+  let { data } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
   const [cartItems, setCartItems] = useState([])
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [addedItem, setAddedItem] = useState('');
   const [timerId, setTimerId] = useState(null);
+
+//TODO: useEffect to fetch restaurant items from db
 
   const test = {
     name: "McDonald's",
@@ -46,6 +48,13 @@ function Menu() {
     ],
     orders: [],
   };
+
+  //Function to add item to cart when add to cart button is pressed
+  
+  /*
+  TODO: when this function is called, it should also store items in the backend.
+  */
+
   const addToCart = (data) => {
     if (cartItems.some(item => item.name === data.name)) {
       return
@@ -56,6 +65,7 @@ function Menu() {
     }
   }
 
+  //Alerts message when item is added to cart
   const displayAddedToCartAlert = (data) => {
     setAddedItem(data);
     setShowAddedToCartMsg(true);
@@ -72,6 +82,12 @@ function Menu() {
     setTimerId(newTimerId);
   }
 
+  // Remove item from cartItems if item matches restaurant id and name
+
+  /*
+  TODO: when this function is called, it should remove the item in the backend. Set initial quantity to 1. 
+         Quantity is handles in the cart component.
+  */
   const removeFromCart = (item) => {
     const updatedCartItems = cartItems.filter(cartItem => !(item.name === cartItem.name && item.rid === cartItem.rid));
     setCartItems(updatedCartItems);
