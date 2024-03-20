@@ -6,7 +6,7 @@ import { removedFromCartMsg } from "../alerts/removed-from-cart.components";
 import './cart.styles.css'
 
 //Cart component for the cart drawer
-export const Cart = ({cartItems, removeFromCart}) => {
+export const Cart = ({cartItems, removeFromCart, checkout}) => {
     const [open, setOpen] = useState(false);
     const [showRemovedFromCartMsg, setShowRemovedFromCartMsg] = useState(false);
     const [removedItem, setRemovedItem] = useState('');
@@ -50,6 +50,10 @@ export const Cart = ({cartItems, removeFromCart}) => {
             setShowRemovedFromCartMsg(false);
           }, 3000);
           setTimerId(newTimerId);
+        }
+
+    const checkoutPressed = () => {
+        checkout(cartItems, quantities);
     }
     return (
         <div>
@@ -108,7 +112,7 @@ export const Cart = ({cartItems, removeFromCart}) => {
                     )}
                         {showRemovedFromCartMsg && removedFromCartMsg(removedItem)}
                     <div className="bottom">
-                        <Button>Checkout</Button>
+                        <Button onClick={() => checkoutPressed()}>Checkout</Button>
                     </div>
                 </div>
             </Drawer>

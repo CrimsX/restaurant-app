@@ -50,7 +50,7 @@ function Menu() {
   };
 
   //Function to add item to cart when add to cart button is pressed
-  
+
   /*
   TODO: when this function is called, it should also store items in the backend.
   */
@@ -85,7 +85,7 @@ function Menu() {
   // Remove item from cartItems if item matches restaurant id and name
 
   /*
-  TODO: when this function is called, it should remove the item in the backend. Set initial quantity to 1. 
+  TODO: when this function is called, it should remove the item in the backend. Set initial quantity to 1.
          Quantity is handles in the cart component.
   */
   const removeFromCart = (item) => {
@@ -93,9 +93,24 @@ function Menu() {
     setCartItems(updatedCartItems);
   }
 
+  /*
+  TODO:
+  */
+
+  /**
+   *
+   * @param {object} cartItems object containing items representing which items are in the cart
+   * @param {hashmap} quantites hashmap containing the quantity of items ordered. key of hashmap is the item name,
+   * value is the quantity ordered.
+   */
+  const checkout = (cartItems, quantites) => {
+    console.log(cartItems);
+    console.log(quantites);
+  }
+
   return (
     <div>
-      <NavBar cartItems={cartItems} removeFromCart={removeFromCart}/>
+      <NavBar cartItems={cartItems} removeFromCart={removeFromCart} checkout={checkout}/>
 
       <div className='container'>
         <div className='table'>
