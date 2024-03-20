@@ -56,7 +56,7 @@ export const removeItemRepo = async(query, body) => {
         if (authorizer.wid > 2 || authorizer === null) {
             return [false, "You are not authorize to make change to this item"];
         }
-        const item = await Item.findOneAndDelete({rid: query.rid, _id: body._id});
+        const item = await Item.findOneAndDelete({rid: query.rid, mid: body.mid});
         if (item === null) {
             return [false, "Cannot find item"]
         }
@@ -92,7 +92,7 @@ export const addItemRepo = async(query, body) => {
 export const updateItemRepo = async(query, body) => {
     try { 
         const authorizer = await Employee.findOne({rid: query.rid, wid: body.wid});
-        const item = await Item.findOne({_id: body._id, rid: query.rid})
+        const item = await Item.findOne({mid: body.mid, rid: query.rid})
         if (item === null) {
             return [false, "Item not found"];
         }
