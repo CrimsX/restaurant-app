@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button } from 'react-bootstrap';
 import { Drawer } from "antd";
 import { removedFromCartMsg } from "../alerts/removed-from-cart.components";
+import { AiOutlineShoppingCart, AiTwotoneDelete } from 'react-icons/ai';
+
 
 import './cart.styles.css'
 
@@ -57,13 +59,11 @@ export const Cart = ({cartItems, removeFromCart, checkout}) => {
     }
     return (
         <div>
-            <Button
+            <AiOutlineShoppingCart className="cart"
             onClick={() => {
                 setOpen(true)
-                }}
-            variant="primary">
-                Cart
-            </Button>
+                }}>
+            </AiOutlineShoppingCart>
             <Drawer open={open}
                 title="Cart"
 
@@ -101,9 +101,9 @@ export const Cart = ({cartItems, removeFromCart, checkout}) => {
                                         </select>
                                         </td>
                                         <td>
-                                            <button onClick={() => removeItem(item)}>
+                                            <AiTwotoneDelete className="delete" onClick={() => removeItem(item)}>
                                                 Remove
-                                            </button>
+                                            </AiTwotoneDelete>
                                         </td>
                                     </tr>
                             ))}
@@ -112,7 +112,9 @@ export const Cart = ({cartItems, removeFromCart, checkout}) => {
                     )}
                         {showRemovedFromCartMsg && removedFromCartMsg(removedItem)}
                     <div className="bottom">
+                        {cartItems.length === 0 ? ("") : (
                         <Button onClick={() => checkoutPressed()}>Checkout</Button>
+                        )}
                     </div>
                 </div>
             </Drawer>

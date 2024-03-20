@@ -1,5 +1,6 @@
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Cart } from '../cartdrawer/cart.components'
+import { IoIosCart } from 'react-icons/io';
 import './navbar.styles.css'
 
 

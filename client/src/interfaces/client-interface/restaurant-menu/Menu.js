@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import './Menu.css'
-import { MenuItems } from '../../../components/clientapp/menu/menu.components'
+import { MenuItems } from '../../../components/clientapp/menu/menu.components';
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
-import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components'
+import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components';
 
 //Menu screen that displays items that are being sold by the restaurant if in stock
 function Menu() {
@@ -12,6 +12,7 @@ function Menu() {
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [addedItem, setAddedItem] = useState('');
   const [timerId, setTimerId] = useState(null);
+  const testing = 2
 
 //TODO: useEffect to fetch restaurant items from db
 
@@ -106,6 +107,7 @@ function Menu() {
   const checkout = (cartItems, quantites) => {
     console.log(cartItems);
     console.log(quantites);
+    console.log(testing)
   }
 
   return (
@@ -114,7 +116,7 @@ function Menu() {
 
       <div className='container'>
         <div className='table'>
-          <h1>{test.name}</h1>
+          <h1>{test.name} </h1>
           {showAddedToCartMsg && addedToCartMsg(addedItem)}
           <MenuItems menu={test.menu} addToCart={addToCart} cartItems={cartItems}/ >
         </div>
