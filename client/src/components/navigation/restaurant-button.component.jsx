@@ -12,7 +12,7 @@ export const NavToRestaurantApp = () => {
   return (
     <button
       type="button"
-      class="btn btn-success btn-custom"
+      className="btn btn-success btn-custom"
       onClick={routeToRestaurantApp}
     >
       Restaurant Interface

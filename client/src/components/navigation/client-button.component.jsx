@@ -11,7 +11,7 @@ export const NavToClientApp = () => {
   return (
     <button
       type="button"
-      class="btn btn-success btn-custom"
+      className="btn btn-success btn-custom"
       onClick={routeToClientApp}
     >
       Client Interface
