@@ -133,3 +133,17 @@ export const addEmployeeRepo = async(query, body) => {
         throw Error ("Error while adding creating worker's profile")
     }
 }
+
+export const getMenuItemRepo = async(query) => {
+    try {
+        const item = await Item.findOne({rid: query.rid, mid: query.mid});
+        if (item === null) {
+            return [false, "Can't find item"]
+        }
+        return [true, item];
+
+    } catch (e) {
+        throw Error ("Error while getting menu item");
+    }
+
+}

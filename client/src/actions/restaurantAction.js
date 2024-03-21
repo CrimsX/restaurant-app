@@ -101,7 +101,8 @@ export const updateItem = async (rid, item) => {
  * @param {*} rid - restaurant id
  * @param {*} item - object holding the item object id
  * {
- *  mid: menu item id
+ *  mid: menu item id,
+ *  wid: authorizer
  * }
  * @returns
  */
@@ -109,6 +110,17 @@ export const removeItem = async (rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
     const { data } = await axios.delete(url, item);
+    return data;
+  } catch (error) { 
+    console.error("Error removing item from inventory:", error);
+    throw error;
+  }
+}
+
+export const getMenuItem = async(rid, mid) => {
+  try {
+    const url = connection + `/restaurant/menu/${rid}/${mid}`;
+    const { data } = await axios.get(url)
     return data;
   } catch (error) { 
     console.error("Error removing item from inventory:", error);

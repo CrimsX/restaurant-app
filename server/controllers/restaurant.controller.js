@@ -1,5 +1,5 @@
 import { updateItemRepo, getRestaurantRepo, getMenuRepo, getMenuRepoCustomer, addItemRepo, 
-    removeItemRepo } from "../repositories/restaurant.repository.js";
+    removeItemRepo, getMenuItemRepo } from "../repositories/restaurant.repository.js";
 
 export const getRestaurant = async(req, res) => {
     const { rid } = req.params;
@@ -99,6 +99,24 @@ export const getMenuCustomer = async(req, res) => {
             status: 200,
             success: menu[0],
             data: menu[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400, 
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+export const getMenuItem = async(req, res) => {
+    const { rid, mid } = req.params;
+    try {
+        const item = await getMenuItemRepo({rid: rid, mid: mid})
+        return res.status(200).json({ 
+            status: 200,
+            success: item[0],
+            data: item[1]
         });
     } catch (e) {
         return res.status(400).json({
