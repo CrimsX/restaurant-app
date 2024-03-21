@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
@@ -24,14 +23,24 @@ const CreateItems = () => {
 
     setLoading(true);
 
-    try {
-      await addItem(3, itemData);
+    if (
+      name.length === 0 ||
+      category.length === 0 ||
+      price.length === 0 ||
+      wid.length === 0
+    ) {
+      alert("Please fill in all fields");
       setLoading(false);
-      navigate("/RestaurantInterface/home");
-    } catch (error) {
-      setLoading(false);
-      alert("Error adding item. Check console.");
-      console.error("Error adding item:", error);
+    } else {
+      try {
+        await addItem(3, itemData);
+        setLoading(false);
+        navigate("/RestaurantInterface/home");
+      } catch (error) {
+        setLoading(false);
+        alert("Error adding item. Check console.");
+        console.error("Error adding item:", error);
+      }
     }
   };
 
@@ -49,7 +58,7 @@ const CreateItems = () => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md"
+            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
             required
           />
         </div>
@@ -62,7 +71,7 @@ const CreateItems = () => {
             type="text"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md"
+            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
             required
           />
         </div>
@@ -76,7 +85,7 @@ const CreateItems = () => {
             min="0"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md"
+            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
             required
           />
         </div>
@@ -90,7 +99,7 @@ const CreateItems = () => {
             min="0"
             value={wid}
             onChange={(e) => setWid(e.target.value)}
-            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md"
+            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
             required
           />
         </div>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineAddBox } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
-import { getMenu, storeRowData } from "../../actions/restaurantAction";
+import { getMenu } from "../../actions/restaurantAction";
 
 const ManagerHome = () => {
   const [loading, setLoading] = useState(false);

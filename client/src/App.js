@@ -8,7 +8,6 @@ import Orders from "./interfaces/client-interface/orders/OrdersScreen.js";
 
 import ManagerHome from "./interfaces/restaurant-interface/ManagerHome.jsx";
 import CreateItem from "./interfaces/restaurant-interface/CreateItem.jsx";
-import ShowItems from "./interfaces/restaurant-interface/ShowItems.jsx";
 import EditItem from "./interfaces/restaurant-interface/EditItem.jsx";
 import DeleteItem from "./interfaces/restaurant-interface/DeleteItem.jsx";
 /**
@@ -35,7 +34,6 @@ function App() {
       {/* Restaurant Manager Interface */}
       <Route path="/RestaurantInterface/home" element={<ManagerHome />} />
       <Route path="/items/create" element={<CreateItem />} />
-      <Route path="/items/details/:id" element={<ShowItems />} />
       <Route path="/items/edit/:id" element={<EditItem />} />
       <Route path="/items/delete/:rid/:mid" element={<DeleteItem />} />
     </Routes>
