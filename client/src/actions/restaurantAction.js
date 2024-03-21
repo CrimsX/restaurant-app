@@ -109,13 +109,13 @@ export const updateItem = async (rid, item) => {
 export const removeItem = async (rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
-    const { data } = await axios.delete(url, item);
+    const { data } = await axios.delete(url, { data: item });
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error removing item from inventory:", error);
     throw error;
   }
-}
+};
 
 export const getMenuItem = async(rid, mid) => {
   try {
