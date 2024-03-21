@@ -17,6 +17,30 @@ export const getRestaurant = async(rid) => {
   }
 }
 
+export const getAllRestaurants = async() => {
+  try {
+    const url = connection + `/restaurant/restaurants`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching restaurant info:", error);
+    throw error;
+  }
+}
+
+//------------------------------------Employees---------------------------------------
+
+export const getEmployees = async(rid) => {
+  try {
+    const url = connection + `/restaurant/employees/${rid}`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching restaurant info:", error);
+    throw error;
+  }
+}
+
 //--------------------------------Menu Item Manipulation------------------------------
 
 /**
@@ -212,6 +236,22 @@ export const getProfit = async(rid) => {
 export const getPopularItems = async(rid) => {
   try {
     const url = connection + `/restaurant/analytic/items/${rid}`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching restaurant info:", error);
+    throw error;
+  }
+}
+
+/**
+ * get array of of order hour and the amount of order receive during that specific hour
+ * @param {*} rid - restaurant id
+ * @returns 
+ */
+export const getPopularHours = async(rid) => {
+  try {
+    const url = connection + `/restaurant/analytic/hours/${rid}`;
     const { data } = await axios.get(url)
     return data;
   } catch (error) { 
