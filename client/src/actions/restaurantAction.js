@@ -109,7 +109,7 @@ export const updateItem = async (rid, item) => {
 export const removeItem = async (rid, item) => {
   try {
     const url = connection + `/restaurant/menu/${rid}`;
-    const { data } = await axios.delete(url, item);
+    const { data } = await axios.delete(url, { data: item });
     return data;
   } catch (error) {
     console.error("Error removing item from inventory:", error);
@@ -117,16 +117,16 @@ export const removeItem = async (rid, item) => {
   }
 };
 
-export const getMenuItem = async(rid, mid) => {
+export const getMenuItem = async (rid, mid) => {
   try {
     const url = connection + `/restaurant/menu/${rid}/${mid}`;
-    const { data } = await axios.get(url)
+    const { data } = await axios.get(url);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error removing item from inventory:", error);
     throw error;
   }
-}
+};
 
 //--------------------------------Order Manipulation and History------------------------------
 

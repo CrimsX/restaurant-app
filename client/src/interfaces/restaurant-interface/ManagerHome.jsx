@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineAddBox } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
-import { getMenu } from "../../actions/restaurantAction";
+import { getMenu, storeRowData } from "../../actions/restaurantAction";
 
 const ManagerHome = () => {
   const [loading, setLoading] = useState(false);
@@ -18,9 +18,14 @@ const ManagerHome = () => {
         // Gathering menu data
         const menuData1 = await getMenu(1);
         const menuData2 = await getMenu(2);
+        const menuData3 = await getMenu(3);
 
         // Combining arrays ... is a spread operator
-        const combinedItems = [...menuData1.data, ...menuData2.data];
+        const combinedItems = [
+          ...menuData1.data,
+          ...menuData2.data,
+          ...menuData3.data,
+        ];
         setItems(combinedItems);
         setLoading(false);
       } catch (error) {
@@ -50,6 +55,7 @@ const ManagerHome = () => {
             <option value="">All</option>
             <option value="Deliscio">Deliscio</option>
             <option value="Asianres">Asianres</option>
+            <option value="Freckle.B">Freckle.B</option>
           </select>
         </div>
         <Link to="/items/create">
@@ -71,7 +77,7 @@ const ManagerHome = () => {
         <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-gray-200">
             <tr className="text-center">
-              <th className="py-2 w-1/6">Item ID</th>
+              <th className="py-2 w-1/6">Menu ID</th>
               <th className="py-2 w-2/6">Food Item</th>
               <th className="py-2 w-1/6">Availability</th>
               <th className="py-2 w-1/6">Restaurant Branch</th>
@@ -85,7 +91,8 @@ const ManagerHome = () => {
                 (item) =>
                   !selectedRestaurant ||
                   (selectedRestaurant === "Deliscio" && item.rid === 1) ||
-                  (selectedRestaurant === "Asianres" && item.rid === 2)
+                  (selectedRestaurant === "Asianres" && item.rid === 2) ||
+                  (selectedRestaurant === "Freckle.B" && item.rid === 3)
               )
               .map((item, index) => (
                 <tr
@@ -108,7 +115,13 @@ const ManagerHome = () => {
                     {item.available === true ? "Available" : "Sold Out"}
                   </td>
                   <td className="py-2 border text-center">
-                    {item.rid === 1 ? "Deliscio" : "Asianres"}
+                    {item.rid === 1
+                      ? "Deliscio"
+                      : item.rid === 2
+                      ? "Asianres"
+                      : item.rid === 3
+                      ? "FreckleB"
+                      : ""}
                   </td>
                   <td className="py-2 border text-center">
                     ${(item.price / 100).toFixed(2)}
@@ -118,7 +131,7 @@ const ManagerHome = () => {
                       <Link to={`/items/edit/${item._id}`}>
                         <AiOutlineEdit className="text-2xl text-green-600 hover:text-green-400" />
                       </Link>
-                      <Link to={`/items/delete/${item._id}`}>
+                      <Link to={`/items/delete/${item.rid}/${item.mid}`}>
                         <MdOutlineDelete className="text-2xl text-red-600 hover:text-red-400" />
                       </Link>
                     </div>
