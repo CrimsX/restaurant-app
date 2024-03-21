@@ -56,7 +56,7 @@ export const removeItemRepo = async(query, body) => {
         if (authorizer.wid > 2 || authorizer === null) {
             return [false, "You are not authorize to make change to this item"];
         }
-        const item = await Item.findOneAndDelete({rid: query.rid, _id: body._id});
+        const item = await Item.findOneAndDelete({rid: query.rid, mid: body.mid});
         if (item === null) {
             return [false, "Cannot find item"]
         }
@@ -92,7 +92,7 @@ export const addItemRepo = async(query, body) => {
 export const updateItemRepo = async(query, body) => {
     try { 
         const authorizer = await Employee.findOne({rid: query.rid, wid: body.wid});
-        const item = await Item.findOne({_id: body._id, rid: query.rid})
+        const item = await Item.findOne({mid: body.mid, rid: query.rid})
         if (item === null) {
             return [false, "Item not found"];
         }
@@ -132,4 +132,18 @@ export const addEmployeeRepo = async(query, body) => {
     } catch (e) {
         throw Error ("Error while adding creating worker's profile")
     }
+}
+
+export const getMenuItemRepo = async(query) => {
+    try {
+        const item = await Item.findOne({rid: query.rid, mid: query.mid});
+        if (item === null) {
+            return [false, "Can't find item"]
+        }
+        return [true, item];
+
+    } catch (e) {
+        throw Error ("Error while getting menu item");
+    }
+
 }

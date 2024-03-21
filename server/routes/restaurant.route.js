@@ -1,11 +1,12 @@
 import express from "express";
-import { getRestaurant, getMenu, getMenuCustomer,updateItem, removeItem, addItem } from "../controllers/restaurant.controller.js";
+import { getRestaurant, getMenu, getMenuCustomer,updateItem, removeItem, addItem, getMenuItem } from "../controllers/restaurant.controller.js";
 import { getOrdersRes, setOrderStatus, getOrdersHistory } from "../controllers/order.controller.js";
 import { getProfit, getPopularItem } from "../controllers/analytic.controller.js";
 const restaurantRouter = express.Router();
 
 restaurantRouter.get("/:rid", getRestaurant);
 restaurantRouter.get("/menu/:rid", getMenu);
+restaurantRouter.get("/menu/:rid/:mid", getMenuItem);
 restaurantRouter.get("/menu/customer/:rid", getMenuCustomer);
 restaurantRouter.patch("/menu/:rid", updateItem);
 restaurantRouter.delete("/menu/:rid", removeItem);

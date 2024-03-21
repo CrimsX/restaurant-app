@@ -79,7 +79,7 @@ export const addItem = async (rid, item) => {
  * @param {*} item - object holding object id of the item, the worker, price to be change to, status to be change to.
  * format:
  * {
- *  _id: object id of the menu item to be change,
+ *  mid: menu item id,
  *  wid: id of the working making the change,
  *  price: the updated price (optional, does not need to be included if wish only to change status)
  *  status: 0 or 1 (change the item availability status, optional if only wish to change the price)
@@ -101,7 +101,8 @@ export const updateItem = async (rid, item) => {
  * @param {*} rid - restaurant id
  * @param {*} item - object holding the item object id
  * {
- *  _id: string
+ *  mid: menu item id,
+ *  wid: authorizer
  * }
  * @returns
  */
@@ -115,6 +116,17 @@ export const removeItem = async (rid, item) => {
     throw error;
   }
 };
+
+export const getMenuItem = async(rid, mid) => {
+  try {
+    const url = connection + `/restaurant/menu/${rid}/${mid}`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error removing item from inventory:", error);
+    throw error;
+  }
+}
 
 //--------------------------------Order Manipulation and History------------------------------
 
