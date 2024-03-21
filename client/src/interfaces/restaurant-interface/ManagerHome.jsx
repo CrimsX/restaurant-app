@@ -128,7 +128,7 @@ const ManagerHome = () => {
                   </td>
                   <td className="py-2 px-5 border text-center">
                     <div className="flex justify-center gap-x-5">
-                      <Link to={`/items/edit/${item._id}`}>
+                      <Link to={`/items/edit/${item.rid}/${item.mid}`}>
                         <AiOutlineEdit className="text-2xl text-green-600 hover:text-green-400" />
                       </Link>
                       <Link to={`/items/delete/${item.rid}/${item.mid}`}>

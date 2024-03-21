@@ -34,7 +34,7 @@ function App() {
       {/* Restaurant Manager Interface */}
       <Route path="/RestaurantInterface/home" element={<ManagerHome />} />
       <Route path="/items/create" element={<CreateItem />} />
-      <Route path="/items/edit/:id" element={<EditItem />} />
+      <Route path="/items/edit/:rid/:mid" element={<EditItem />} />
       <Route path="/items/delete/:rid/:mid" element={<DeleteItem />} />
     </Routes>
   );
