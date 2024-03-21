@@ -275,13 +275,15 @@ const test = async() => {
     //let p = await getTotalProfitRepo({rid: 3});
     //let info = await getTotalPopularItemsRepo({rid: 3});
 
-    //let o = await getHourCountRepo({rid: 1});
+    let o = await getHourCountRepo({rid: 3});
 
-    let o = await Order.findOne({order_id: 1710794079520});
-    console.log(o.orderAt);
+    let order = await Order.findOne({order_id: 1710794079520});
+    console.log(order.orderAt);
+    console.log(o);
 }
 
 //insertCustomer();
 //insertRestaurant();
 //createMenuItem();
 //addWorker();
+test()
