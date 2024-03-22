@@ -1,7 +1,6 @@
 import Restaurant from "../models/restaurant.model.js";
 import Employee from "../models/employee.model.js";
 import Item from "../models/item.model.js";
-import Order from "../models/order.model.js";
 
 export const addRestaurantToRepo = async(body) => {
     const maxID = await Restaurant.find().sort({"rid": -1}).limit(1);
@@ -26,6 +25,16 @@ export const getRestaurantRepo = async(query) => {
     } catch (e) {
         throw Error ("Error while retrieving restaurant information")
     }
+}
+
+export const getAllRestaurantRepo = async() => {
+    try {
+        const res = await Restaurant.find().select('-employees');
+        return [true, res]
+    } catch (e) {
+        throw Error ("Error while retrieving all restaurants information")
+    }
+
 }
 
 export const getMenuRepo = async(query) => {
@@ -56,7 +65,7 @@ export const removeItemRepo = async(query, body) => {
         if (authorizer.wid > 2 || authorizer === null) {
             return [false, "You are not authorize to make change to this item"];
         }
-        const item = await Item.findOneAndDelete({rid: query.rid, _id: body._id});
+        const item = await Item.findOneAndDelete({rid: query.rid, mid: body.mid});
         if (item === null) {
             return [false, "Cannot find item"]
         }
@@ -92,11 +101,11 @@ export const addItemRepo = async(query, body) => {
 export const updateItemRepo = async(query, body) => {
     try { 
         const authorizer = await Employee.findOne({rid: query.rid, wid: body.wid});
-        const item = await Item.findOne({_id: body._id, rid: query.rid})
+        const item = await Item.findOne({mid: body.mid, rid: query.rid})
         if (item === null) {
             return [false, "Item not found"];
         }
-        if (authorizer.wid > 2 || item.rid != authorizer.rid || authorizer === null) {
+        if (authorizer.pos > 2 || item.rid != authorizer.rid || authorizer === null) {
             return [false, "You are not authorize to make change to this item"];
         }
         if (body.hasOwnProperty('status')) { //set order status
@@ -131,5 +140,27 @@ export const addEmployeeRepo = async(query, body) => {
         return [true, restaurant];
     } catch (e) {
         throw Error ("Error while adding creating worker's profile")
+    }
+}
+
+export const getMenuItemRepo = async(query) => {
+    try {
+        const item = await Item.findOne({rid: query.rid, mid: query.mid});
+        if (item === null) {
+            return [false, "Can't find item"]
+        }
+        return [true, item];
+
+    } catch (e) {
+        throw Error ("Error while getting menu item");
+    }
+}
+
+export const getEmployeesRepo = async(query) => {
+    try {
+        const emp = await Restaurant.findOne({rid: query.rid}).populate('employees').select('rid employees');
+        return [true, emp];
+    } catch (e) {
+        throw Error ("Error while getting employees information")
     }
 }
