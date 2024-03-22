@@ -89,7 +89,7 @@ export const Cart = ({cartItems, removeFromCart, checkout}) => {
                             .map(item => (
                                     <tr key={item.name}>
                                         <td>{item.name}</td>
-                                        <td>{'$' + calcPrice(item.price, quantities[item.name])}</td>
+                                        <td>{'$' + calcPrice((item.price / 100).toFixed(2), quantities[item.name])}</td>
                                         <td>
                                         <select
                                         value={quantities[item.name] || 1}
