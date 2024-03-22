@@ -1,8 +1,11 @@
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Cart } from '../cartdrawer/cart.components'
+import { IoIosCart } from 'react-icons/io';
 import './navbar.styles.css'
 
-export function NavBar({cartItems, removeFromCart}) {
+
+// Navigation bar that is used on all pages in the client application.
+export function NavBar({cartItems, removeFromCart, checkout}) {
   return (
     <Navbar expand="lg" className="bg-body-tertiary sticky">
       <Container>
@@ -14,7 +17,7 @@ export function NavBar({cartItems, removeFromCart}) {
                 <Nav.Link href="../orders">Orders</Nav.Link>
             </Nav>
             <Nav className="ml-auto">
-                <Cart cartItems={cartItems} removeFromCart={removeFromCart}/>
+                <Cart cartItems={cartItems} removeFromCart={removeFromCart} checkout={checkout}/>
             </Nav>
         </Navbar.Collapse>
       </Container>
