@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './Menu.css'
+import axios from 'axios';
 import { MenuItems } from '../../../components/clientapp/menu/menu.components';
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
@@ -8,47 +9,19 @@ import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-ca
 //Menu screen that displays items that are being sold by the restaurant if in stock
 function Menu() {
   let { data } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
+  const [restaurant, setRestaurant] = useState([]);
   const [cartItems, setCartItems] = useState([])
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [addedItem, setAddedItem] = useState('');
   const [timerId, setTimerId] = useState(null);
   const testing = 2
 
-//TODO: useEffect to fetch restaurant items from db
-
-  const test = {
-    name: "McDonald's",
-    rid: 1,
-    email: "mcdonalds@example.com",
-    pw: "password",
-    address: {
-      street: "123 Main St",
-      city: "Anytown",
-      state: "CA",
-      zip: "12345",
-    },
-    menu: [
-      {
-        name: "Big Mac",
-        rid: 1,
-        available: true,
-        price: 4.99,
-      },
-      {
-        name: "French Fries",
-        rid: 1,
-        available: true,
-        price: 2.49,
-      },
-      {
-        "name": "Chicken McNuggets",
-        "rid": 1,
-        "available": true,
-        "price": 5.99
-      },
-    ],
-    orders: [],
-  };
+  useEffect(() => {
+    axios.get('http://localhost:8000/restaurant/' + data)
+    .then((res) => {
+      setRestaurant(res.data.data);
+    })
+  }, []);
 
   //Function to add item to cart when add to cart button is pressed
 
@@ -116,9 +89,9 @@ function Menu() {
 
       <div className='container'>
         <div className='table'>
-          <h1>{test.name} </h1>
+          <h1>{restaurant.name} </h1>
           {showAddedToCartMsg && addedToCartMsg(addedItem)}
-          <MenuItems menu={test.menu} addToCart={addToCart} cartItems={cartItems}/ >
+          <MenuItems menu={restaurant.menu} addToCart={addToCart} cartItems={cartItems}/ >
         </div>
       </div>
     </div>
