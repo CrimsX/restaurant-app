@@ -30,7 +30,7 @@ export const MenuItems = ({ menu, addToCart, cartItems}) => {
             .map(item => (
                     <tr key={item.name}>
                         <td>{item.name}</td>
-                        <td>{'$' + item.price}</td>
+                        <td>{'$' + (item.price / 100).toFixed(2)}</td>
                         <td>
                             <AiTwotonePlusSquare className="add-to-cart" onClick={() => handleAddToCart(item)}>
                             </AiTwotonePlusSquare>
