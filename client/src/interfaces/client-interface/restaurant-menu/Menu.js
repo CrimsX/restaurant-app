@@ -33,9 +33,16 @@ function Menu() {
     if (cartItems.some(item => item.name === data.name)) {
       return
     } else {
-      cartItems.push(data);
-      setCartItems(cartItems);
-      displayAddedToCartAlert(data);
+      axios.patch('http://localhost:8000/customer/cart/add/' + '1', {
+        mid: data.mid,
+        quantity: 1,
+        rid: data.rid,
+      })
+      .then((res) => {
+        cartItems.push(data);
+        setCartItems(cartItems);
+        displayAddedToCartAlert(data);
+      })
     }
   }
 
