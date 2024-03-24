@@ -17,6 +17,17 @@ export const getCustomer = async(cid) => {
   }
 }
 
+export const getAllCustomers = async() => {
+  try {
+    const url = connection + `/`;
+    const { data } = await axios.get(url)
+    return data;
+  } catch (error) { 
+    console.error("Error fetching customers info:", error);
+    throw error;
+  }
+}
+
 //---------------------------------------Cart Manipulation-------------------------------------------
 
 /**
@@ -26,7 +37,7 @@ export const getCustomer = async(cid) => {
  */
 export const getCart = async(cid) => {
   try {
-    const url = connection +  + `/customer/cart/${cid}`;
+    const url = connection + `/customer/cart/${cid}`;
     const { data } = await axios.get(url);
     return data;
   } catch (error) { 
@@ -48,7 +59,7 @@ export const getCart = async(cid) => {
  */
 export const addToCart = async(cid, item) => {
   try {
-    const url = connection +  + `/customer/cart/add/${cid}`;
+    const url = connection + `/customer/cart/add/${cid}`;
     const { data } = await axios.patch(url, item);
     return data;
   } catch (error) { 
@@ -59,7 +70,7 @@ export const addToCart = async(cid, item) => {
 
 export const updateCart = async(cid, item) => {
   try {
-    const url = connection +  + `/customer/cart/edit/${cid}`;
+    const url = connection + `/customer/cart/edit/${cid}`;
     const { data } = await axios.patch(url, item);
     return data;
   } catch (error) { 
@@ -79,7 +90,7 @@ export const updateCart = async(cid, item) => {
  */
 export const removeFromCart = async(cid, item) => {
   try {
-    const url = connection +  + `/customer/cart/remove/${cid}`;
+    const url = connection + `/customer/cart/remove/${cid}`;
     const { data } = await axios.delete(url, item);
     return data;
   } catch (error) { 
@@ -95,7 +106,7 @@ export const removeFromCart = async(cid, item) => {
  */
 export const resetCart = async(cid) => {
   try {
-    const url = connection +  + `/customer/cart/${cid}`;
+    const url = connection + `/customer/cart/${cid}`;
     const { data } = await axios.delete(url);
     return data;
   } catch (error) { 
@@ -115,11 +126,29 @@ export const resetCart = async(cid) => {
  */
 export const placeOrder = async(cid, body) => {
   try {
-    const url = connection +  + `/customer/order/${cid}`;
+    const url = connection + `/customer/order/${cid}`;
     const { data } = await axios.patch(url, body);
     return data;
   } catch (error) { 
     console.error("Error placing order:", error);
+    throw error;
+  }
+}
+
+/**
+ * Method for user to set the status of their own order to complete
+ * Body is an object containg the order_id.
+ * {
+ *  order_id: number
+ * }
+ */
+export const completeOrder = async(cid, body) => {
+  try {
+    const url = connection + `/order/complete/${cid}`;
+    const { data } = await axios.patch(url, body);
+    return data;
+  } catch (error) { 
+    console.error("Error updating order:", error);
     throw error;
   }
 }
@@ -130,7 +159,7 @@ export const placeOrder = async(cid, body) => {
  */
 export const getAllOrders = async(cid) => {
   try {
-    const url = connection +  + `/customer/orders/${cid}`;
+    const url = connection + `/customer/orders/${cid}`;
     const { data } = await axios.get(url);
     return data;
   } catch (error) { 
@@ -149,7 +178,7 @@ export const getAllOrders = async(cid) => {
  */
 export const getOrdersHistoryMonth = async(cid, body) => {
   try {
-    const url = connection +  + `/customer/orders/history/${cid}`;
+    const url = connection + `/customer/orders/history/${cid}`;
     const { data } = await axios.get(url, body);
     return data;
   } catch (error) { 
