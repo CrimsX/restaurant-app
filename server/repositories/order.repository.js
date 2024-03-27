@@ -57,6 +57,26 @@ export const setOrderStatusRepo= async(rid, body) => {
         }
 }
 
+//customer version, only update status to complete
+export const setOrderStatusRepoC = async(cid, body) => {
+        try {
+                const authorizer = await Customer.findOne({cid: cid})
+                if (authorizer === null) {
+                        return [false, "You are not authorize to make change to this item"];
+                }
+                let order = await Order.findOne({cid: cid, order_id: body.order_id, status: {$gt: -1}});
+                if ( order === null ) {
+                        return [false, "Order not found"];
+                }
+                order.status = 3;
+                let saved = await Order.findOneAndUpdate({cid: cid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
+                return [true, saved];
+        }
+        catch (e) { 
+                throw Error ("Error while update order status")
+        }
+}
+
 //--------------------------------------------------Get all Orders for customers and restaurants-----------------------------------------------------------------
 //for customer
 export const getOrdersRepo = async(query) => {

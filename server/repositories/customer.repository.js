@@ -1,4 +1,5 @@
 import Customer from "../models/customer.model.js";
+import Item from "../models/item.model.js";
 
 export const addCustomerToRepo = async(body) => {
     const maxID = await Customer.find().sort({"cid": -1}).limit(1);
@@ -27,6 +28,28 @@ export const getCustomerRepo = async(query) => {
         throw Error ("Error while attempting to retrieve profile")
     }
 } 
+
+export const getAllCustomersRepo = async() => {
+    try {
+        const customers = await Customer.find().select("-pw -_id");
+        return [true, customers];
+    } catch (e) {
+        throw Error ("Error getting information of all customers")
+    }
+}
+
+//in working progress
+export const addFavoriteRepo = async(query, body) => {
+    try {
+        const exist = await Customer.exist({cid: query.cid})
+        const item = await Item.findOne({rid: body.rid, mid: body.mid});
+        if (item === null) {
+            return [false, "Can't find item"];
+        }
+    } catch (e) {
+        throw Error ("Error while adding item to favourite");
+    }
+}
 
 
 
