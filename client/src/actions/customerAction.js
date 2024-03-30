@@ -31,7 +31,7 @@ export const getAllCustomers = async() => {
 //---------------------------------------Cart Manipulation-------------------------------------------
 
 /**
- * 
+ * get customer cart
  * @param {*} cid - customer id
  * @returns object containing 3 things: status, success (boolean value), and data
  */
@@ -111,6 +111,27 @@ export const resetCart = async(cid) => {
     return data;
   } catch (error) { 
     console.error("Error resetting cart:", error);
+    throw error;
+  }
+}
+
+/**
+ * Add item from past order to cart
+ * @param {*} cid - customer id
+ * @param {*} body - object containing 2 fields: rid and order_id
+ * {
+ *  rid: restaurant id,
+ *  order_id: order id 
+ * }
+ * @returns 
+ */
+export const reOrder = async(cid, body) => {
+  try {
+    const url = connection + `/customer/reorder/${cid}`;
+    const { data } = await axios.patch(url, body);
+    return data;
+  } catch (error) { 
+    console.error("Error adding item to cart:", error);
     throw error;
   }
 }
