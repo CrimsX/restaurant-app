@@ -16,6 +16,7 @@ const CustomerSchema = new Schema (
         username: {type: String, required: true },
         email: {type: String, required: true },
         address: {type: addressSchema, required: true},
+        favorite: [{type: Schema.Types.ObjectId, ref: 'Item'}]
     }
 )
 

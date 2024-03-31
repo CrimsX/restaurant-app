@@ -53,18 +53,16 @@ export const getHourCountRepo = async(query) => {
       {$match: {rid: parseInt(query.rid), status: 3}},
       {
         $addFields: {
-          orderHour: { $dateToString: { format: "%H", date: "$orderAt" } }
+          orderHour: { $dateToString: { format: "%H", date: "$orderAt", timezone: "America/Edmonton" } } //convert to Edmonton timezone
         }
       },
-      // Group by the 'orderHour' field and count the number of orders for each hour
-      {
+      { // Group by the 'orderHour' field and count the number of orders for each hour
         $group: {
           _id: "$orderHour",
           count: { $sum: 1 }
         }
       },
-      // Optionally, sort by hour
-      { $sort: { _id: 1 } }
+      { $sort: { _id: 1 } }, //sort by hour
     ]);
     return[true, info];
 }

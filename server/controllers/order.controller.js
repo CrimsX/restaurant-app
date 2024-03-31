@@ -1,5 +1,5 @@
 import { createOrderRepo, getOrdersRepo, getOrdersRepo2, getSpecOrdeRepo, setOrderStatusRepo, 
-    getOrdersHistoryRepo, getOrdersHistoryRepoC } from "../repositories/order.repository.js";
+    getOrdersHistoryRepo, getOrdersHistoryRepoC, setOrderStatusRepoC } from "../repositories/order.repository.js";
 
 export const createOrder = async(req, res) => {
     const { cid } = req.params;
@@ -24,6 +24,24 @@ export const setOrderStatus = async(req, res) => {
     const { rid } = req.params;
     try {
         const order = await setOrderStatusRepo(rid, req.body);
+        return res.status(200).json({ 
+            status: 200, 
+            success: order[0],
+            data: order[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400, 
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+export const setOrderStatusCustomer = async(req, res) => {
+    const { cid } = req.params
+    try {
+        const order = await setOrderStatusRepoC(cid, req.body);
         return res.status(200).json({ 
             status: 200, 
             success: order[0],

@@ -1,17 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { Drawer } from "antd";
 import { removedFromCartMsg } from "../alerts/removed-from-cart.components";
+import { AiOutlineShoppingCart, AiTwotoneDelete } from 'react-icons/ai';
+
+import { getCart, removeFromCart } from '../../../actions/customerAction';
+
 
 import './cart.styles.css'
 
-export const Cart = ({cartItems, removeFromCart}) => {
+//Cart component for the cart drawer
+export const Cart = ({removeFromCart, checkout}) => {
     const [open, setOpen] = useState(false);
     const [showRemovedFromCartMsg, setShowRemovedFromCartMsg] = useState(false);
     const [removedItem, setRemovedItem] = useState('');
     const [timerId, setTimerId] = useState(null);
     const [quantities, setQuantities] = useState({});
 
+    const [cartItems, setCartItems] = useState([]);
+
+    /*
+    TODO: useEffect to fetch user cart items
+          get user id
+    */
+
+
+    useEffect (() => {
+      /*
+      getCart(1).then((res) => {
+        setCartItems(res.data.items);
+      })
+      */
+      axios.get('http://localhost:8000/customer/cart/' + 1)
+      .then((res) => {
+        setCartItems(res.data.data.items);
+      })
+    }, [cartItems]);
+
+
+    //Calculates the price of the individual item in cart. Updates when quantitiy dropdown is changed
     const calcPrice = (price, qty) =>{
         if (isNaN(parseFloat(qty))){
             qty = 1;
@@ -20,6 +48,8 @@ export const Cart = ({cartItems, removeFromCart}) => {
         return total.toFixed(2);
     }
 
+    //Creates a quantity hashmap with item name as key to track how many of one item is in the cart
+    //If key does not exist in this hashmap but item exists in cart, treat it as 1. Will fix later
     const handleQuantityChange = (event, itemName) => {
         const { value } = event.target;
         setQuantities(prevQuantities => ({
@@ -28,7 +58,15 @@ export const Cart = ({cartItems, removeFromCart}) => {
         }));
     }
 
+    //Remove item from cart and display alert message when item is successfully removed
     const removeItem = (item) => {
+        console.log(item.item.mid)
+        axios.delete('http://localhost:8000/customer/cart/remove/1', {
+          data: {
+            mid: item.item.mid
+          }
+        });
+        //removeFromCart(1, item.item.mid);
         setRemovedItem(item);
         removeFromCart(item);
         setShowRemovedFromCartMsg(true);
@@ -41,16 +79,19 @@ export const Cart = ({cartItems, removeFromCart}) => {
             setShowRemovedFromCartMsg(false);
           }, 3000);
           setTimerId(newTimerId);
+        }
+
+    const checkoutPressed = () => {
+        checkout(cartItems, quantities);
     }
+
     return (
         <div>
-            <Button
+            <AiOutlineShoppingCart className="cart"
             onClick={() => {
                 setOpen(true)
-                }}
-            variant="primary">
-                Cart
-            </Button>
+                }}>
+            </AiOutlineShoppingCart>
             <Drawer open={open}
                 title="Cart"
 
@@ -74,13 +115,13 @@ export const Cart = ({cartItems, removeFromCart}) => {
                         <tbody className="center-text">
                             {cartItems
                             .map(item => (
-                                    <tr key={item.name}>
-                                        <td>{item.name}</td>
-                                        <td>{'$' + calcPrice(item.price, quantities[item.name])}</td>
+                                    <tr key={item.item.name}>
+                                        <td>{item.item.name}</td>
+                                        <td>{'$' + calcPrice((item.item.price / 100).toFixed(2), quantities[item.item.name])}</td>
                                         <td>
                                         <select
-                                        value={quantities[item.name] || 1}
-                                        onChange={(event) => handleQuantityChange(event, item.name)}
+                                        value={quantities[item.item.name] || 1}
+                                        onChange={(event) => handleQuantityChange(event, item.item.name)}
                                         >
                                             {[...Array(99).keys()].map(num => (
                                             <option key={num + 1} value={num + 1}>{num + 1}</option>
@@ -88,9 +129,9 @@ export const Cart = ({cartItems, removeFromCart}) => {
                                         </select>
                                         </td>
                                         <td>
-                                            <button onClick={() => removeItem(item)}>
+                                            <AiTwotoneDelete className="delete" onClick={() => removeItem(item)}>
                                                 Remove
-                                            </button>
+                                            </AiTwotoneDelete>
                                         </td>
                                     </tr>
                             ))}
@@ -99,7 +140,9 @@ export const Cart = ({cartItems, removeFromCart}) => {
                     )}
                         {showRemovedFromCartMsg && removedFromCartMsg(removedItem)}
                     <div className="bottom">
-                        <Button>Checkout</Button>
+                        {cartItems.length === 0 ? ("") : (
+                        <Button onClick={() => checkoutPressed()}>Checkout</Button>
+                        )}
                     </div>
                 </div>
             </Drawer>

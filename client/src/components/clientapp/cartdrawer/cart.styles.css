@@ -13,3 +13,21 @@
   font-size: 24px;
   padding-bottom: 24px;
 }
+
+.cart {
+  width: 32px;
+  height: 32px;
+}
+
+.cart:hover {
+  cursor: pointer;
+}
+
+.delete {
+  width: 24px;
+  height: 24px;
+}
+
+.delete:hover {
+  cursor: pointer;
+}

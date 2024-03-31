@@ -2,6 +2,7 @@ import React from "react";
 import './tile.styles.css'
 import { useNavigate } from "react-router-dom";
 
+//Component to display list of restaurants as clickable tiles.
 export const Tile = ({ restaurant }) => {
     const { name, rid } = restaurant;
     let navigate = useNavigate();

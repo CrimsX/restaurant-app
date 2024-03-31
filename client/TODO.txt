@@ -1,0 +1,14 @@
+I still need to make a login system so maybe hardcode cid for now unless i can get to it in time
+
+landingScreen.js:
+    -useEffect to fetch list of restaurants.
+
+Menu.js:
+    -useEffect(): fetch restaurant items
+    -addToCart(): store item to backend in order model as a cart item. Store quantity as 1.
+    -removedFromCart(): remove the item as a cart item when this button is clicked.
+    -checkout(): should change cart status to ordered in the backend. (still need to make delivery/pickup time so hardcode for now if needed)
+
+cart.components.jsx:
+    -useEffect to fetch user cart items
+    -handleQuantityChange(): change the quantity of the item in the backend when this function is called.

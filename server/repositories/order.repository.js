@@ -1,6 +1,7 @@
 import Order from "../models/order.model.js";
 import Customer from "../models/customer.model.js";
 import Restaurant from "../models/restaurant.model.js";
+import Employee from "../models/employee.model.js";
 
 export const createOrderRepo = async(query, body) => { 
         try {
@@ -27,6 +28,10 @@ export const createOrderRepo = async(query, body) => {
 //query is the restaurant id
 export const setOrderStatusRepo= async(rid, body) => {
         try {
+                const authorizer = await Employee.findOne({rid: rid, wid: body.wid});
+                if (authorizer.pos > 2 || authorizer === null) {
+                        return [false, "You are not authorize to make change to this item"];
+                }
                 let order = await Order.findOne({rid: rid, order_id: body.order_id, status: {$gt: -1}});
                 if ( order === null ) {
                         return [false, "Order not found"];
@@ -52,12 +57,32 @@ export const setOrderStatusRepo= async(rid, body) => {
         }
 }
 
+//customer version, only update status to complete
+export const setOrderStatusRepoC = async(cid, body) => {
+        try {
+                const authorizer = await Customer.findOne({cid: cid})
+                if (authorizer === null) {
+                        return [false, "You are not authorize to make change to this item"];
+                }
+                let order = await Order.findOne({cid: cid, order_id: body.order_id, status: {$gt: -1}});
+                if ( order === null ) {
+                        return [false, "Order not found"];
+                }
+                order.status = 3;
+                let saved = await Order.findOneAndUpdate({cid: cid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
+                return [true, saved];
+        }
+        catch (e) { 
+                throw Error ("Error while update order status")
+        }
+}
+
 //--------------------------------------------------Get all Orders for customers and restaurants-----------------------------------------------------------------
 //for customer
 export const getOrdersRepo = async(query) => {
         try {
 
-                let orders = await Order.find({cid: query.cid, status: {$gt: -1}}).populate("items.item"); //return an array
+                let orders = await Order.find({cid: query.cid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"rid": 1,"schedule": 1}); //return an array
                 return [true, orders];
         }
         catch (e) { 
@@ -67,7 +92,7 @@ export const getOrdersRepo = async(query) => {
 //for restaurant
 export const getOrdersRepo2 = async(query) => {
         try {
-                let orders = await Order.find({rid: query.rid, status: {$gt: -1}}).populate("items.item"); //return an array
+                let orders = await Order.find({rid: query.rid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"schedule": 1}); //return an array
                 return [true, orders];
         }
         catch (e) { 
