@@ -274,15 +274,16 @@ const addWorker = async () => {
 
 const test = async() => {
     //let p = await getTotalProfitRepo({rid: 3});
-    //let info = await getTotalPopularItemsRepo({rid: 3});
+    let info = await getTotalPopularItemsRepo({rid: 3});
     //let o = await getHourCountRepo({rid: 3});
     //console.log(o);
-    let body = {
+    /*let body = {
       rid: 3,
       order_id: 1711026363102
     }
     let order = await reOrderRepo({cid: 1}, body);
-    //console.log(order.items[0].item);
+    //console.log(order.items[0].item);*/
+    console.log(info[1]);
     
 }
 
