@@ -64,25 +64,25 @@ export const addItemToCartRepo = async(query, body) => {
                 return [true, saved];
             } else { //add new item
                 let item = await Item.findOne({rid: body.rid, mid: body.mid});
-                let total = parseFloat(cart.total) + (parseFloat(item.price) * body.quantity); //update the price 
+                let total = parseFloat(cart.total) + (parseFloat(item.price) * body.quantity); //update the price
                 let order = {
                     item: item._id,
                     quantity: body.quantity,
                     total: (parseFloat(item.price) * body.quantity)
                 }
-                cart = await Order.findOneAndUpdate({cid: query.cid, rid: body.rid, status: {$lt: 0}}, {$set: {total: total}, $push: {items: order}}, {new: true})          
+                cart = await Order.findOneAndUpdate({cid: query.cid, rid: body.rid, status: {$lt: 0}}, {$set: {total: total}, $push: {items: order}}, {new: true})
                 return [true, cart];
             }
         }
         else { //cart is empty
             let item = await Item.findOne({rid: body.rid, mid: body.mid});
-            let total = parseFloat(cart.total) + (parseFloat(item.price) * body.quantity); //update the price 
+            let total = parseFloat(cart.total) + (parseFloat(item.price) * body.quantity); //update the price
             let order = {
                 item: item._id,
                 quantity: body.quantity,
                 total: (parseFloat(item.price) * body.quantity)
             }
-            let newcart = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, 
+            let newcart = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}},
                 {$set: {total: total, rid: body.rid}, $push: {items: order}}, {new: true})
             return [true, newcart];
         }
@@ -100,7 +100,7 @@ export const editCartRepo = async(query, body) => {
             return [false, "Cart is empty"]
         }
         if (cart.items.length > 0 && cart.rid > -1) { //cart is not empty
-            const existingItem = cart.items.find(item => item.item.mid === body.mid);
+            const existingItem = cart.items.find(item => item.item.mid === body.item.mid);
             if (existingItem) { //update quantity and price
                 let saved;
                 if (body.quantity < 1) { //remove item if quantity is 0
@@ -118,7 +118,7 @@ export const editCartRepo = async(query, body) => {
                     saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, cart, {new: true});
                 }
                 return [true, saved];
-            } else { 
+            } else {
                 return [false, "Item does not exist"];
             }
         }
@@ -135,14 +135,14 @@ export const removeItemRepo = async(query, body) => {
         }
         const existingItem = cart.items.find(item => item.item.mid === body.mid);
         if (existingItem) { //update quantity and price
-            cart.total = (parseFloat(cart.total) - existingItem.total); //update price 
+            cart.total = (parseFloat(cart.total) - existingItem.total); //update price
             if (cart.total <= 0) {
                 cart.rid = -1;
             }
             //remove item
             let saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, {$set: {total: cart.total, rid: cart.rid}, $pull: {items: { item: existingItem.item._id }}}, {new: true});
             return [true, saved];
-        } 
+        }
         return [false, "Can't find item in cart"];
     } catch (e) {
         throw Error ("Error while reseting cart");
@@ -164,6 +164,3 @@ export const resetCartRepo = async(query) => {
         throw Error ("Error while reseting cart");
     }
 }
-
-
-

@@ -5,6 +5,7 @@ import Interface from "./interfaces/home/Interface.js";
 import Home from "./interfaces/client-interface/landing/landingScreen.js";
 import Menu from "./interfaces/client-interface/restaurant-menu/Menu.js";
 import Orders from "./interfaces/client-interface/orders/OrdersScreen.js";
+import Login from "./interfaces/client-interface/login/loginScreen.js";
 
 import ManagerHome from "./interfaces/restaurant-interface/ManagerHome.jsx";
 import CreateItem from "./interfaces/restaurant-interface/CreateItem.jsx";
@@ -27,9 +28,10 @@ function App() {
       <Route path="/" element={<Interface />} />
 
       {/* Client Interface */}
-      <Route path="/home" element={<Home />} />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/menu/:data" element={<Menu />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/home/:cid" element={<Home />} />
+      <Route path="/orders/:cid" element={<Orders />} />
+      <Route path="/menu/:cid/:rid" element={<Menu />} />
 
       {/* Restaurant Manager Interface */}
       <Route path="/RestaurantInterface/home" element={<ManagerHome />} />
