@@ -22,4 +22,4 @@ customerRouter.get("/orders/:cid", getOrdersCustomer);
 customerRouter.get("/orders/history/:cid", getOrdersHistoryC);
 
 
-export default customerRouter; 
+export default customerRouter;
