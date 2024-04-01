@@ -5,15 +5,16 @@ import { MenuItems } from '../../../components/clientapp/menu/menu.components';
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components';
-import { removeFromCart, updateCart } from '../../../actions/customerAction';
+import { placeOrder, removeFromCart, updateCart } from '../../../actions/customerAction';
 import { alreadyInCart } from '../../../components/clientapp/alerts/already-in-cart.components';
 import { DifferentRestaurant } from '../../../components/clientapp/alerts/different-restaurant-warning.components';
+import DialogueBox from '../../../components/clientapp/checkout/checkout';
 
 //Menu screen that displays items that are being sold by the restaurant if in stock
 function Menu() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
   const [restaurant, setRestaurant] = useState([]);
-  const [cartItems, setCartItems] = useState([])
+  const [cartItems, setCartItems] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [showAlreadyInCart, setShowAlreadyInCart] = useState(false);
@@ -23,6 +24,8 @@ function Menu() {
   const [timerId2, setTimerId2] = useState(null);
   const [timerId3, setTimerId3] = useState(null);
   const isMounted = useRef(false);
+  const [dialogueVisible, setDialogueVisible] = useState(false);
+
 
   useEffect(() => {
     axios.get('http://localhost:8000/restaurant/' + rid)
@@ -40,6 +43,7 @@ function Menu() {
       isMounted.current = true; // Set to true after initial render
       return; // Don't execute further code on initial render
     }
+    setCartItems([]);
     axios.get(`http://localhost:8000/customer/cart/` + cid)
     .then((res) => {
       if ("Cart is Empty" === res.data.data) {
@@ -146,9 +150,9 @@ function Menu() {
       updateCart(cid, item, quantities[item.name]);
     }
 
-  /*
-  TODO:
-  */
+  const toggleDialogue = () => {
+    setDialogueVisible(!dialogueVisible);
+  };
 
   /**
    *
@@ -156,15 +160,19 @@ function Menu() {
    * @param {hashmap} quantites hashmap containing the quantity of items ordered. key of hashmap is the item name,
    * value is the quantity ordered.
    */
-  const checkout = (cartItems, quantites) => {
-    console.log(cartItems);
-    console.log(quantites);
+  const checkout = () => {
+    toggleDialogue();
   }
+
+  const placeOrder = (pickupOption) => {
+    console.log(pickupOption);
+  }
+
 
   return (
     <div>
       <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
-
+      {dialogueVisible && <DialogueBox onSubmit={placeOrder} onClose={toggleDialogue} />}
       <div className='container'>
         <div className='table'>
           <h1>{restaurant.name} </h1>

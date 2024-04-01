@@ -5,6 +5,7 @@ import './landingScreen.css'
 import Restaurants from '../../../components/clientapp/restuarant-list/resutarant-tile-display/display.components'
 import { removeFromCart, updateCart } from '../../../actions/customerAction';
 import { useParams } from 'react-router-dom';
+import DialogueBox from '../../../components/clientapp/checkout/checkout';
 
 //Home page that displays list of restaurants
 function Home() {
@@ -13,6 +14,7 @@ function Home() {
   const [quantities, setQuantities] = useState({});
   let {cid} = useParams();
   const isMounted = useRef(false);
+  const [dialogueVisible, setDialogueVisible] = useState(false);
 
   useEffect( () => {
     axios.get('http://localhost:8000/restaurant/restaurants')
@@ -26,6 +28,7 @@ function Home() {
       isMounted.current = true; // Set to true after initial render
       return; // Don't execute further code on initial render
     }
+    setCartItems([]);
     axios.get(`http://localhost:8000/customer/cart/` + cid)
     .then((res) => {
       if ("Cart is Empty" === res.data.data) {
@@ -62,9 +65,10 @@ function Home() {
       updateCart(cid, item, quantities[item.name]);
     }
 
-  /*
-  TODO:
-  */
+    const toggleDialogue = () => {
+      setDialogueVisible(!dialogueVisible);
+    };
+
 
   /**
    *
@@ -73,13 +77,19 @@ function Home() {
    * value is the quantity ordered.
    */
   const checkout = (cartItems, quantites) => {
+    toggleDialogue();
     console.log(cartItems);
     console.log(quantites);
+  }
+
+  const placeOrder = (pickupOption) => {
+    console.log(pickupOption);
   }
 
     return (
         <div>
             <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
+            {dialogueVisible && <DialogueBox onSubmit={placeOrder} onClose={toggleDialogue} />}
             <div className='body'>
               <h1 className='title'>Restaurant's</h1>
               <Restaurants restaurants={restaurants} cid={cid} onClick/>
