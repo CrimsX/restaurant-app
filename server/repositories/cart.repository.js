@@ -164,3 +164,36 @@ export const resetCartRepo = async(query) => {
         throw Error ("Error while reseting cart");
     }
 }
+
+//Create new cart and add items from the past order to it
+//Will overwritten exisiting cart
+export const reOrderRepo = async(query, body) => {
+    try {
+        //retrieve old order information
+        let order = await Order.findOne({cid: query.cid, rid: body.rid, order_id: body.order_id, status: {$gt: 2}}).populate('items.item'); //retrieve old order information
+        if (!order) {
+            return [false, "Unable to retrieve order information"];
+        }
+        let cart = await Order.findOne({cid: query.cid, status: {$lt: 0}}).populate("items.item"); //retrieve current cart or make new one if there is none
+        if (!cart) { //create new cart if none exist
+            cart = await new Order(query).save();
+        }
+        //filter out item that is set as false
+        let filter_items = order.items.filter((item) => item.item.available === true);
+        //add information to cart;
+        cart.total = getTotal(filter_items);
+        cart.items = filter_items;
+        //save new cart
+        let saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, {$set: {items: cart.items, rid: order.rid, total: cart.total}}
+            , {new: true});
+        return [true, saved];
+    } catch (e) {
+        throw Error ("Error while adding item to cart");
+    }
+}
+
+//Helper method to get total price for cart
+const getTotal= (items) => {
+    let total = items.reduce((accumulator, item) => { return accumulator += (item.quantity * (item.item.price * 100))}, 0)
+    return total;
+}

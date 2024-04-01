@@ -1,5 +1,6 @@
-import { getCartRepo, createCartRepo, addItemToCartRepo, resetCartRepo,
-    editCartRepo, removeItemRepo} from "../repositories/cart.repository.js";
+import { getCartRepo, createCartRepo, addItemToCartRepo, resetCartRepo, 
+    editCartRepo, removeItemRepo, reOrderRepo} from "../repositories/cart.repository.js";
+
 
 export const getCart = async(req, res) => {
     const { cid } = req.params;
@@ -103,6 +104,24 @@ export const removeFromCart= async(req, res) => {
         return res.status(400).json({
             status: 400,
             success: false,
+            message: e.message
+        });
+    }
+}
+
+export const reOrder = async(req, res) => {
+    const { cid } = req.params;
+    try {
+        const cart = await reOrderRepo({cid: cid}, req.body);
+        return res.status(200).json({ 
+            status: 200, 
+            success: cart[0], 
+            data: cart[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400,
+            success: false, 
             message: e.message
         });
     }
