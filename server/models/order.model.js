@@ -58,7 +58,7 @@ const OrderSchema = new mongoose.Schema(
         cid: {type: Number, required: true},
         rid: {type: Number, default: -1},
         total: {type: Number,  get: getPrice, set: setPrice},
-        status: {type: Number, get: getStatus, default: -1},
+        status: {type: Number, default: -1},
         schedule: {type: Number, get: getSchedule},
         pickup: {type: Date},
         orderAt: {type: Date}

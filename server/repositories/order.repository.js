@@ -18,6 +18,7 @@ export const createOrderRepo = async(query, body) => {
                 cart.restaurant = restaurant._id;
                 cart.schedule = body.schedule;
                 cart.orderAt = new Date();
+                cart.pickup = cart.orderAt;
                 let order = await cart.save();
                 return [true, order];
         } catch (e) {
@@ -37,6 +38,12 @@ export const setOrderStatusRepo= async(rid, body) => {
                         return [false, "Order not found"];
                 }
                 if (body.hasOwnProperty('status')) { //set order status
+                        if (body.status < order.status) {
+                                return [false, "Cannot reverse order status"]
+                        }
+                        if (body.status > 3) {
+                                return [false, "Invalid order status"]
+                        }
                         order.status = body.status;
                 }
                 if (body.hasOwnProperty('h')) { //set pickup time
@@ -67,6 +74,9 @@ export const setOrderStatusRepoC = async(cid, body) => {
                 let order = await Order.findOne({cid: cid, order_id: body.order_id, status: {$gt: -1}});
                 if ( order === null ) {
                         return [false, "Order not found"];
+                }
+                if (order.status < 2) {
+                        return [false, "Order is not ready for pickup"]
                 }
                 order.status = 3;
                 let saved = await Order.findOneAndUpdate({cid: cid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
@@ -143,7 +153,30 @@ export const getOrdersHistoryRepoC = async(query, body) => {
             const record = await Order.find({cid: query.cid, status: 3, orderAt: {$gte: startdate, $lte: enddate}});
             return [true, record];
         } catch (e) {
-            throw Error ("Error while retrieving sales history");
+            throw Error ("Error while retrieving orders history");
+        }
+}
+
+//Method to retrieve all past orders
+export const getAllOrdersHistoryR = async (query, body) => {
+        try {
+                let orders;
+                orders = await Order.find({rid: query.rid, status: 3}).sort({'orderAt': -1})
+                .populate('items.item').populate('customer');
+                return [true, orders]
+        } catch (e) {
+        throw Error ("Error while retrieving orders history");
+        }
+}
+
+export const getAllOrdersHistoryC = async (query, body) => {
+        try {
+                let orders;
+                orders = await Order.find({cid: query.cid, status: 3}).sort({'orderAt': -1})
+                .populate('items.item').populate('restaurant', '-menu');
+                return [true, orders]
+        } catch (e) {
+                throw Error ("Error while retrieving orders history");
         }
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------

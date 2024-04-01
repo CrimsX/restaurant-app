@@ -1,7 +1,7 @@
 import express from "express";
 import { getAllCustomers, getCustomer } from "../controllers/customer.controller.js";
 import { getCart, addToCart, resetCart, editCart, removeFromCart, reOrder } from "../controllers/cart.controller.js";
-import { createOrder, getOrdersCustomer, getOrdersHistoryC, setOrderStatusCustomer } from "../controllers/order.controller.js";
+import { createOrder, getOrdersCustomer, getOrdersHistoryC, setOrderStatusCustomer, getAllOrdersC } from "../controllers/order.controller.js";
 const customerRouter = express.Router();
 
 customerRouter.get("/:cid", getCustomer);
@@ -20,6 +20,7 @@ customerRouter.patch("/order/complete/:cid", setOrderStatusCustomer);
 customerRouter.patch("/orders/:cid", createOrder); //create order from cart
 customerRouter.get("/orders/:cid", getOrdersCustomer);
 customerRouter.get("/orders/history/:cid", getOrdersHistoryC);
+customerRouter.get("/orders/all/:cid", getAllOrdersC); //create order from cart
 
 
 export default customerRouter; 
