@@ -2,9 +2,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Form } from "react-bootstrap";
 import { getAllRestaurants } from "../../../actions/restaurantAction";
+import './SelectRID.styles.css';
 
 const RIDSelector = ({selectRID}) => {
-  const {isError, isSuccess, isLoading, data, error} = useQuery({
+  const {isError, isSuccess, isLoading, data} = useQuery({
     queryKey: ["restaurants"],
     queryFn: getAllRestaurants,
     refetchOnMount: true,
@@ -14,15 +15,29 @@ const RIDSelector = ({selectRID}) => {
     selectRID(option.target.value);
   }
 
+  if (isError) {
+    return (
+      <h4>Unable to retrieve restaurant list </h4>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <h4>Please wait, retrieving restaurant list </h4>
+    )
+  }
+
   if (isSuccess) {
     return (
-      <Form.Select aria-label="Default select example" onChange={handleChange}>
-        {
-          data.data.map( row => (
-            <option key = {row.rid} value={row.rid}> {row.name} </option>
-          ))
-        }
-      </Form.Select>
+      <div className="rid_selector"> 
+        <Form.Select className="selector" size='lg' aria-label="Default select example" onChange={handleChange}>
+          {
+            data.data.map( row => (
+              <option key = {row.rid} value={row.rid}> {row.name} </option>
+            ))
+          }
+        </Form.Select>
+      </div>
     )
   }
 }

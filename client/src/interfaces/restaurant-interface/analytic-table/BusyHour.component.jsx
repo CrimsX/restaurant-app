@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useQuery } from "@tanstack/react-query"; //react-query
@@ -8,10 +8,22 @@ const BusiestHours = ({rid}) => {
   const [hours, setHours] = useState([]);
   const [currentRID, setCurrentRID] = useState(0);
 
-  const {isError, isSuccess, isLoading, data, error} = useQuery({
+  const {isError, isSuccess, isLoading, data} = useQuery({
     queryKey: ["hour", rid],
     queryFn:() => getPopularHours(rid),
   })
+
+  if (isError) {
+    return (
+      <h4>Unable to retrieve analytic information </h4>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <h4>Please wait, retrieving analytic information </h4>
+    )
+  }
 
   if (isSuccess) {
     if ((hours.length < 1 && data.data.length > 1) || currentRID !== rid) { //set rendering limit

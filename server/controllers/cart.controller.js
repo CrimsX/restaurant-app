@@ -116,7 +116,8 @@ export const reOrder = async(req, res) => {
         return res.status(200).json({ 
             status: 200, 
             success: cart[0], 
-            data: cart[1]
+            data: cart[1],
+            diff: cart[2]
         });
     } catch (e) {
         return res.status(400).json({

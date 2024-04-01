@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { Table } from 'react-bootstrap';
@@ -9,11 +9,23 @@ const TotalProfit = ({rid}) => {
   const [profit, setProfit] = useState();
   const [currentRID, setCurrentRID] = useState(0);
 
-  const {isError, isSuccess, isLoading, data, error} = useQuery({
+  const {isError, isSuccess, isLoading, data} = useQuery({
     queryKey: ["profit", rid],
     queryFn:() => getProfit(rid),
     refetchOnMount:true
   })
+
+  if (isError) {
+    return (
+      <h4>Unable to retrieve profit information </h4>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <h4>Please wait, retrieving profit information </h4>
+    )
+  }
 
   if (isSuccess) {
     if (currentRID !== rid) {

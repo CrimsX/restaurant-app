@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useQuery } from "@tanstack/react-query"; //react-query
@@ -9,10 +9,22 @@ const PopularItems = ({rid}) => {
   const [popItems, setpopItems] = useState([]);
   const [currentRID, setCurrentRID] = useState(0);
 
-  const {isError, isSuccess, isLoading, data, error} = useQuery({
+  const {isError, isSuccess, isLoading, data} = useQuery({
     queryKey: ["restaurant", rid],
     queryFn:() => getPopularItems(rid),
   })
+
+  if (isError) {
+    return (
+      <h4>Unable to retrieve analytic information </h4>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <h4>Please wait, retrieving analytic information </h4>
+    )
+  }
 
 if (isSuccess) {
     if ((popItems.length < 1 && data.data.length > 1) || currentRID !== rid) { //set rendering limit
