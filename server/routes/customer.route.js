@@ -23,4 +23,4 @@ customerRouter.get("/orders/history/:cid", getOrdersHistoryC);
 customerRouter.get("/orders/all/:cid", getAllOrdersC); //create order from cart
 
 
-export default customerRouter; 
+export default customerRouter;
