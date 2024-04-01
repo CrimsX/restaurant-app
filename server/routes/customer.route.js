@@ -16,11 +16,11 @@ customerRouter.delete("/cart/remove/:cid", removeFromCart); //remove an item fro
 customerRouter.patch("/cart/reorder/:cid", reOrder); //add item from previous order top cart 
 
 //orders information
-customerRouter.patch("/order/complete/:cid", setOrderStatusCustomer);
+customerRouter.patch("/order/complete/:cid", setOrderStatusCustomer);//set order to complete
 customerRouter.patch("/orders/:cid", createOrder); //create order from cart
-customerRouter.get("/orders/:cid", getOrdersCustomer);
-customerRouter.get("/orders/history/:cid", getOrdersHistoryC);
-customerRouter.get("/orders/all/:cid", getAllOrdersC); //create order from cart
+customerRouter.get("/orders/:cid", getOrdersCustomer); //get all pending orders
+customerRouter.get("/orders/history/:cid", getOrdersHistoryC); //get order history by months
+customerRouter.get("/orders/all/:cid", getAllOrdersC); //get all complete order
 
 
 export default customerRouter;

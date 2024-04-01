@@ -14,10 +14,10 @@ restaurantRouter.delete("/menu/:rid", removeItem);
 restaurantRouter.post("/menu/:rid", addItem);
 
 //order 
-restaurantRouter.get("/orders/:rid", getOrdersRes);
-restaurantRouter.get("/orders/history/:rid", getOrdersHistory);
-restaurantRouter.patch("/order/:rid", setOrderStatus);
-restaurantRouter.get("/orders/all/:rid", getAllOrdersR); //create order from cart
+restaurantRouter.get("/orders/:rid", getOrdersRes); //get all pending orders
+restaurantRouter.get("/orders/history/:rid", getOrdersHistory); //get orders by month
+restaurantRouter.patch("/order/:rid", setOrderStatus); //set order status 
+restaurantRouter.get("/orders/all/:rid", getAllOrdersR); //get all complete orders
 
 //analytic
 restaurantRouter.get("/analytic/profit/:rid", getProfit);
