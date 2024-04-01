@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineAddBox } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
+import { BsBarChart } from "react-icons/bs";
 import { getMenu } from "../../actions/restaurantAction";
 
 const ManagerHome = () => {
@@ -58,6 +59,9 @@ const ManagerHome = () => {
             <option value="Freckle.B">Freckle.B</option>
           </select>
         </div>
+        <Link to="/RestaurantAnalytic">
+          <BsBarChart className="text-sky-800 text-4xl ml-4" />
+        </Link>
         <Link to="/items/create">
           <MdOutlineAddBox className="text-sky-800 text-4xl ml-4" />
         </Link>

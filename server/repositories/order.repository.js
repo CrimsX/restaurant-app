@@ -82,7 +82,7 @@ export const setOrderStatusRepoC = async(cid, body) => {
 export const getOrdersRepo = async(query) => {
         try {
 
-                let orders = await Order.find({cid: query.cid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"schedule": 1}); //return an array
+                let orders = await Order.find({cid: query.cid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"rid": 1,"schedule": 1}); //return an array
                 return [true, orders];
         }
         catch (e) { 
