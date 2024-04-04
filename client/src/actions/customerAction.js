@@ -122,7 +122,7 @@ export const resetCart = async(cid) => {
  * @param {*} body - object containing 2 fields: rid and order_id
  * {
  *  rid: restaurant id,
- *  order_id: order id 
+ *  order_id: order id
  * }
  * @returns will return and additional field called diff, if true then some item is no longer available to order
  */
@@ -131,7 +131,7 @@ export const reOrder = async(cid, body) => {
     const url = connection + `/customer/reorder/${cid}`;
     const { data } = await axios.patch(url, body);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error adding item to cart:", error);
     throw error;
   }
@@ -148,9 +148,12 @@ export const reOrder = async(cid, body) => {
  */
 export const placeOrder = async(cid, body) => {
   try {
-    const url = connection + `/customer/order/${cid}`;
+    const url = connection + `/customer/orders/${cid}`;
+    console.log(body);
     const { data } = await axios.patch(url, body);
-    return data;
+    const result = data.success;
+    return result;
+
   } catch (error) {
     console.error("Error placing order:", error);
     throw error;
@@ -176,8 +179,8 @@ export const completeOrder = async(cid, body) => {
 }
 
 /**
- * Get all customer pending orders
- * @param {*} cid 
+ * Get all customer orders, including pending order
+ * @param {*} cid
  */
 export const getAllOrdersP = async(cid) => {
   try {

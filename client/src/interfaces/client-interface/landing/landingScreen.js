@@ -3,16 +3,23 @@ import axios from 'axios';
 import { NavBar } from'../../../components/clientapp/navbar/navbar.components'
 import './landingScreen.css'
 import Restaurants from '../../../components/clientapp/restuarant-list/resutarant-tile-display/display.components'
-import { removeFromCart, updateCart } from '../../../actions/customerAction';
+import { placeOrder, removeFromCart, updateCart } from '../../../actions/customerAction';
 import { useParams } from 'react-router-dom';
+import DialogueBox from '../../../components/clientapp/checkout/checkout';
+import { orderConfirmedMsg } from '../../../components/clientapp/alerts/order-confirmed.components';
+
 
 //Home page that displays list of restaurants
 function Home() {
   const [restaurants, setRestaurants] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [quantities, setQuantities] = useState({});
+  const [showOrderConfirmedMsg, setShowOrderConfirmedMsg] = useState(false);
+  const [timerID, setTimerID] = useState(false);
   let {cid} = useParams();
   const isMounted = useRef(false);
+  const [dialogueVisible, setDialogueVisible] = useState(false);
+
 
   useEffect( () => {
     axios.get('http://localhost:8000/restaurant/restaurants')
@@ -26,6 +33,8 @@ function Home() {
       isMounted.current = true; // Set to true after initial render
       return; // Don't execute further code on initial render
     }
+    setCartItems([]);
+
     axios.get(`http://localhost:8000/customer/cart/` + cid)
     .then((res) => {
       if ("Cart is Empty" === res.data.data) {
@@ -62,9 +71,10 @@ function Home() {
       updateCart(cid, item, quantities[item.name]);
     }
 
-  /*
-  TODO:
-  */
+
+    const toggleDialogue = () => {
+      setDialogueVisible(!dialogueVisible);
+    };
 
   /**
    *
@@ -73,14 +83,41 @@ function Home() {
    * value is the quantity ordered.
    */
   const checkout = (cartItems, quantites) => {
+    toggleDialogue();
     console.log(cartItems);
     console.log(quantites);
+  }
+
+  const order = (pickupOption) => {
+    console.log(pickupOption);
+    const result = placeOrder(parseInt(cid), {schedule: parseInt(pickupOption)});
+    if (result) {
+      setCartItems([]);
+      displayOrderConfirmedAlert();
+    }
+  }
+
+  const displayOrderConfirmedAlert = () => {
+    setShowOrderConfirmedMsg(true);
+
+    // reset timer if add to cart clicked before 3 seconds is up
+    if (timerID) {
+      clearTimeout(timerID);
+    }
+
+    // Set new timer
+    const newTimerID = setTimeout(() => {
+      setShowOrderConfirmedMsg(false);
+    }, 3000);
+    setTimerID(newTimerID);
   }
 
     return (
         <div>
             <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
+            {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
             <div className='body'>
+              {showOrderConfirmedMsg && orderConfirmedMsg()}
               <h1 className='title'>Restaurant's</h1>
               <Restaurants restaurants={restaurants} cid={cid} onClick/>
             </div>

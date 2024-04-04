@@ -5,24 +5,30 @@ import { MenuItems } from '../../../components/clientapp/menu/menu.components';
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components';
-import { removeFromCart, updateCart } from '../../../actions/customerAction';
+import { orderConfirmedMsg } from '../../../components/clientapp/alerts/order-confirmed.components';
+import { placeOrder, removeFromCart, updateCart } from '../../../actions/customerAction';
 import { alreadyInCart } from '../../../components/clientapp/alerts/already-in-cart.components';
 import { DifferentRestaurant } from '../../../components/clientapp/alerts/different-restaurant-warning.components';
+import DialogueBox from '../../../components/clientapp/checkout/checkout';
+
 
 //Menu screen that displays items that are being sold by the restaurant if in stock
 function Menu() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
   const [restaurant, setRestaurant] = useState([]);
-  const [cartItems, setCartItems] = useState([])
+  const [cartItems, setCartItems] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [showAlreadyInCart, setShowAlreadyInCart] = useState(false);
   const [showDifferentResAlert, setShowDifferentResAlert] = useState(false);
+  const [showOrderConfirmedMsg, setShowOrderConfirmedMsg] = useState(false);
   const [addedItem, setAddedItem] = useState('');
   const [timerId1, setTimerId1] = useState(null);
   const [timerId2, setTimerId2] = useState(null);
   const [timerId3, setTimerId3] = useState(null);
+  const [timerId4, setTimerId4] = useState(null);
   const isMounted = useRef(false);
+  const [dialogueVisible, setDialogueVisible] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:8000/restaurant/' + rid)
@@ -40,6 +46,7 @@ function Menu() {
       isMounted.current = true; // Set to true after initial render
       return; // Don't execute further code on initial render
     }
+    setCartItems([]);
     axios.get(`http://localhost:8000/customer/cart/` + cid)
     .then((res) => {
       if ("Cart is Empty" === res.data.data) {
@@ -55,10 +62,9 @@ function Menu() {
     .catch(error => {
       console.error('Error fetching cart items:', error);
     });
-  }, []);
+  }, [cid]);
 
   //Function to add item to cart when add to cart button is pressed
-
   const addToCart = (data) => {
     //Check if item is already in cart
     if (cartItems.some(item => item.name === data.name)) {
@@ -105,6 +111,7 @@ function Menu() {
     }
     // Set new timer
     const newTimerId = setTimeout(() => {
+
       setShowDifferentResAlert(false);
     }, 7000);
     setTimerId3(newTimerId);
@@ -127,7 +134,6 @@ function Menu() {
     setTimerId2(newTimerId);
   }
 
-
   // Remove item from cartItems if item matches restaurant id and name
   const removeItem = (item) => {
     removeFromCart(parseInt(cid), item);
@@ -146,9 +152,9 @@ function Menu() {
       updateCart(cid, item, quantities[item.name]);
     }
 
-  /*
-  TODO:
-  */
+  const toggleDialogue = () => {
+    setDialogueVisible(!dialogueVisible);
+  };
 
   /**
    *
@@ -156,17 +162,42 @@ function Menu() {
    * @param {hashmap} quantites hashmap containing the quantity of items ordered. key of hashmap is the item name,
    * value is the quantity ordered.
    */
-  const checkout = (cartItems, quantites) => {
-    console.log(cartItems);
-    console.log(quantites);
+  const checkout = () => {
+    toggleDialogue();
+  }
+
+  const order = (pickupOption) => {
+    console.log(pickupOption);
+    const result = placeOrder(parseInt(cid), {schedule: parseInt(pickupOption)});
+    if (result) {
+      setCartItems([]);
+      displayOrderConfirmedAlert();
+    }
+  }
+
+  const displayOrderConfirmedAlert = () => {
+    setShowOrderConfirmedMsg(true);
+
+    // reset timer if add to cart clicked before 3 seconds is up
+    if (timerId4) {
+      clearTimeout(timerId4);
+    }
+
+    // Set new timer
+    const newTimerId = setTimeout(() => {
+      setShowOrderConfirmedMsg(false);
+    }, 3000);
+    setTimerId4(newTimerId);
+
   }
 
   return (
     <div>
       <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
-
+      {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
       <div className='container'>
         <div className='table'>
+        {showOrderConfirmedMsg && orderConfirmedMsg()}
           <h1>{restaurant.name} </h1>
           {showAlreadyInCart && alreadyInCart()}
           {showAddedToCartMsg && addedToCartMsg(addedItem)}

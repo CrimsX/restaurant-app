@@ -49,8 +49,18 @@ export const Cart = ({cartItems, quantities, handleChange, removeFromCart, check
 
     const checkoutPressed = () => {
         checkout(cartItems, quantities);
+        setOpen(false)
     }
 
+    const getTotal = () => {
+        let total = 0;
+        for (var item of cartItems) {
+            var cost = item.price;
+            var quantitiy = quantities[item.name];
+            total += (cost * parseInt(quantitiy))
+        }
+        return (total/100).toFixed(2);
+    }
     return (
         <div>
             <AiOutlineShoppingCart className="cart"
@@ -107,7 +117,11 @@ export const Cart = ({cartItems, quantities, handleChange, removeFromCart, check
                         {showRemovedFromCartMsg && removedFromCartMsg(removedItem)}
                     <div className="bottom">
                         {Array.isArray(cartItems) && cartItems.length === 0 ? ("") : (
+                        <>
+                        <h3>Total: ${getTotal()}</h3>
+
                         <Button onClick={() => checkoutPressed()}>Checkout</Button>
+                        </>
                         )}
                     </div>
                 </div>
