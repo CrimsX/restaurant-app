@@ -35,7 +35,7 @@ const OrderHistoryList = ({rid}) => {
             <Accordion.Item key={i++} eventKey={i++}>
               <Accordion.Header> 
                 Order ID: {order.order_id} &emsp; &emsp; 
-                Date: {convertDate(order.orderAt)} &emsp; &emsp; 
+                Date: {convertDate(order.orderAt)} &emsp; &emsp;
                 Order Status: {convertOrderStatus(order.status)}
               </Accordion.Header>
               <Accordion.Body>
@@ -50,6 +50,11 @@ const OrderHistoryList = ({rid}) => {
           ))
         }
         </Accordion>
+      )
+    }
+    else {
+      return (
+        <h4>No orders record available</h4>
       )
     }
   }
