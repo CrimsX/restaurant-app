@@ -119,6 +119,7 @@ export const Cart = ({cartItems, quantities, handleChange, removeFromCart, check
                         {Array.isArray(cartItems) && cartItems.length === 0 ? ("") : (
                         <>
                         <h3>Total: ${getTotal()}</h3>
+
                         <Button onClick={() => checkoutPressed()}>Checkout</Button>
                         </>
                         )}

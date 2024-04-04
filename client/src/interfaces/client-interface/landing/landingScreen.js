@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import DialogueBox from '../../../components/clientapp/checkout/checkout';
 import { orderConfirmedMsg } from '../../../components/clientapp/alerts/order-confirmed.components';
 
+
 //Home page that displays list of restaurants
 function Home() {
   const [restaurants, setRestaurants] = useState([]);
@@ -18,6 +19,7 @@ function Home() {
   let {cid} = useParams();
   const isMounted = useRef(false);
   const [dialogueVisible, setDialogueVisible] = useState(false);
+
 
   useEffect( () => {
     axios.get('http://localhost:8000/restaurant/restaurants')
@@ -32,6 +34,7 @@ function Home() {
       return; // Don't execute further code on initial render
     }
     setCartItems([]);
+
     axios.get(`http://localhost:8000/customer/cart/` + cid)
     .then((res) => {
       if ("Cart is Empty" === res.data.data) {
@@ -68,10 +71,10 @@ function Home() {
       updateCart(cid, item, quantities[item.name]);
     }
 
+
     const toggleDialogue = () => {
       setDialogueVisible(!dialogueVisible);
     };
-
 
   /**
    *

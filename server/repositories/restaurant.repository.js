@@ -109,6 +109,8 @@ export const updateItemRepo = async(query, body) => {
             return [false, "You are not authorize to make change to this item"];
         }
         if (body.hasOwnProperty('status')) { //set order status
+            if (body.status < 0 || body.status > 1)
+                return [false, "Invalid status"]
             if (body.status === 0)
                 item.available = false;
             else 

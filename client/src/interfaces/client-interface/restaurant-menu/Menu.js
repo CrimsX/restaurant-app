@@ -11,6 +11,7 @@ import { alreadyInCart } from '../../../components/clientapp/alerts/already-in-c
 import { DifferentRestaurant } from '../../../components/clientapp/alerts/different-restaurant-warning.components';
 import DialogueBox from '../../../components/clientapp/checkout/checkout';
 
+
 //Menu screen that displays items that are being sold by the restaurant if in stock
 function Menu() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
@@ -28,7 +29,6 @@ function Menu() {
   const [timerId4, setTimerId4] = useState(null);
   const isMounted = useRef(false);
   const [dialogueVisible, setDialogueVisible] = useState(false);
-
 
   useEffect(() => {
     axios.get('http://localhost:8000/restaurant/' + rid)
@@ -65,7 +65,6 @@ function Menu() {
   }, [cid]);
 
   //Function to add item to cart when add to cart button is pressed
-
   const addToCart = (data) => {
     //Check if item is already in cart
     if (cartItems.some(item => item.name === data.name)) {
@@ -112,6 +111,7 @@ function Menu() {
     }
     // Set new timer
     const newTimerId = setTimeout(() => {
+
       setShowDifferentResAlert(false);
     }, 7000);
     setTimerId3(newTimerId);
@@ -133,7 +133,6 @@ function Menu() {
     }, 3000);
     setTimerId2(newTimerId);
   }
-
 
   // Remove item from cartItems if item matches restaurant id and name
   const removeItem = (item) => {
@@ -189,6 +188,7 @@ function Menu() {
       setShowOrderConfirmedMsg(false);
     }, 3000);
     setTimerId4(newTimerId);
+
   }
 
   return (

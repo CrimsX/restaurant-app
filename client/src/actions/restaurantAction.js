@@ -64,7 +64,7 @@ export const getMenu = async (rid) => {
  * @param {*} rid
  * @returns
  */
-const getMenuCustomer = async (rid) => {
+export const getMenuCustomer = async (rid) => {
   try {
     const url = connection + `/restaurant/menu/customer/${rid}`;
     const { data } = await axios.get(url);
@@ -177,11 +177,11 @@ export const updateOrderStatus = async (rid, body) => {
 };
 
 /**
- * Get all orders for a restaurant
+ * Get all pending orders for a restaurant
  * @param {*} rid - restaurant id
  * @returns
  */
-export const getOrders = async (rid) => {
+export const getOrdersP = async (rid) => {
   try {
     const url = connection + `/restaurant/orders/${rid}`;
     const { data } = await axios.get(url);
@@ -191,6 +191,22 @@ export const getOrders = async (rid) => {
     throw error;
   }
 };
+
+/**
+ * Method for retrieving all completed orders
+ * @param {*} rid 
+ * @returns 
+ */
+export const getOrdersHistory = async(rid) => {
+  try {
+    const url = connection + `/restaurant/orders/all/${rid}`;
+    const { data } = await axios.get(url);
+    return data;
+  } catch (error) { 
+    console.error("Error retrieving orders:", error);
+    throw error;
+  }
+}
 
 /**
  * Get order history for a restaurant by month

@@ -1,5 +1,5 @@
-import { createOrderRepo, getOrdersRepo, getOrdersRepo2, getSpecOrdeRepo, setOrderStatusRepo,
-    getOrdersHistoryRepo, getOrdersHistoryRepoC, setOrderStatusRepoC } from "../repositories/order.repository.js";
+import { createOrderRepo, getOrdersRepo, getOrdersRepo2, getSpecOrdeRepo, setOrderStatusRepo, 
+    getOrdersHistoryRepo, getOrdersHistoryRepoC, setOrderStatusRepoC, getAllOrdersHistoryC, getAllOrdersHistoryR } from "../repositories/order.repository.js";
 
 export const createOrder = async(req, res) => {
     const { cid } = req.params;
@@ -148,4 +148,41 @@ export const getOrdersHistoryC = async(req, res) => {
         });
     }
 }
+
+export const getAllOrdersR = async(req, res) => {
+    const { rid } = req.params
+    try {
+        const record = await getAllOrdersHistoryR({rid: rid})
+        return res.status(200).json({ 
+            status: 200, 
+            success: record[0],
+            data: record[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400,
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+export const getAllOrdersC = async(req, res) => {
+    const { cid } = req.params
+    try {
+        const record = await getAllOrdersHistoryC({cid: cid})
+        return res.status(200).json({ 
+            status: 200, 
+            success: record[0],
+            data: record[1]
+        });
+    } catch (e) {
+        return res.status(400).json({
+            status: 400,
+            success: false,
+            message: e.message
+        });
+    }
+}
 //-------------------------------------------------------------------------------------------------------------------------------------------
+

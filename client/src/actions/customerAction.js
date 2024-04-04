@@ -124,7 +124,7 @@ export const resetCart = async(cid) => {
  *  rid: restaurant id,
  *  order_id: order id
  * }
- * @returns
+ * @returns will return and additional field called diff, if true then some item is no longer available to order
  */
 export const reOrder = async(cid, body) => {
   try {
@@ -153,6 +153,7 @@ export const placeOrder = async(cid, body) => {
     const { data } = await axios.patch(url, body);
     const result = data.success;
     return result;
+
   } catch (error) {
     console.error("Error placing order:", error);
     throw error;
@@ -181,12 +182,28 @@ export const completeOrder = async(cid, body) => {
  * Get all customer orders, including pending order
  * @param {*} cid
  */
-export const getAllOrders = async(cid) => {
+export const getAllOrdersP = async(cid) => {
   try {
     const url = connection + `/customer/orders/${cid}`;
     const { data } = await axios.get(url);
     return data;
   } catch (error) {
+    console.error("Error retrieving orders:", error);
+    throw error;
+  }
+}
+
+/**
+ * Method for retrieving all completed orders
+ * @param {*} cid 
+ * @returns 
+ */
+export const getOrdersHistory = async(cid) => {
+  try {
+    const url = connection + `/customer/orders/all/${cid}`;
+    const { data } = await axios.get(url);
+    return data;
+  } catch (error) { 
     console.error("Error retrieving orders:", error);
     throw error;
   }
