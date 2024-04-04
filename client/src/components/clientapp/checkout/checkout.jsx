@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import "./checkout.css"
 
-const DialogueBox = ({ onSubmit,onClose }) => {
+const DialogueBox = ({ onSubmit, onClose }) => {
   const [selectedOption, setSelectedOption] = useState('0');
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Do something with the selected option
+  const handleSubmit = () => {
     onSubmit(selectedOption);
     // Close the dialogue box
-    onClose();
+    onClose()
   };
 
   return (
@@ -41,10 +39,10 @@ const DialogueBox = ({ onSubmit,onClose }) => {
           Pickup Later
         </label>
         <div>
-            <button >Submit Order</button>
+            <button onClick={handleSubmit}>Submit Order</button>
         </div>
         <div className='cancel'>
-            <button>Cancel</button>
+            <button onClick={onClose}>Cancel</button>
         </div>
       </form>
     </div>

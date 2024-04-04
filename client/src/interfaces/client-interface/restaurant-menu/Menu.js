@@ -5,6 +5,7 @@ import { MenuItems } from '../../../components/clientapp/menu/menu.components';
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components';
+import { orderConfirmedMsg } from '../../../components/clientapp/alerts/order-confirmed.components';
 import { placeOrder, removeFromCart, updateCart } from '../../../actions/customerAction';
 import { alreadyInCart } from '../../../components/clientapp/alerts/already-in-cart.components';
 import { DifferentRestaurant } from '../../../components/clientapp/alerts/different-restaurant-warning.components';
@@ -19,10 +20,12 @@ function Menu() {
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [showAlreadyInCart, setShowAlreadyInCart] = useState(false);
   const [showDifferentResAlert, setShowDifferentResAlert] = useState(false);
+  const [showOrderConfirmedMsg, setShowOrderConfirmedMsg] = useState(false);
   const [addedItem, setAddedItem] = useState('');
   const [timerId1, setTimerId1] = useState(null);
   const [timerId2, setTimerId2] = useState(null);
   const [timerId3, setTimerId3] = useState(null);
+  const [timerId4, setTimerId4] = useState(null);
   const isMounted = useRef(false);
   const [dialogueVisible, setDialogueVisible] = useState(false);
 
@@ -59,7 +62,7 @@ function Menu() {
     .catch(error => {
       console.error('Error fetching cart items:', error);
     });
-  }, []);
+  }, [cid]);
 
   //Function to add item to cart when add to cart button is pressed
 
@@ -164,17 +167,37 @@ function Menu() {
     toggleDialogue();
   }
 
-  const placeOrder = (pickupOption) => {
+  const order = (pickupOption) => {
     console.log(pickupOption);
+    const result = placeOrder(parseInt(cid), {schedule: parseInt(pickupOption)});
+    if (result) {
+      setCartItems([]);
+      displayOrderConfirmedAlert();
+    }
   }
 
+  const displayOrderConfirmedAlert = () => {
+    setShowOrderConfirmedMsg(true);
+
+    // reset timer if add to cart clicked before 3 seconds is up
+    if (timerId4) {
+      clearTimeout(timerId4);
+    }
+
+    // Set new timer
+    const newTimerId = setTimeout(() => {
+      setShowOrderConfirmedMsg(false);
+    }, 3000);
+    setTimerId4(newTimerId);
+  }
 
   return (
     <div>
       <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
-      {dialogueVisible && <DialogueBox onSubmit={placeOrder} onClose={toggleDialogue} />}
+      {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
       <div className='container'>
         <div className='table'>
+        {showOrderConfirmedMsg && orderConfirmedMsg()}
           <h1>{restaurant.name} </h1>
           {showAlreadyInCart && alreadyInCart()}
           {showAddedToCartMsg && addedToCartMsg(addedItem)}

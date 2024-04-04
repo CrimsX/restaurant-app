@@ -3,10 +3,10 @@ import Customer from "../models/customer.model.js";
 import Restaurant from "../models/restaurant.model.js";
 import Employee from "../models/employee.model.js";
 
-export const createOrderRepo = async(query, body) => { 
+export const createOrderRepo = async(query, body) => {
         try {
         //this version will retrieve the user cart first using the cid
-                let cart = await Order.findOne({cid: query.cid, status: -1}).populate("items.item");
+                let cart = await Order.findOne({cid: parseInt(query.cid), status: -1}).populate("items.item");
                 if (cart === null || cart.items.length < 1) {
                         return [false, "Empty cart"];
                 }
@@ -52,7 +52,7 @@ export const setOrderStatusRepo= async(rid, body) => {
                 let saved = await Order.findOneAndUpdate({rid: rid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
                 return [true, saved];
         }
-        catch (e) { 
+        catch (e) {
                 throw Error ("Error while update order status")
         }
 }
@@ -72,7 +72,7 @@ export const setOrderStatusRepoC = async(cid, body) => {
                 let saved = await Order.findOneAndUpdate({cid: cid, order_id: body.order_id, status: {$gt: -1}}, order, {new: true}).populate("items.item");
                 return [true, saved];
         }
-        catch (e) { 
+        catch (e) {
                 throw Error ("Error while update order status")
         }
 }
@@ -85,7 +85,7 @@ export const getOrdersRepo = async(query) => {
                 let orders = await Order.find({cid: query.cid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"rid": 1,"schedule": 1}); //return an array
                 return [true, orders];
         }
-        catch (e) { 
+        catch (e) {
                 throw Error ("Error while retrieving orders")
         }
 }
@@ -95,7 +95,7 @@ export const getOrdersRepo2 = async(query) => {
                 let orders = await Order.find({rid: query.rid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"schedule": 1}); //return an array
                 return [true, orders];
         }
-        catch (e) { 
+        catch (e) {
                 throw Error ("Error while retrieving orders")
         }
 }
@@ -109,7 +109,7 @@ export const getSpecOrdeRepo = async(query, body) => {
                 let orders = await Order.findOne({cid: cid, order_id: order_id, status: {$gt: -1}}).populate("items.item");
                 return orders;
         }
-        catch (e) { 
+        catch (e) {
                 throw Error ("Error while retrieving customer's orders")
         }
 }
@@ -120,7 +120,7 @@ export const getOrdersHistoryRepo = async(query, body) => {
         try {
             if (body.month > 12) {
                 return [false, "Invalid Month"];
-            } 
+            }
             const year = new Date().getFullYear();
             const startdate = new Date(year, body.month - 1, 1);
             const enddate = new Date(year, body.month, 0);
@@ -136,7 +136,7 @@ export const getOrdersHistoryRepoC = async(query, body) => {
         try {
             if (body.month > 12) {
                 return [false, "Invalid Month"];
-            }    
+            }
             const year = new Date().getFullYear();
             const startdate = new Date(year, body.month - 1, 1);
             const enddate = new Date(year, body.month , 0);

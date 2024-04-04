@@ -5,14 +5,14 @@ const getPrice = (num) => {
 }
 
 const setPrice = (num) => {
-    if (!Number.isInteger(num)) 
+    if (!Number.isInteger(num))
         return (num * 100).toFixed(0);
-    else 
+    else
         return num;
 }
 
-const getSchedule = (num) => { 
-    if (num < 0) {
+const getSchedule = (num) => {
+    if (num == 0) {
         return "Immediate Pickup";
     }
     else {
@@ -31,9 +31,9 @@ const getStatus = (num) => {
     switch(num) {
         case 1:
             return "In-progress";
-        case 2: 
+        case 2:
             return "Awaiting-Pickup"
-        case 3: 
+        case 3:
             return "Completed"
         default:
             return "Ordered"
@@ -45,11 +45,11 @@ const OrderItemSchema = new mongoose.Schema(
     {
         item: {type: Schema.Types.ObjectId, ref: 'Item'},
         quantity: { type: Number, required: true },
-        total: { type: Number,  get: getPrice, set: setPrice, required: true} 
+        total: { type: Number,  get: getPrice, set: setPrice, required: true}
     }
 )
 
-const OrderSchema = new mongoose.Schema( 
+const OrderSchema = new mongoose.Schema(
     {
         order_id: {type: Number},
         items: [{type: OrderItemSchema}],

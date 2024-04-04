@@ -148,9 +148,11 @@ export const reOrder = async(cid, body) => {
  */
 export const placeOrder = async(cid, body) => {
   try {
-    const url = connection + `/customer/order/${cid}`;
+    const url = connection + `/customer/orders/${cid}`;
+    console.log(body);
     const { data } = await axios.patch(url, body);
-    return data;
+    const result = data.success;
+    return result;
   } catch (error) {
     console.error("Error placing order:", error);
     throw error;
