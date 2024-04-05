@@ -13,10 +13,16 @@ const EditItem = () => {
   const [price, setPrice] = useState("");
   const [status, setStatus] = useState("1");
 
-  const {isSuccess, data} = useQuery({
+  const { isSuccess, data } = useQuery({
     queryKey: ["item", rid, mid],
-    queryFn:() => getMenuItem(rid, mid),
-  })
+    queryFn: () => getMenuItem(rid, mid),
+  });
+
+  useEffect(() => {
+    if (isSuccess && price.length === 0) {
+      setPrice(getPrice(data.data.price));
+    }
+  }, [isSuccess]);
 
   const handleSaveItem = async () => {
     setLoading(true);
@@ -43,9 +49,6 @@ const EditItem = () => {
   };
 
   if (isSuccess) {
-    if (price.length < 1) {
-      setPrice(getPrice(data.data.price));
-    }
     return (
       <div className="p-4">
         <BackButton />
@@ -59,7 +62,7 @@ const EditItem = () => {
             <input
               type="number"
               min="0"
-              step = "0.01"
+              step="0.01"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
