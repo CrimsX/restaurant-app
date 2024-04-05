@@ -5,7 +5,11 @@ import { BsBarChart } from "react-icons/bs";
 import { FaReceipt } from "react-icons/fa6";
 import Spinner from "../../components/Spinner";
 import { getMenu } from "../../actions/restaurantAction";
-import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import {
+  AiOutlineEdit,
+  AiOutlineDelete,
+  AiOutlineArrowLeft,
+} from "react-icons/ai";
 
 const ManagerHome = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(() => {
@@ -60,6 +64,10 @@ const ManagerHome = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
+        <Link to="http://localhost:3000" className="text-sky-800 text-4xl ml-4">
+          <AiOutlineArrowLeft />
+        </Link>
+
         <h1 className="text-3xl">Items</h1>
 
         <Link to={`/RestaurantOrders/${selectedRestaurant}`}>
@@ -118,7 +126,19 @@ const ManagerHome = () => {
                 <tr
                   key={item._id}
                   className={index % 2 === 0 ? "bg-gray-100" : ""}
-                  style={{ transition: "background-color 0.25s" }}
+                  // highlight effects
+                  style={{ transition: "background-color 0.2s" }}
+                  onMouseEnter={() => {
+                    document
+                      .getElementById(`row-${item._id}`)
+                      .classList.add("hover:bg-green-300");
+                  }}
+                  onMouseLeave={() => {
+                    document
+                      .getElementById(`row-${item._id}`)
+                      .classList.remove("hover:bg-green-300");
+                  }}
+                  id={`row-${item._id}`}
                 >
                   <td className="py-2 border text-center">{item.mid}</td>
                   <td className="py-2 border text-center">{item.name}</td>
@@ -140,7 +160,7 @@ const ManagerHome = () => {
                   <td className="py-2 px-5 border text-center">
                     <div className="flex justify-center gap-x-5">
                       <Link to={`/items/edit/${item.rid}/${item.mid}`}>
-                        <AiOutlineEdit className="text-2xl text-green-600 hover:text-green-400" />
+                        <AiOutlineEdit className="text-2xl text-yellow-600 hover:text-yellow-500" />
                       </Link>
                       <Link to={`/items/delete/${item.rid}/${item.mid}`}>
                         <AiOutlineDelete className="text-2xl text-red-600 hover:text-red-400" />

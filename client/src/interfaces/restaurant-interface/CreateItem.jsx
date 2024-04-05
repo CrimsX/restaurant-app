@@ -10,7 +10,7 @@ const CreateItem = () => {
   const [price, setPrice] = useState("");
   const [wid, setWid] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false); // State to track visibility of additional inputs
+  const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,9 +25,8 @@ const CreateItem = () => {
     const itemData = {
       name,
       price,
-      // Check if category is empty, if true set it to "1", otherwise use the entered value
+      // Default values if left blank
       category: category.length === 0 ? "1" : category,
-      // Check if worker ID is empty, if true set it to "1", otherwise use the entered value
       wid: wid.length === 0 ? "1" : wid,
     };
 
@@ -49,8 +48,9 @@ const CreateItem = () => {
     }
   };
 
+  // advance field toggle
   const toggleShowMore = () => {
-    setShowMore(!showMore); // Toggle visibility state
+    setShowMore(!showMore);
   };
 
   return (
@@ -58,42 +58,40 @@ const CreateItem = () => {
       <BackButton />
       <h1 className="text-3xl my-4">Create Food Item</h1>
       {loading && <Spinner />}
-      <div className="flex flex-col border-2 border-sky-400 rounded-xl max-w-[600px] p-4 mx-auto">
+      <div className="border-2 border-sky-400 rounded-xl max-w-[600px] p-4 mx-auto">
         {/* Item  */}
-        <div className="my-4 flex items-center">
-          <label className="text-xl mr-4 text-gray-500 flex-shrink-0 w-28">
+        <div className="my-4">
+          <label className="text-xl text-gray-700 block mb-2">
             Food Item *
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
+            className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:border-sky-500"
             required
           />
         </div>
 
         {/* Price */}
-        <div className="my-4 flex items-center">
-          <label className="text-xl mr-4 text-gray-500 flex-shrink-0 w-28">
-            Price *
-          </label>
+        <div className="my-4">
+          <label className="text-xl text-gray-700 block mb-2">Price *</label>
           <input
             type="number"
             min="0"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
+            className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:border-sky-500"
             required
           />
         </div>
 
         {/* Button to toggle visibility of additional inputs */}
-        <div className="flex justify-center">
+        <div className="text-center my-4">
           <button
-            className={`p-2 rounded-md mt-4 ${
+            className={`px-4 py-2 rounded-md ${
               showMore ? "bg-red-500" : "bg-blue-500"
-            } text-white`}
+            } text-white focus:outline-none`}
             style={{ cursor: "pointer" }}
             onClick={toggleShowMore}
           >
@@ -105,22 +103,21 @@ const CreateItem = () => {
         {showMore && (
           <>
             {/* Category */}
-            <div className="my-4 flex items-center">
-              <label className="text-xl mr-4 text-gray-500 flex-shrink-0 w-28">
+            <div className="my-4">
+              <label className="text-xl text-gray-700 block mb-2">
                 Category
               </label>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
-                required
+                className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:border-sky-500"
               />
             </div>
 
             {/* Worker ID */}
-            <div className="my-4 flex items-center">
-              <label className="text-xl mr-4 text-gray-500 flex-shrink-0 w-28">
+            <div className="my-4">
+              <label className="text-xl text-gray-700 block mb-2">
                 Worker ID
               </label>
               <input
@@ -128,15 +125,14 @@ const CreateItem = () => {
                 min="0"
                 value={wid}
                 onChange={(e) => setWid(e.target.value)}
-                className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
-                required
+                className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:border-sky-500"
               />
             </div>
           </>
         )}
 
         <button
-          className="p-2 bg-sky-300 rounded-md mt-4 self-start"
+          className="px-4 py-2 bg-sky-300 rounded-md mt-4 self-start text-white focus:outline-none"
           onClick={handleSaveItem}
         >
           Add Item

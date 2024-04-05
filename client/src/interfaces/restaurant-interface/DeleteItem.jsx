@@ -17,24 +17,29 @@ const DeleteItem = () => {
       navigate("/RestaurantInterface/home");
     } catch (error) {
       setLoading(false);
-      alert(`Check console:\nResturant ID: ${rid}\nMenu ID: ${mid}`);
-      console.error(error);
+      alert(`Error deleting item. Please check console for details.`);
+      console.error("Error:", error);
     }
   };
 
   return (
     <div className="p-4">
       <BackButton />
-      <h1 className="text-3x1 my-4">Delete Item</h1>
-      {loading ? <Spinner /> : ""}
-      <div className="flex flex-col items-center border-2 border-sky-400 rounded-xl w-[600px] p-8 mx-auto">
-        <h3 className="text-2xl">Delete this item?</h3>
-        <button
-          className="p-4 bg-red-600 text-white m-8 w-full"
-          onClick={handleDeleteItem}
-        >
-          Yes
-        </button>
+      <h1 className="text-3xl my-4">Delete Item</h1>
+      {loading && <Spinner />}
+      <div className="flex flex-col items-center border-2 border-sky-400 rounded-xl max-w-[600px] mx-auto p-8">
+        <h3 className="text-2xl mb-8">
+          Are you sure you want to delete this item?
+        </h3>
+        <div className="flex justify-center w-full">
+          <button
+            className="px-8 py-4 bg-red-600 text-white rounded-md w-full max-w-[200px] focus:outline-none hover:bg-red-700"
+            onClick={handleDeleteItem}
+            disabled={loading}
+          >
+            Yes, Delete
+          </button>
+        </div>
       </div>
     </div>
   );
