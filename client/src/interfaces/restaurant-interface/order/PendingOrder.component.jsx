@@ -50,6 +50,7 @@ const PendingOrderList = ({ rid }) => {
     } catch (error) {
       console.error("Error updating order status:", error);
     }
+    window.location.reload();
   };
 
   if (isError) {
