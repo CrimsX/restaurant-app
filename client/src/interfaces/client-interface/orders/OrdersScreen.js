@@ -21,8 +21,8 @@ import axios from "axios";
 
 function Order() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
-  const [cartItems, setCartItems] = useState([]);
-  const [quantities, setQuantities] = useState({});
+  let [cartItems, setCartItems] = useState([]);
+  let [quantities, setQuantities] = useState({});
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [showAlreadyInCart, setShowAlreadyInCart] = useState(false);
   const [showDifferentResAlert, setShowDifferentResAlert] = useState(false);
@@ -264,13 +264,21 @@ function Order() {
     }
   };
 
-  // Changes the quantity of the item
-  const changeQuantityOrder = (order) => {
-    axios.patch(`http://localhost:8000/customer/cart/reorder/${cid}`, {
-      order_id: order.order_id,
-      rid: order.rid,
-    });
-    window.location.reload();
+  // Add item from past completed order to cart
+  const reOrdering = async(order) => {
+    const { data } = await axios.patch(`http://localhost:8000/customer/cart/reorder/${cid}`, {order_id: order.order_id, rid: order.rid});
+    if (data.success = true) {
+      if (data.data.items.length > 0) {
+        let new_quantities = {}
+        let new_cart = []
+        for (var items of data.data.items) {
+          new_quantities[items.item.name] = items.quantity;
+          new_cart.push(items.item);
+        }
+        setQuantities(new_quantities);
+        setCartItems(new_cart);
+      }
+    }
   };
 
   return (
@@ -316,7 +324,7 @@ function Order() {
                   {!pending && (
                     <button
                       className="btn btn-primary"
-                      onClick={() => changeQuantityOrder(order)}
+                      onClick={() => reOrdering(order)}
                     >
                       Reorder
                     </button>
