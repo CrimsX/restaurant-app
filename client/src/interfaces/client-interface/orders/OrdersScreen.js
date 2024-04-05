@@ -12,20 +12,6 @@ import OrdersInfo from './OrderInfoTable.component';
 
 import axios from 'axios';
 
-/*
-display menu item as a grid
-    when clicked, ask for quantity to add
-        on the same pop up, click add to cart or cancel
-
-*/
-
-/*
- * cart/reorder/2
- * reorder
-  * rid
-  * order_id
-*/
-
 function Order() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
   const [cartItems, setCartItems] = useState([])
@@ -268,8 +254,13 @@ function Order() {
     }
   }
 
+  // Changes the quantity of the item
+  const changeQuantityOrder = (order) => {
+    axios.patch(`http://localhost:8000/customer/cart/reorder/${cid}`, {order_id: order.order_id, rid: order.rid});
+  }
+
   return (
-    <div>
+    <div className='order'>
       <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
       {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
       <h1>Order History</h1>
@@ -294,6 +285,9 @@ function Order() {
                   </p>
                   <OrdersInfo order={order.items} pending={pending}> </OrdersInfo>
                   <h5>Grand Total: ${getPrice(order.total)}</h5>
+                  {!pending &&
+                    <button className="btn btn-primary" onClick={() => changeQuantityOrder(order)}>Reorder</button>
+                  }
                 </Accordion.Body>
               </Accordion.Item>
             ))

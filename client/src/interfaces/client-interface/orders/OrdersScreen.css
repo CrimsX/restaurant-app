@@ -15,3 +15,8 @@ h1 {
 .orderInfoTable {
   padding: 32px;
 }
+
+.order h1 {
+  padding-top: 64px;
+  text-align: center;
+}
