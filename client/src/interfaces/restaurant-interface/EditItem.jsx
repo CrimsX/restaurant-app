@@ -42,8 +42,8 @@ const EditItem = () => {
         navigate("/RestaurantInterface/home");
       } catch (error) {
         setLoading(false);
-        alert("Error adding item. Check console.");
-        console.error("Error adding item:", error);
+        alert("Error updating item. Check console.");
+        console.error("Error updating item:", error);
       }
     }
   };
@@ -54,30 +54,26 @@ const EditItem = () => {
         <BackButton />
         <h1 className="text-3xl my-4">Edit Food Item</h1>
         {loading && <Spinner />}
-        <div className="flex flex-col border-2 border-sky-400 rounded-xl max-w-[600px] p-4 mx-auto">
+        <div className="border-2 border-sky-400 rounded-xl max-w-[600px] p-4 mx-auto">
           <div className="my-4 flex items-center">
-            <label className="text-xl mr-4 text-gray-500 flex-shrink-0 w-28">
-              Price $
-            </label>
+            <label className="text-xl mr-4 text-gray-700 w-28">Price $</label>
             <input
               type="number"
               min="0"
               step="0.01"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
+              className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:border-sky-500"
               required
             />
           </div>
 
           <div className="my-4 flex items-center">
-            <label className="text-xl mr-4 text-gray-500 flex-shrink-0 w-28">
-              Status
-            </label>
+            <label className="text-xl mr-4 text-gray-700 w-28">Status</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="flex-grow border-2 border-gray-500 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors duration-300"
+              className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:border-sky-500"
               required
             >
               <option value="0">Sold Out</option>
@@ -86,7 +82,7 @@ const EditItem = () => {
           </div>
 
           <button
-            className="p-2 bg-sky-300 rounded-md mt-8 self-start"
+            className="px-4 py-2 bg-sky-300 rounded-md mt-4 self-start text-white focus:outline-none"
             onClick={handleSaveItem}
           >
             Save Item
@@ -94,6 +90,8 @@ const EditItem = () => {
         </div>
       </div>
     );
+  } else {
+    return null;
   }
 };
 
