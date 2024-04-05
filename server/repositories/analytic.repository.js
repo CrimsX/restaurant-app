@@ -26,20 +26,23 @@ export const getTotalPopularItemsRepo = async(query) => {
     //need to populate result with menu item information
     const info = await Order.aggregate([
       {$match: {rid: parseInt(query.rid), status: 3}},
-      {$lookup: 
-        {
-          from: "items", //the collection that wish to be join
-          localField: "items.item", //the field of the current result
-          foreignField: "_id", //the field from the collection that wishes to be join, must match 
-          as: "item" 
-        }
-      },
       { $unwind: "$items" }, //Deconstructs an array field from the input documents to output a document for each element. 
       { $group: {
         _id: "$items.item", // group item together by the reference id
         count: { $sum: 1 }, // Count the occurrences of each unique reference ID
         item: { $first: { $arrayElemAt: ["$item", 0] }} //return an array, this makes it returns only the first item
-      }}
+      }},
+      {
+        $lookup: {
+          from: "items", // Collection to join
+          localField: "_id", // Field from the previous group stage
+          foreignField: "_id", // Field in the items collection
+          as: "item" // Output array field name
+        }
+      },
+      // Unwind array to get a single document per item
+      { $unwind: "$item" },
+      { $sort: { count: -1 } }
     ])
     return[true, info];
   } catch (e) {

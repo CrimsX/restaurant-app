@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import './menu.styles.css';
 import { AiTwotonePlusSquare } from "react-icons/ai";
 
@@ -9,6 +9,11 @@ export const MenuItems = ({ menu, addToCart, cartItems}) => {
     if (!menu) {
         return;
     }
+
+    //sort menu items based on category
+    const sortedMenu = menu.sort((a, b) => {
+        return a.category - b.category;
+      });
 
     //Handles add to cart button click. Handled in Menu.js
     const handleAddToCart = (item, qty) => {
@@ -25,7 +30,7 @@ export const MenuItems = ({ menu, addToCart, cartItems}) => {
             </tr>
         </thead>
         <tbody className="center-text">
-            {menu
+            {sortedMenu
             .filter(data => data.available)
             .map(item => (
                     <tr key={item.name}>

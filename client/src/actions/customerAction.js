@@ -11,7 +11,7 @@ export const getCustomer = async(cid) => {
     const url = connection + `/customer/${cid}`;
     const { data } = await axios.get(url)
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching customer info:", error);
     throw error;
   }
@@ -22,7 +22,7 @@ export const getAllCustomers = async() => {
     const url = connection + `/`;
     const { data } = await axios.get(url)
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching customers info:", error);
     throw error;
   }
@@ -40,14 +40,14 @@ export const getCart = async(cid) => {
     const url = connection + `/customer/cart/${cid}`;
     const { data } = await axios.get(url);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error resetting cart:", error);
     throw error;
   }
 }
 
 /**
- * 
+ *
  * @param {*} cid: Customer id number
  * @param {*} item: Order object format provide below
  * {
@@ -55,25 +55,26 @@ export const getCart = async(cid) => {
  *    quantity: number,
  *    rid: restaurant id number
  * }
- * 
+ *
  */
 export const addToCart = async(cid, item) => {
   try {
     const url = connection + `/customer/cart/add/${cid}`;
     const { data } = await axios.patch(url, item);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error adding to cart:", error);
     throw error;
   }
 }
 
-export const updateCart = async(cid, item) => {
+export const updateCart = async(cid, item, quantity) => {
   try {
+    const body = {item: item, quantity: quantity};
     const url = connection + `/customer/cart/edit/${cid}`;
-    const { data } = await axios.patch(url, item);
+    const { data } = await axios.patch(url, body);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error updating cart:", error);
     throw error;
   }
@@ -86,14 +87,14 @@ export const updateCart = async(cid, item) => {
  * {
  *  item: string of the object _id
  * }
- * @returns 
+ * @returns
  */
 export const removeFromCart = async(cid, item) => {
   try {
     const url = connection + `/customer/cart/remove/${cid}`;
-    const { data } = await axios.delete(url, item);
+    const { data } = await axios.delete(url, {data: item});
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error removing item from cart:", error);
     throw error;
   }
@@ -101,15 +102,15 @@ export const removeFromCart = async(cid, item) => {
 
 /**
  * remove all item from cart
- * @param {*} cid 
- * @returns 
+ * @param {*} cid
+ * @returns
  */
 export const resetCart = async(cid) => {
   try {
     const url = connection + `/customer/cart/${cid}`;
     const { data } = await axios.delete(url);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error resetting cart:", error);
     throw error;
   }
@@ -121,16 +122,16 @@ export const resetCart = async(cid) => {
  * @param {*} body - object containing 2 fields: rid and order_id
  * {
  *  rid: restaurant id,
- *  order_id: order id 
+ *  order_id: order id
  * }
- * @returns 
+ * @returns will return and additional field called diff, if true then some item is no longer available to order
  */
 export const reOrder = async(cid, body) => {
   try {
     const url = connection + `/customer/reorder/${cid}`;
     const { data } = await axios.patch(url, body);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error adding item to cart:", error);
     throw error;
   }
@@ -140,17 +141,20 @@ export const reOrder = async(cid, body) => {
 
 /**
  * Change customer's cart status to order
- * @param {*} cid 
+ * @param {*} cid
  * @param {*} body - object containing the schedule to indicate when the customer want to pick up the order
  * 0 for Immediate, 1 for Later
- * @returns 
+ * @returns
  */
 export const placeOrder = async(cid, body) => {
   try {
-    const url = connection + `/customer/order/${cid}`;
+    const url = connection + `/customer/orders/${cid}`;
+    console.log(body);
     const { data } = await axios.patch(url, body);
-    return data;
-  } catch (error) { 
+    const result = data.success;
+    return result;
+
+  } catch (error) {
     console.error("Error placing order:", error);
     throw error;
   }
@@ -168,7 +172,7 @@ export const completeOrder = async(cid, body) => {
     const url = connection + `/order/complete/${cid}`;
     const { data } = await axios.patch(url, body);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error updating order:", error);
     throw error;
   }
@@ -176,11 +180,27 @@ export const completeOrder = async(cid, body) => {
 
 /**
  * Get all customer orders, including pending order
- * @param {*} cid 
+ * @param {*} cid
  */
-export const getAllOrders = async(cid) => {
+export const getAllOrdersP = async(cid) => {
   try {
     const url = connection + `/customer/orders/${cid}`;
+    const { data } = await axios.get(url);
+    return data;
+  } catch (error) {
+    console.error("Error retrieving orders:", error);
+    throw error;
+  }
+}
+
+/**
+ * Method for retrieving all completed orders
+ * @param {*} cid 
+ * @returns 
+ */
+export const getOrdersHistory = async(cid) => {
+  try {
+    const url = connection + `/customer/orders/all/${cid}`;
     const { data } = await axios.get(url);
     return data;
   } catch (error) { 
@@ -202,7 +222,7 @@ export const getOrdersHistoryMonth = async(cid, body) => {
     const url = connection + `/customer/orders/history/${cid}`;
     const { data } = await axios.get(url, body);
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error retrieving orders:", error);
     throw error;
   }

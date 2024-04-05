@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import { MdOutlineAddBox } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
+import { BsBarChart } from "react-icons/bs";
+import { FaReceipt } from "react-icons/fa6";
 import { getMenu } from "../../actions/restaurantAction";
 
 const ManagerHome = () => {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
-  const [selectedRestaurant, setSelectedRestaurant] = useState("");
+  const [selectedRestaurant, setSelectedRestaurant] = useState(1);
 
   useEffect(() => {
     setLoading(true);
@@ -44,6 +46,9 @@ const ManagerHome = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl">Items</h1>
+        <Link to={`/RestaurantOrders/${selectedRestaurant}`}>
+          <FaReceipt className="text-sky-800 text-4xl ml-4" />
+        </Link>
         <div className="flex items-center">
           <label className="mr-2">Manager Login:</label>
           <select
@@ -52,12 +57,14 @@ const ManagerHome = () => {
             onChange={handleDropdownChange}
             value={selectedRestaurant}
           >
-            <option value="">All</option>
-            <option value="Deliscio">Deliscio</option>
-            <option value="Asianres">Asianres</option>
-            <option value="Freckle.B">Freckle.B</option>
+            <option value={1}>Deliscio</option>
+            <option value={2}>Asianres</option>
+            <option value={3}>Freckle.B</option>
           </select>
         </div>
+        <Link to={`/RestaurantAnalytic/${selectedRestaurant}`}>
+          <BsBarChart className="text-sky-800 text-4xl ml-4" />
+        </Link>
         <Link to="/items/create">
           <MdOutlineAddBox className="text-sky-800 text-4xl ml-4" />
         </Link>
@@ -89,10 +96,7 @@ const ManagerHome = () => {
             {items
               .filter(
                 (item) =>
-                  !selectedRestaurant ||
-                  (selectedRestaurant === "Deliscio" && item.rid === 1) ||
-                  (selectedRestaurant === "Asianres" && item.rid === 2) ||
-                  (selectedRestaurant === "Freckle.B" && item.rid === 3)
+                  (selectedRestaurant == item.rid)
               )
               .map((item, index) => (
                 <tr
