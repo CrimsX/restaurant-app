@@ -92,7 +92,7 @@ export const setOrderStatusRepoC = async(cid, body) => {
 export const getOrdersRepo = async(query) => {
         try {
 
-                let orders = await Order.find({cid: query.cid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"rid": 1,"schedule": 1}); //return an array
+                let orders = await Order.find({cid: query.cid, status: {$gt: -1, $lt: 3}}).sort({"rid": 1,"schedule": 1}).populate("items.item").populate('restaurant', '-menu'); //return an array
                 return [true, orders];
         }
         catch (e) {
@@ -102,7 +102,7 @@ export const getOrdersRepo = async(query) => {
 //for restaurant
 export const getOrdersRepo2 = async(query) => {
         try {
-                let orders = await Order.find({rid: query.rid, status: {$gt: -1, $lt: 3}}).populate("items.item").sort({"schedule": 1}); //return an array
+                let orders = await Order.find({rid: query.rid, status: {$gt: -1, $lt: 3}}).sort({"schedule": 1}).populate("items.item").populate('customer'); //return an array
                 return [true, orders];
         }
         catch (e) {

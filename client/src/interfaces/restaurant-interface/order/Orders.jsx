@@ -3,6 +3,7 @@ import BackButton from "../../../components/BackButton";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import OrderHistoryList from "./OrderHistory.component";
+import PendingOrderList from "./PendingOrder.component";
 import { useParams } from "react-router-dom";
 import "./Orders.styles.css"
 
@@ -20,7 +21,7 @@ const RestaurantOrders = () => {
           id="order-tabs"
         >
           <Tab eventKey="pop_items" title="Pending Orders">
-            Pending Order
+            <PendingOrderList rid={rid}> </PendingOrderList>
           </Tab>
           <Tab eventKey="busy_hours" title="Order History">
             <OrderHistoryList rid={rid}> </OrderHistoryList>
