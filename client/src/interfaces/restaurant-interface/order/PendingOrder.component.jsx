@@ -79,9 +79,7 @@ const PendingOrderList = ({ rid }) => {
                   Customer ID: {order.customer.cid} <br />
                 </p>
                 <OrdersInfo order={order.items} />
-                <h5>
-                  Grand Total: ${(getPrice(order.total) * 100).toFixed(2)}
-                </h5>
+                <h5>Grand Total: ${getPrice(order.total)}</h5>
                 <div>
                   <label htmlFor="statusFilter">Item Status:</label>{" "}
                   {/* Label for dropdown */}
