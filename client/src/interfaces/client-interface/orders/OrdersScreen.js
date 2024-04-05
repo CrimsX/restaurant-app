@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef }from 'react';
 
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query"; //react-query
-import { placeOrder, removeFromCart, updateCart, getAllOrdersP, getOrdersHistory } from '../../../actions/customerAction';
+import { getCustomer, placeOrder, removeFromCart, updateCart, getAllOrdersP, getOrdersHistory } from '../../../actions/customerAction';
 
 import './OrdersScreen.css';
 
@@ -18,15 +18,6 @@ display menu item as a grid
     when clicked, ask for quantity to add
         on the same pop up, click add to cart or cancel
 
-*/
-
-/*
-buttons on nav bar (sticky buttons for now):
-        view cart (enddrawer from the right (component))
-            place order option
-        view orderhistory (navigate to order history page)
-
-List restaurants
 */
 
 /*
@@ -52,8 +43,11 @@ function Order() {
   const isMounted = useRef(false);
   const [dialogueVisible, setDialogueVisible] = useState(false);
 
-  let i = 0;
+  const [customer, setCustomer] = useState({});
+  const [orders, setOrders] = useState([null]);
+  const [pending, setPending] = useState(true);
 
+  let i = 0;
 
   /*
    * Nav bar
@@ -211,17 +205,56 @@ function Order() {
       setShowOrderConfirmedMsg(false);
     }, 3000);
     setTimerId4(newTimerId);
-
-  } 
+  }
 
   /*
    * Order history
    */
+  // Get customer information
+  useEffect(() => {
+    axios.get(`http://localhost:8000/customer/${cid}`)
+    .then((res) => {
+      setCustomer(res.data.data);
+    })
+  }, [cid]);
+
   // Get order history
-  const {isError, isSuccess, isLoading, data} = useQuery({
+  const {isError, isSuccess, isLoading, fetchedData} = useQuery({
     queryKey: ["history", cid],
-    queryFn:() => getOrdersHistory(cid),
+    //queryFn:() => getOrdersHistory(cid),
+    queryFn:() => getAllOrdersP(cid),
   });
+  
+  // Set orders if fetchedData is not undefined
+  if (fetchedData !== undefined) {
+    setOrders(fetchedData);
+  };
+
+  // Get order history
+  useEffect(() => {
+    axios.get(`http://localhost:8000/customer/orders/${cid}`)
+    .then((res) => {
+      setOrders(res.data);
+    })
+  }, [cid]);
+
+  // Button to get pending orders
+  const historyPending = () => {
+    axios.get(`http://localhost:8000/customer/orders/${cid}`)
+    .then((res) => {
+      setOrders(res.data);
+      setPending(true);
+    })
+  }
+
+  // Button to get all orders
+  const historyAll = () => {
+    axios.get(`http://localhost:8000/customer/orders/all/${cid}`)
+    .then((res) => {
+      setOrders(res.data);
+      setPending(false);
+    }) 
+  }
 
   // Error message
   if (isError) {
@@ -262,22 +295,19 @@ function Order() {
     }
   }
 
-  // Change quantity of item in order history
-  const changeQuantity = (quantity) => {
-    // change quantity
-  }
-
   if (isSuccess) {
-    if (data.data.length > 0) {
+    if (orders.data.length > 0) {
       return (
         <div>
           <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
           {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
           <h1>Order History</h1>
+          <button className="btn btn-primary" onClick={() => historyPending()}>View Pending History</button>
+          <button className="btn btn-primary" onClick={() => historyAll()}>View All History</button>
           <div className="orderInfoTable">
             <Accordion>
             {
-              data.data.map(order => (
+              orders.data.map(order => (
                 <Accordion.Item key={i++} eventKey={i++}>
                   <Accordion.Header>
                     Restaurant: {order.restaurant.name} &emsp; &emsp; 
@@ -287,10 +317,10 @@ function Order() {
                   </Accordion.Header>
                   <Accordion.Body>
                     <p>
-                      Name: {order.customer.name} <br></br> 
-                      Customer ID: {order.customer.cid} <br></br> 
+                      Name: {customer.name} <br></br> 
+                      Customer ID: {customer.cid} <br></br> 
                     </p>
-                    <OrdersInfo order={order.items}> </OrdersInfo>
+                    <OrdersInfo order={order.items} pending={pending}> </OrdersInfo>
                     <h5>Grand Total: ${getPrice(order.total)}</h5>
                   </Accordion.Body>
                 </Accordion.Item>
@@ -298,6 +328,16 @@ function Order() {
             }
             </Accordion>
           </div>
+        </div>
+      )
+      
+    } else {
+      return (
+        <div>
+          <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
+          {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
+          <h1>Order History</h1>
+          <h4>No orders found</h4>
         </div>
       )
     }
