@@ -44,7 +44,7 @@ function Order() {
   const [dialogueVisible, setDialogueVisible] = useState(false);
 
   const [customer, setCustomer] = useState({});
-  const [orders, setOrders] = useState([null]);
+  const [orders, setOrders] = useState([]);
   const [pending, setPending] = useState(true);
 
   let i = 0;
@@ -218,31 +218,20 @@ function Order() {
     })
   }, [cid]);
 
-  // Get order history
-  const {isError, isSuccess, isLoading, fetchedData} = useQuery({
-    queryKey: ["history", cid],
-    //queryFn:() => getOrdersHistory(cid),
-    queryFn:() => getAllOrdersP(cid),
-  });
-  
-  // Set orders if fetchedData is not undefined
-  if (fetchedData !== undefined) {
-    setOrders(fetchedData);
-  };
-
-  // Get order history
+  // Get the initial order history
   useEffect(() => {
     axios.get(`http://localhost:8000/customer/orders/${cid}`)
     .then((res) => {
       setOrders(res.data);
     })
-  }, [cid]);
+  }, []);
 
   // Button to get pending orders
   const historyPending = () => {
     axios.get(`http://localhost:8000/customer/orders/${cid}`)
     .then((res) => {
       setOrders(res.data);
+      console.log(orders);
       setPending(true);
     })
   }
@@ -254,20 +243,6 @@ function Order() {
       setOrders(res.data);
       setPending(false);
     }) 
-  }
-
-  // Error message
-  if (isError) {
-    return (
-      <h4>Unable to retrieve list of orders </h4>
-    )
-  }
-
-  // Loading message
-  if (isLoading) {
-    return (
-      <h4>Please wait, retrieving orders history </h4>
-    )
   }
 
   // Add decimal point to the price
@@ -295,53 +270,42 @@ function Order() {
     }
   }
 
-  if (isSuccess) {
-    if (orders.data.length > 0) {
-      return (
-        <div>
-          <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
-          {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
-          <h1>Order History</h1>
-          <button className="btn btn-primary" onClick={() => historyPending()}>View Pending History</button>
-          <button className="btn btn-primary" onClick={() => historyAll()}>View All History</button>
-          <div className="orderInfoTable">
-            <Accordion>
-            {
-              orders.data.map(order => (
-                <Accordion.Item key={i++} eventKey={i++}>
-                  <Accordion.Header>
-                    Restaurant: {order.restaurant.name} &emsp; &emsp; 
-                    Order ID: {order.order_id} &emsp; &emsp; 
-                    Date: {convertDate(order.orderAt)} &emsp; &emsp; 
-                    Order Status: {convertOrderStatus(order.status)}
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <p>
-                      Name: {customer.name} <br></br> 
-                      Customer ID: {customer.cid} <br></br> 
-                    </p>
-                    <OrdersInfo order={order.items} pending={pending}> </OrdersInfo>
-                    <h5>Grand Total: ${getPrice(order.total)}</h5>
-                  </Accordion.Body>
-                </Accordion.Item>
-              ))
-            }
-            </Accordion>
-          </div>
-        </div>
-      )
-      
-    } else {
-      return (
-        <div>
-          <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
-          {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
-          <h1>Order History</h1>
-          <h4>No orders found</h4>
-        </div>
-      )
-    }
-  }
+  return (
+    <div>
+      <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
+      {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
+      <h1>Order History</h1>
+      <button className="btn btn-primary" onClick={() => historyPending()}>View Pending History</button>
+      <button className="btn btn-primary" onClick={() => historyAll()}>View All History</button>
+      <div className="orderInfoTable">
+        {orders.data !== undefined ?
+          <Accordion>
+          {
+            orders.data.map(order => (
+              <Accordion.Item key={i++} eventKey={i++}>
+                <Accordion.Header>
+                  Restaurant: {order.restaurant.name} &emsp; &emsp; 
+                  Order ID: {order.order_id} &emsp; &emsp; 
+                  Date: {convertDate(order.orderAt)} &emsp; &emsp; 
+                  Order Status: {convertOrderStatus(order.status)}
+                </Accordion.Header>
+                <Accordion.Body>
+                  <p>
+                    Name: {customer.name} <br></br> 
+                    Customer ID: {customer.cid} <br></br> 
+                  </p>
+                  <OrdersInfo order={order.items} pending={pending}> </OrdersInfo>
+                  <h5>Grand Total: ${getPrice(order.total)}</h5>
+                </Accordion.Body>
+              </Accordion.Item>
+            ))
+          }
+          </Accordion>
+        : <h4>No orders found</h4>
+        }
+      </div>
+    </div>
+  ) 
 }
 
 export default Order;
