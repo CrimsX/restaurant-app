@@ -1,17 +1,17 @@
 import React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import { useQuery } from "@tanstack/react-query"; //react-query
-import { getOrdersHistory } from '../../../actions/restaurantAction';
-import OrdersInfo from './OrderInfoTable.component';
+import { getOrdersP} from '../../../actions/restaurantAction'; //get pending order 
+import OrdersInfo from './OrderInfoTable.component'; //fpr holding order items
 import { getPrice } from '../DisplayItemFunctions';
 
-const OrderHistoryList = ({rid}) => {
+const PendingOrderList = ({rid}) => { 
   let i = 0;
-  
+
   //get restaurant orders history
   const {isError, isSuccess, isLoading, data} = useQuery({
-    queryKey: ["history", rid],
-    queryFn:() => getOrdersHistory(rid),
+    queryKey: ["pending", rid],
+    queryFn:() => getOrdersP(rid),
   })
 
   if (isError) {
@@ -36,7 +36,8 @@ const OrderHistoryList = ({rid}) => {
               <Accordion.Header> 
                 Order ID: {order.order_id} &emsp; &emsp; 
                 Date: {convertDate(order.orderAt)} &emsp; &emsp;
-                Order Status: {convertOrderStatus(order.status)}
+                Order Status: {convertOrderStatus(order.status)} &emsp; &emsp;
+                Pick Up schedule: {convertpickUp(order.schedule)}
               </Accordion.Header>
               <Accordion.Body>
                 <p>
@@ -77,4 +78,14 @@ const convertOrderStatus = (status) => {
         return "Ordered"
   }
 }
-export default OrderHistoryList;
+
+const convertpickUp = (schedule) => {
+  if (schedule == 0) {
+    return "Immediate Pickup";
+  }
+  else {
+    return "Later Pickup";
+  }
+}
+
+export default PendingOrderList;
