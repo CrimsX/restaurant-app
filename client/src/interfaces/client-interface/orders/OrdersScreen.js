@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef }from 'react';
 
 import { useParams } from 'react-router-dom';
-import { useQuery } from "@tanstack/react-query"; //react-query
 import { getCustomer, placeOrder, removeFromCart, updateCart, getAllOrdersP, getOrdersHistory } from '../../../actions/customerAction';
 
 import './OrdersScreen.css';
@@ -231,7 +230,6 @@ function Order() {
     axios.get(`http://localhost:8000/customer/orders/${cid}`)
     .then((res) => {
       setOrders(res.data);
-      console.log(orders);
       setPending(true);
     })
   }
@@ -275,8 +273,8 @@ function Order() {
       <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
       {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
       <h1>Order History</h1>
-      <button className="btn btn-primary" onClick={() => historyPending()}>View Pending History</button>
-      <button className="btn btn-primary" onClick={() => historyAll()}>View All History</button>
+      <button className="btnHistory" onClick={() => historyPending()}>View Pending History</button>
+      <button className="btnHistory" onClick={() => historyAll()}>View All History</button>
       <div className="orderInfoTable">
         {orders.data !== undefined ?
           <Accordion>
@@ -301,7 +299,7 @@ function Order() {
             ))
           }
           </Accordion>
-        : <h4>No orders found</h4>
+        : <h4>Loading orders...</h4>
         }
       </div>
     </div>

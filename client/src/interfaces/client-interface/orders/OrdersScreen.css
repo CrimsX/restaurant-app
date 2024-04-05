@@ -3,8 +3,13 @@ h1 {
   text-align: center;
 }
 
-.btn {
+.btnHistory {
   margin: 32px;
+  padding: 8px;
+  background-color: lightgray;
+  color: black;
+  border: 1px solid black;
+  font-size: 16px;
 }
 
 .orderInfoTable {
