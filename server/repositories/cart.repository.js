@@ -188,6 +188,9 @@ export const reOrderRepo = async(query, body) => {
         cart.total = getTotal(filter_items);
         cart.items = filter_items;
         //save new cart
+        if (cart.items.length < 1) { //cart is empty the rid
+            order.rid = -1;
+        }
         let saved = await Order.findOneAndUpdate({cid: query.cid, status: {$lt: 0}}, {$set: {items: cart.items, rid: order.rid, total: cart.total}}
             , {new: true}).populate('items.item');
         return [true, saved, diff];
