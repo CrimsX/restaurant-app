@@ -23,12 +23,12 @@ git clone https://github.com/CrimsX/restaurant-app
 
 - Start the server
 ```shell
-npm i --production
+npm i
 npm start
 ```
 
 - Start the client
 ```shell
-npm i --production
+npm i
 npm start
 ```
