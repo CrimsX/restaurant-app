@@ -19,6 +19,11 @@ const CreateItem = () => {
     return params.get(name);
   };
 
+  /*
+   adds an item to a restaurant's menu, managing loading state
+   and validation, and navigates to the home page upon success
+   or displays an error alert on failure.
+  */
   const handleSaveItem = async () => {
     const restaurantId = getQueryParam("restaurantId");
 

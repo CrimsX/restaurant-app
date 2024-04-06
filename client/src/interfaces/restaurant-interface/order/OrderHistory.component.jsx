@@ -5,6 +5,11 @@ import { getOrdersHistory } from "../../../actions/restaurantAction";
 import OrdersInfo from "./OrderInfoTable.component";
 import { getPrice } from "../DisplayItemFunctions";
 
+/*
+component fetches and displays restaurant order history, handling loading,
+error, and success states, presenting each order's details in an
+accordion format if available.
+*/
 const OrderHistoryList = ({ rid }) => {
   let i = 0;
 

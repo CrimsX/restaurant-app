@@ -4,6 +4,11 @@ import Spinner from "../../components/Spinner";
 import { useNavigate, useParams } from "react-router-dom";
 import { removeItem } from "../../actions/restaurantAction";
 
+/* 
+handles item deletion, managing loading state and
+navigation, triggering deletion using removeItem, and
+displaying a confirmation prompt.
+*/
 const DeleteItem = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
