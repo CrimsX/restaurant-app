@@ -6,6 +6,11 @@ import Spinner from "../../components/Spinner";
 import { updateItem, getMenuItem } from "../../actions/restaurantAction";
 import { getPrice } from "./DisplayItemFunctions";
 
+/*
+loading state and state variables for editing an item's price
+and status, fetching data with useQuery, and updating the price
+state upon successful data retrieval with useEffect.
+*/
 const EditItem = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -24,6 +29,11 @@ const EditItem = () => {
     }
   }, [isSuccess]);
 
+  /* 
+  Updates an item with specified parameters, handles loading state,
+  alerts if required fields are missing, and navigates or
+  logs errors accordingly.
+  */
   const handleSaveItem = async () => {
     setLoading(true);
 

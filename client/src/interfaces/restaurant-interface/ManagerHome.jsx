@@ -19,6 +19,12 @@ const ManagerHome = () => {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
 
+  /*
+  fetches menu data from three different sources asynchronously,
+  combines the data into a single array, updates the component's
+  state with the combined data, and manages loading state during
+  the fetching process in a React functional component.
+  */
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -63,6 +69,7 @@ const ManagerHome = () => {
 
   return (
     <div className="p-4">
+      {/* Header of ManagerHome */}
       <div className="flex justify-between items-center mb-4">
         <Link to="http://localhost:3000" className="text-sky-800 text-4xl ml-4">
           <AiOutlineArrowLeft />
@@ -108,6 +115,7 @@ const ManagerHome = () => {
           <Spinner />
         </div>
       ) : (
+        // table
         <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-gray-200">
             <tr className="text-center">
@@ -138,6 +146,7 @@ const ManagerHome = () => {
                       .getElementById(`row-${item._id}`)
                       .classList.remove("hover:bg-green-300");
                   }}
+                  // Table cells
                   id={`row-${item._id}`}
                 >
                   <td className="py-2 border text-center">{item.mid}</td>
