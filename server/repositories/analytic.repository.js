@@ -29,7 +29,7 @@ export const getTotalPopularItemsRepo = async(query) => {
       { $unwind: "$items" }, //Deconstructs an array field from the input documents to output a document for each element. 
       { $group: {
         _id: "$items.item", // group item together by the reference id
-        count: { $sum: 1 }, // Count the occurrences of each unique reference ID
+        count: { $sum:  "$items.quantity"}, // add the quantities of the items
         item: { $first: { $arrayElemAt: ["$item", 0] }} //return an array, this makes it returns only the first item
       }},
       {

@@ -19,8 +19,8 @@ import OrderHistoryList from "./OrderHistory.component";
 
 function Order() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
-  const [cartItems, setCartItems] = useState([]);
-  const [quantities, setQuantities] = useState({});
+  let [cartItems, setCartItems] = useState([]);
+  let [quantities, setQuantities] = useState({});
   const [showAddedToCartMsg, setShowAddedToCartMsg] = useState(false);
   const [showAlreadyInCart, setShowAlreadyInCart] = useState(false);
   const [showDifferentResAlert, setShowDifferentResAlert] = useState(false);
@@ -213,10 +213,16 @@ function Order() {
       <div className="restaurant-order">
         <Tabs id="order-tabs">
           <Tab eventKey="pop_items" title="Pending Orders">
-            <PendingOrderList rid={rid}> </PendingOrderList>
+            <PendingOrderList> </PendingOrderList>
           </Tab>
           <Tab eventKey="busy_hours" title="Order History">
-            <OrderHistoryList rid={rid}> </OrderHistoryList>
+            <OrderHistoryList
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+              quantities={quantities}
+              setQuantities={setQuantities}
+              >
+              </OrderHistoryList>
           </Tab>
         </Tabs>
       </div>
