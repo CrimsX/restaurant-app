@@ -2,21 +2,3 @@
   padding-top: 64px;
   text-align: center;
 }
-
-.btnHistory {
-  margin: 32px;
-  padding: 8px;
-  background-color: lightgray;
-  color: black;
-  border: 1px solid black;
-  font-size: 16px;
-}
-
-.orderInfoTable {
-  padding: 32px;
-}
-
-.order h1 {
-  padding-top: 64px;
-  text-align: center;
-}

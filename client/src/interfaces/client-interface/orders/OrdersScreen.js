@@ -1,23 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
-  getCustomer,
   placeOrder,
   removeFromCart,
   updateCart,
-  getAllOrdersP,
-  getOrdersHistory,
 } from "../../../actions/customerAction";
 
 import "./OrdersScreen.css";
 
 import { NavBar } from "../../../components/clientapp/navbar/navbar.components";
 import DialogueBox from "../../../components/clientapp/checkout/checkout";
-import Accordion from "react-bootstrap/Accordion";
-import OrdersInfo from "./OrderInfoTable.component";
-
-import axios from "axios";
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import PendingOrderList from "./PendingOrder.component";
+import OrderHistoryList from "./OrderHistory.component";
 
 function Order() {
   let { cid, rid } = useParams(); //Data contains the restaurant ID to fetch restaurant from db
@@ -34,12 +32,6 @@ function Order() {
   const [timerId4, setTimerId4] = useState(null);
   const isMounted = useRef(false);
   const [dialogueVisible, setDialogueVisible] = useState(false);
-
-  const [customer, setCustomer] = useState({});
-  const [orders, setOrders] = useState([]);
-  const [pending, setPending] = useState(true);
-
-  let i = 0;
 
   /*
    * Nav bar
@@ -202,84 +194,7 @@ function Order() {
       setShowOrderConfirmedMsg(false);
     }, 3000);
     setTimerId4(newTimerId);
-  };
-
-  /*
-   * Order history
-   */
-  // Get customer information
-  useEffect(() => {
-    axios.get(`http://localhost:8000/customer/${cid}`).then((res) => {
-      setCustomer(res.data.data);
-    });
-  }, [cid]);
-
-  // Get the initial order history
-  useEffect(() => {
-    axios.get(`http://localhost:8000/customer/orders/${cid}`).then((res) => {
-      setOrders(res.data);
-    });
-  }, []);
-
-  // Button to get pending orders
-  const historyPending = () => {
-    axios.get(`http://localhost:8000/customer/orders/${cid}`).then((res) => {
-      setOrders(res.data);
-      setPending(true);
-    });
-  };
-
-  // Button to get all orders
-  const historyAll = () => {
-    axios
-      .get(`http://localhost:8000/customer/orders/all/${cid}`)
-      .then((res) => {
-        setOrders(res.data);
-        setPending(false);
-      });
-  };
-
-  // Add decimal point to the price
-  const getPrice = (num) => {
-    return (num / 100).toFixed(2);
-  };
-
-  // Convert date to locale date
-  const convertDate = (date) => {
-    let locale = new Date(date);
-    return locale.toLocaleDateString();
-  };
-
-  // Convert order status to readable string
-  const convertOrderStatus = (status) => {
-    switch (status) {
-      case 1:
-        return "In-progress";
-      case 2:
-        return "Awaiting-Pickup";
-      case 3:
-        return "Completed";
-      default:
-        return "Ordered";
-    }
-  };
-
-  // Add item from past completed order to cart
-  const reOrdering = async(order) => {
-    const { data } = await axios.patch(`http://localhost:8000/customer/cart/reorder/${cid}`, {order_id: order.order_id, rid: order.rid});
-    if (data.success = true) {
-      if (data.data.items.length > 0) {
-        let new_quantities = {}
-        let new_cart = []
-        for (var items of data.data.items) {
-          new_quantities[items.item.name] = items.quantity;
-          new_cart.push(items.item);
-        }
-        setQuantities(new_quantities);
-        setCartItems(new_cart);
-      }
-    }
-  };
+  }; 
 
   return (
     <div className="order">
@@ -294,48 +209,22 @@ function Order() {
       {dialogueVisible && (
         <DialogueBox onSubmit={order} onClose={toggleDialogue} />
       )}
-      <h1>Order History</h1>
-      <button className="btnHistory" onClick={() => historyPending()}>
-        View Pending History
-      </button>
-      <button className="btnHistory" onClick={() => historyAll()}>
-        View All History
-      </button>
-      <div className="orderInfoTable">
-        {orders.data !== undefined ? (
-          <Accordion>
-            {orders.data.map((order) => (
-              <Accordion.Item key={i++} eventKey={i++}>
-                <Accordion.Header>
-                  Restaurant: {order.restaurant.name} &emsp; &emsp; Order ID:{" "}
-                  {order.order_id} &emsp; &emsp; Date:{" "}
-                  {convertDate(order.orderAt)} &emsp; &emsp; Order Status:{" "}
-                  {convertOrderStatus(order.status)}
-                </Accordion.Header>
-                <Accordion.Body>
-                  <p>
-                    Name: {customer.name} <br></br>
-                    Customer ID: {customer.cid} <br></br>
-                  </p>
-                  <OrdersInfo order={order.items} pending={pending}>
-                    {" "}
-                  </OrdersInfo>
-                  <h5>Grand Total: ${getPrice(order.total)}</h5>
-                  {!pending && (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => reOrdering(order)}
-                    >
-                      Reorder
-                    </button>
-                  )}
-                </Accordion.Body>
-              </Accordion.Item>
-            ))}
-          </Accordion>
-        ) : (
-          <h4>Loading orders...</h4>
-        )}
+      <h1 className="text-3xl my-4"> Orders </h1>
+      <div className="restaurant-order">
+        <Tabs id="order-tabs">
+          <Tab eventKey="pop_items" title="Pending Orders">
+            <PendingOrderList> </PendingOrderList>
+          </Tab>
+          <Tab eventKey="busy_hours" title="Order History">
+            <OrderHistoryList
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+              quantities={quantities}
+              setQuantities={setQuantities}
+              >
+              </OrderHistoryList>
+          </Tab>
+        </Tabs>
       </div>
     </div>
   );
