@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Menu.css'
 import axios from 'axios';
-import { MenuItems } from '../../../components/clientapp/menu/menu.components';
+import { FoodMenu } from '../../../components/clientapp/menu/menu-list/food-display.components';
 import { useParams } from 'react-router-dom';
 import { NavBar } from '../../../components/clientapp/navbar/navbar.components';
 import { addedToCartMsg } from '../../../components/clientapp/alerts/added-to-cart.components';
@@ -195,17 +195,17 @@ function Menu() {
     <div>
       <NavBar cid={cid} cartItems={cartItems} quantities={quantities} handleChange={handleQuantityChange} removeFromCart={removeItem} checkout={checkout}/>
       {dialogueVisible && <DialogueBox onSubmit={order} onClose={toggleDialogue} />}
-      <div className='container'>
-        <div className='table'>
+        <div className='body'>
         {showOrderConfirmedMsg && orderConfirmedMsg()}
           <h1>{restaurant.name} </h1>
-          {showAlreadyInCart && alreadyInCart()}
-          {showAddedToCartMsg && addedToCartMsg(addedItem)}
-          {showDifferentResAlert && DifferentRestaurant()}
-          <MenuItems menu={restaurant.menu} addToCart={addToCart} cartItems={cartItems}/ >
+          <div className='margin-down'>
+            {showAlreadyInCart && alreadyInCart()}
+            {showAddedToCartMsg && addedToCartMsg(addedItem)}
+            {showDifferentResAlert && DifferentRestaurant()}
+            </div>
+            <FoodMenu menu={restaurant.menu} addToCart={addToCart}/>
         </div>
       </div>
-    </div>
   );
 }
 

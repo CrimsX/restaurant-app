@@ -14,7 +14,7 @@ export const Tile = ({ restaurant, cid }) => {
 
   return (
     <div className="tile-container" onClick={routeToMenu}>
-      {/* <h1 className="logo">{name[0]}</h1> */}
+      <h1 className="logo">{name[0]}</h1>
       <h2>{name}</h2>
     </div>
   );
