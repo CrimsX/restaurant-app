@@ -1,19 +1,34 @@
-Restaurant Manager Interface Objectives:
+# restaurant-app
+A restaurant ordering application that allows customers to place orders and restaurant managers to manage their menu and orders.
 
-- Menu Management:
-  - Add, update, or remove menu items.
-    - The ability to mark specific items as ‘sold-out’ and it will not appear on the
-      customer ordering page.
-  
-- Order Processing:
-  - View and manage incoming orders and their statuses.
-    - See the order status requirement above.
-    - See the pickup time requirement above.
-      
-- Analytics Dashboard:
-  - View insights on sales, popular items and busiest pickup time by
-    hour.
-  
-- Custom Feature:
-  - Develop a unique feature that enhances the restaurant pickup
-    experience. (this function is up to your group to create)
+# Features
+- Client Interface
+  - Menu Browsing: Ability to view detailed menus from different restaurants.
+  - Order Placement: Functionality for placing orders with specific menu items.
+  - Order History and Tracking: Customers can view their past orders and track current orders.
+
+- Restaurant Manager Interface
+  - Menu Management: Add, update, or remove menu items.
+  - Order Processing: View and manage incoming orders and their statuses.
+  - Order History: View past orders and their details.
+
+# Prerequisites
+- Node version 20.x.x
+
+# Getting Started
+- Clone the repository
+```shell
+git clone https://github.com/CrimsX/restaurant-app
+```
+
+- Start the server
+```shell
+npm i --production
+npm start
+```
+
+- Start the client
+```shell
+npm i --production
+npm start
+```
